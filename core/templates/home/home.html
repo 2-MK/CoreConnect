@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CASA Connect | MCA Association Management Portal</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="{% static 'corecss/style.css' %}">
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<header>
+
+    <div class="container navbar">
+
+       <div class="logo">
+
+    <img src="{% static 'images/home/ritlogo.png' %}" alt="CASA Logo">
+
+    <div class="logo-text">
+        <h2>Core Connect</h2>
+        <p>MCA Association Portal</p>
+    </div>
+
+</div>
+
+        <nav>
+
+            <ul>
+
+                <li><a href="{% url 'members' %}">Committee</a></li>
+
+                <li><a href="#">Events</a></li>
+
+                <li><a href="#">Placements</a></li>
+
+                <li><a href="#">Gallery</a></li>
+
+            </ul>
+
+        </nav>
+
+        <div class="dropdown">
+            <a href="#" class="nav-btn"> Member Login </a>
+
+    <div class="dropdown-content">
+        <a href="{% url 'admins' %}">Admin</a>
+        <a href="">Student</a>
+    </div>
+</div>
+
+    </div>
+
+</header>
+
+<!-- ================= HERO ================= -->
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <h1>
+        Empower the
+        <span>MCA Community</span>
+    </h1>
+
+    <p>
+        CASA Connect is a centralized MCA Association Management Portal
+        that helps students, faculty, parents, and alumni stay connected
+        through events, placement updates, study materials, PTA Connect,
+        and transparent fund management.
+    </p>
+
+</section>
+
+<!-- ================= CAROUSEL ================= -->
+
+<section class="carousel-section">
+
+    <div class="carousel">
+
+        <!-- Card 1 -->
+        <div class="card">
+
+            <div class="card-top">
+
+                <span>●</span>
+
+                Association Events
+
+            </div>
+
+            <img src="{% static 'images/home/mca1.jpg' %}" alt="Association Events">
+
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+
+            <div class="card-top">
+
+                <span>●</span>
+
+                Student Activities
+
+            </div>
+
+            <img src="{% static 'images/home/mca3.png' %}" alt="Student Activities">
+
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+
+            <div class="card-top">
+
+                <span>●</span>
+
+                PTA Connect
+
+            </div>
+
+            <img src="{% static 'images/home/mca4.jpg' %}" alt="PTA Connect">
+
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+
+            <div class="card-top">
+
+                <span>●</span>
+
+                Placement Cell
+
+            </div>
+
+            <img src="{% static 'images/home/mca5.png' %}" alt="Placement Cell">
+
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+
+            <div class="card-top">
+
+                <span>●</span>
+
+                Alumni Network
+
+            </div>
+
+            <img src="{% static 'images/home/mca6.jpg' %}" alt="Alumni Network">
+
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+
+            <div class="card-top">
+
+                <span>●</span>
+
+                Study Resources
+
+            </div>
+
+            <img src="{% static 'images/home/mca7.jpg' %}" alt="Study Resources">
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- JS -->
+
+<script src="{% static 'home/js/script.js' %}"></script>
+
+</body>
+</html>

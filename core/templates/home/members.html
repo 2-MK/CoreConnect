@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Committee Members</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'corecss/members.css' %}">
+</head>
+<body>
+
+<section class="committee-section">
+    <h1>Committee Members</h1>
+
+    <div class="members-grid">
+
+        <div class="member-card">
+            <img src="{% static 'images/member1.jpg' %}" alt="Member">
+            <h3>Mohammed Mussammil</h3>
+            <p>Secretary</p>
+        </div>
+
+        <div class="member-card">
+            <img src="{% static 'images/committee/anjana.jpeg' %}" alt="Member">
+            <h3>anjana</h3>
+            <p>Joint Secretary</p>
+        </div>
+
+        <div class="member-card">
+            <img src="{% static 'images/member3.jpg' %}" alt="Member">
+            <h3>John Doe</h3>
+            <p>Chairperson</p>
+        </div>
+
+        <div class="member-card">
+            <img src="{% static 'images/member4.jpg' %}" alt="Member">
+            <h3>Jane Smith</h3>
+            <p>Treasurer</p>
+        </div>
+
+    </div>
+</section>
+
+</body>
+</html>

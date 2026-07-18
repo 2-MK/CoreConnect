@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Profile</title>
+
+    <style>
+        body{
+            background:#f4f6f9;
+            font-family:Arial,sans-serif;
+        }
+
+        .container{
+            width:400px;
+            margin:80px auto;
+            background:white;
+            padding:30px;
+            border-radius:15px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2{
+            text-align:center;
+            margin-bottom:20px;
+        }
+
+        input{
+            width:100%;
+            padding:10px;
+            margin-top:5px;
+            margin-bottom:15px;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            background:#3498db;
+            color:white;
+            border:none;
+            cursor:pointer;
+            border-radius:5px;
+        }
+
+        button:hover{
+            background:#2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Update Admin Profile</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Admin Name</label>
+        <input type="text" name="admin_name" required>
+
+        <label>New Password</label>
+        <input type="password" name="password" required>
+
+        <button type="submit">Update Profile</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

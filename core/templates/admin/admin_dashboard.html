@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, sans-serif;
+        }
+
+        body{
+            background:#f4f6f9;
+            padding:30px;
+        }
+
+        h1{
+            text-align:center;
+            color:#333;
+            margin-bottom:10px;
+        }
+
+        p{
+            text-align:center;
+            color:#666;
+            margin-bottom:30px;
+        }
+
+        .dashboard{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:20px;
+        }
+
+        .card-link{
+            text-decoration:none;
+            color:inherit;
+        }
+
+        .card{
+            background:white;
+            border-radius:15px;
+            padding:30px;
+            text-align:center;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+            transition:0.3s;
+            cursor:pointer;
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+        }
+
+        .card h2{
+            color:#2c3e50;
+            margin-bottom:15px;
+        }
+
+        .card p{
+            color:#3498db;
+            font-size:28px;
+            font-weight:bold;
+            margin:0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Welcome Admin</h1>
+<p>Login Successful</p>
+
+<div class="dashboard">
+
+    <a href="{% url 'profile_update' %}" class="card-link">
+        <div class="card">
+            <h2>Profile</h2>
+            <p>Update</p>
+        </div>
+    </a>
+
+    <a href="{% url 'profile_update' %}" class="card-link">
+        <div class="card">
+            <h2>Total Users</h2>
+            <p>120</p>
+        </div>
+    </a>
+
+    <a href="{% url 'profile_update' %}" class="card-link">
+        <div class="card">
+            <h2>Products</h2>
+            <p>45</p>
+        </div>
+    </a>
+
+    <a href="{% url 'profile_update' %}" class="card-link">
+        <div class="card">
+            <h2>Orders</h2>
+            <p>85</p>
+        </div>
+    </a>
+
+    <a href="{% url 'profile_update' %}" class="card-link">
+        <div class="card">
+            <h2>Revenue</h2>
+            <p>₹50,000</p>
+        </div>
+    </a>
+
+</div>
+
+</body>
+</html>

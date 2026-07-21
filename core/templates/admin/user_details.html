@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'corecss/user_management.css' %}">
+</head>
+<body>
+
+<div class="page-container">
+
+    <div class="header">
+        <h1>User Management Dashboard</h1>
+        <p>Add, update and delete user records</p>
+    </div>
+
+    <div id="message-box"></div>
+
+    <div class="grid">
+
+        <!-- ADD USER -->
+        <div class="card add-card">
+
+            <h2>Add User</h2>
+
+            {% csrf_token %}
+
+            <input
+                type="text"
+                id="ktu_id"
+                placeholder="KTU ID"
+            >
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Name"
+            >
+
+            <input
+                type="number"
+                id="passout_year"
+                placeholder="Passout Year"
+            >
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Email"
+            >
+
+            <input
+                type="text"
+                id="contact"
+                placeholder="Contact Number"
+            >
+
+            <button
+                class="btn add-btn"
+                onclick="addUser()"
+            >
+                Save User
+            </button>
+
+        </div>
+
+
+        <!-- UPDATE USER -->
+        <div class="card update-card">
+
+            <h2>Update User</h2>
+
+            <input
+                type="text"
+                id="update_ktu_id"
+                placeholder="KTU ID"
+            >
+
+            <input
+                type="text"
+                id="update_name"
+                placeholder="Updated Name"
+            >
+
+            <input
+                type="number"
+                id="update_passout_year"
+                placeholder="Updated Passout Year"
+            >
+
+            <input
+                type="email"
+                id="update_email"
+                placeholder="Updated Email"
+            >
+
+            <input
+                type="text"
+                id="update_contact"
+                placeholder="Updated Contact"
+            >
+
+            <button
+                class="btn update-btn"
+                onclick="updateUser()"
+            >
+                Update User
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- DELETE USER -->
+    <div class="card delete-card">
+
+        <h2>Delete User</h2>
+
+        <input
+            type="text"
+            id="delete_ktu_id"
+            placeholder="Enter KTU ID to delete"
+        >
+
+        <button
+            class="btn delete-btn"
+            onclick="deleteUser()"
+        >
+            Delete User
+        </button>
+
+    </div>
+
+</div>
+
+<script src="{% static 'js/user_management.js' %}"></script>
+
+</body>
+</html>

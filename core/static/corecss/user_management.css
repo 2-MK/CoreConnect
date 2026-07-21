@@ -1,0 +1,148 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b,
+        #334155
+    );
+    min-height:100vh;
+    padding:40px;
+}
+
+.page-container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.header h1{
+    color:white;
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.header p{
+    color:#cbd5e1;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+}
+
+.card{
+    background:rgba(255,255,255,0.08);
+    -webkit-backdrop-filter:blur(20px);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:20px;
+    padding:30px;
+    box-shadow:
+    0 8px 32px rgba(0,0,0,0.3);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+}
+
+.card h2{
+    color:white;
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    margin-bottom:15px;
+    background:rgba(255,255,255,.12);
+    color:white;
+    font-size:15px;
+    outline:none;
+}
+
+input::placeholder{
+    color:#cbd5e1;
+}
+
+.btn{
+    width:100%;
+    border:none;
+    padding:14px;
+    border-radius:12px;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.add-btn{
+    background:#10b981;
+}
+
+.add-btn:hover{
+    background:#059669;
+}
+
+.update-btn{
+    background:#3b82f6;
+}
+
+.update-btn:hover{
+    background:#2563eb;
+}
+
+.delete-btn{
+    background:#ef4444;
+}
+
+.delete-btn:hover{
+    background:#dc2626;
+}
+
+.delete-card{
+    margin-top:25px;
+}
+
+#message-box{
+    margin-bottom:20px;
+}
+
+.success{
+    background:#10b981;
+    color:white;
+    padding:15px;
+    border-radius:10px;
+}
+
+.error{
+    background:#ef4444;
+    color:white;
+    padding:15px;
+    border-radius:10px;
+}
+
+@media(max-width:900px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    body{
+        padding:20px;
+    }
+}

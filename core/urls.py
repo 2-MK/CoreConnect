@@ -13,6 +13,10 @@ urlpatterns = [
         name="admin_dashboard"
     ),
     path('profile-update/', views.profile_update, name='profile_update'),
-
+    path('users_details/', views.user_details_view, name='user_details'),
+    path("get-users", views.get_users),
+    path("add-user", views.add_user),
+    path("update-user", views.update_user, name="update_user"),
+    path("delete-user", views.delete_user, name="delete_user"),
    
 ]

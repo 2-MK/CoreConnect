@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alumni Directory</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+        }
+
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+
+        .search-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus,
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .results {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .results-header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .results-header h2 {
+            color: #333;
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .results-count {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #ddd;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+        }
+
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .info-text {
+            background-color: #e7f3ff;
+            color: #004085;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #004085;
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+
+            .form-group {
+                min-width: auto;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Alumni Directory</h1>
+        <a href="{% url 'admin_dashboard' %}" class="back-btn">← Back to Dashboard</a>
+    </div>
+
+    <div class="info-text">
+        <strong>Note:</strong> Search by Passout Year is the primary option. You can also search by Name or KTU ID.
+    </div>
+
+    <div class="search-box">
+        <form method="POST" class="search-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="search_type">Search By:</label>
+                <select id="search_type" name="search_type" required>
+                    <option value="">-- Select Search Type --</option>
+                    <option value="passout_year" {% if search_type == 'passout_year' %}selected{% endif %}>Passout Year (Primary)</option>
+                    <option value="name" {% if search_type == 'name' %}selected{% endif %}>Name</option>
+                    <option value="ktu_id" {% if search_type == 'ktu_id' %}selected{% endif %}>KTU ID</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="search_query">Search Value:</label>
+                <input 
+                    type="text" 
+                    id="search_query" 
+                    name="search_query" 
+                    placeholder="Enter search value" 
+                    value="{{ search_query }}"
+                    required
+                >
+            </div>
+
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    {% if search_query and search_type %}
+        <div class="results">
+            <div class="results-header">
+                <h2>Search Results</h2>
+                <div class="results-count">
+                    Found <strong>{{ alumni|length }}</strong> alumni
+                    {% if search_type == 'passout_year' %}
+                        who passed out in <strong>{{ search_query }}</strong>
+                    {% elif search_type == 'name' %}
+                        with name matching <strong>{{ search_query }}</strong>
+                    {% elif search_type == 'ktu_id' %}
+                        with KTU ID <strong>{{ search_query }}</strong>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if alumni %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>KTU ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Contact</th>
+                            <th>Passout Year</th>
+                            <th>Designation</th>
+                            <th>Company</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for person in alumni %}
+                            <tr>
+                                <td>{{ person.ktu_id }}</td>
+                                <td>{{ person.name }}</td>
+                                <td>{{ person.email|default:"N/A" }}</td>
+                                <td>{{ person.contact|default:"N/A" }}</td>
+                                <td>{{ person.passout_year|default:"N/A" }}</td>
+                                <td>{{ person.designation|default:"N/A" }}</td>
+                                <td>{{ person.company_name|default:"N/A" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="no-results">
+                    No alumni found matching your search criteria.
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

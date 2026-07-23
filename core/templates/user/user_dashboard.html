@@ -71,6 +71,49 @@
         a.logout:hover {
             background-color: #c82333;
         }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert {
+            animation: slideDown 0.3s ease-in-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.fade-out {
+            animation: fadeOut 0.3s ease-in-out forwards;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
     </style>
 </head>
 <body>
@@ -79,11 +122,33 @@
     <h1>Welcome {{ name }}</h1>
     <p>Login Successful</p>
     
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
     <div class="btn-group">
+        <a href="{% url 'user_profile_update' %}">Update Profile</a>
         <a href="{% url 'change_password' %}">Change Password</a>
         <a href="{% url 'user_logout' %}" class="logout">Logout</a>
     </div>
 </div>
+
+<script>
+    // Auto-dismiss success messages after 3 seconds
+    const alerts = document.querySelectorAll('.alert-success');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.classList.add('fade-out');
+            setTimeout(() => {
+                alert.remove();
+            }, 300);
+        }, 3000);
+    });
+</script>
 
 </body>
 </html>

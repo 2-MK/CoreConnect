@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .supabase_client import supabase
 from django.http import JsonResponse
+from django.contrib import messages
 import json
 
 
@@ -319,8 +320,104 @@ def change_password(request):
     )
 
 
+def user_profile_update(request):
+
+    if "user_id" not in request.session:
+        return redirect("password_login")
+
+    user_id = request.session.get("user_id")
+
+    # Fetch current user data
+    result = supabase.table("users").select("*").eq("id", user_id).execute()
+    user = result.data[0] if result.data else None
+
+    if not user:
+        return redirect("password_login")
+
+    if request.method == "POST":
+
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        contact = request.POST.get("contact")
+        designation = request.POST.get("designation")
+        company_name = request.POST.get("company_name")
+
+        supabase.table("users").update({
+            "name": name,
+            "email": email,
+            "contact": contact,
+            "designation": designation,
+            "company_name": company_name
+        }).eq("id", user_id).execute()
+
+        request.session["user_name"] = name
+        
+        messages.success(request, "Profile updated successfully")
+
+        return redirect("user_dashboard")
+
+    return render(
+        request,
+        "user/profile_update.html",
+        {
+            "user": user
+        }
+    )
+
+
 def user_logout(request):
 
     request.session.flush()
 
     return redirect("password_login")
+
+
+def alumni_directory(request):
+    
+    if not request.session.get("admin_name"):
+        return redirect("admins")
+    
+    alumni = []
+    search_query = None
+    search_type = None
+    
+    if request.method == "POST":
+        search_type = request.POST.get("search_type")
+        search_query = request.POST.get("search_query")
+        
+        if search_type and search_query:
+            if search_type == "passout_year":
+                response = (
+                    supabase.table("users")
+                    .select("*")
+                    .eq("passout_year", search_query)
+                    .execute()
+                )
+            elif search_type == "name":
+                response = (
+                    supabase.table("users")
+                    .select("*")
+                    .ilike("name", f"%{search_query}%")
+                    .execute()
+                )
+            elif search_type == "ktu_id":
+                response = (
+                    supabase.table("users")
+                    .select("*")
+                    .eq("ktu_id", search_query)
+                    .execute()
+                )
+            else:
+                response = None
+            
+            alumni = response.data if response else []
+    
+    return render(
+        request,
+        "admin/alumni_directory.html",
+        {
+            "alumni": alumni,
+            "search_query": search_query,
+            "search_type": search_type
+        }
+    )

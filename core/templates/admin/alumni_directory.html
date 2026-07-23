@@ -212,7 +212,7 @@
     </div>
 
     <div class="info-text">
-        <strong>Note:</strong> Search by Passout Year is the primary option. You can also search by Name or KTU ID.
+        <strong>Note:</strong> Use any one of the filters below. Passout Year is the primary option, and Name or KTU ID can be used as secondary filters.
     </div>
 
     <div class="search-box">
@@ -220,24 +220,35 @@
             {% csrf_token %}
 
             <div class="form-group">
-                <label for="search_type">Search By:</label>
-                <select id="search_type" name="search_type" required>
-                    <option value="">-- Select Search Type --</option>
-                    <option value="passout_year" {% if search_type == 'passout_year' %}selected{% endif %}>Passout Year (Primary)</option>
-                    <option value="name" {% if search_type == 'name' %}selected{% endif %}>Name</option>
-                    <option value="ktu_id" {% if search_type == 'ktu_id' %}selected{% endif %}>KTU ID</option>
-                </select>
+                <label for="passout_year">Passout Year:</label>
+                <input
+                    type="text"
+                    id="passout_year"
+                    name="passout_year"
+                    placeholder="e.g. 2024"
+                    value="{{ passout_year }}"
+                >
             </div>
 
             <div class="form-group">
-                <label for="search_query">Search Value:</label>
-                <input 
-                    type="text" 
-                    id="search_query" 
-                    name="search_query" 
-                    placeholder="Enter search value" 
-                    value="{{ search_query }}"
-                    required
+                <label for="name">Name:</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter name"
+                    value="{{ name }}"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="ktu_id">KTU ID:</label>
+                <input
+                    type="text"
+                    id="ktu_id"
+                    name="ktu_id"
+                    placeholder="Enter KTU ID"
+                    value="{{ ktu_id }}"
                 >
             </div>
 

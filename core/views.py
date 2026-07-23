@@ -380,12 +380,45 @@ def alumni_directory(request):
     alumni = []
     search_query = None
     search_type = None
+    passout_year = ""
+    name = ""
+    ktu_id = ""
     
     if request.method == "POST":
         search_type = request.POST.get("search_type")
         search_query = request.POST.get("search_query")
-        
-        if search_type and search_query:
+        passout_year = request.POST.get("passout_year", "").strip()
+        name = request.POST.get("name", "").strip()
+        ktu_id = request.POST.get("ktu_id", "").strip()
+
+        if passout_year:
+            search_type = "passout_year"
+            search_query = passout_year
+            response = (
+                supabase.table("users")
+                .select("*")
+                .eq("passout_year", search_query)
+                .execute()
+            )
+        elif name:
+            search_type = "name"
+            search_query = name
+            response = (
+                supabase.table("users")
+                .select("*")
+                .ilike("name", f"%{search_query}%")
+                .execute()
+            )
+        elif ktu_id:
+            search_type = "ktu_id"
+            search_query = ktu_id
+            response = (
+                supabase.table("users")
+                .select("*")
+                .eq("ktu_id", search_query)
+                .execute()
+            )
+        elif search_type and search_query:
             if search_type == "passout_year":
                 response = (
                     supabase.table("users")
@@ -409,8 +442,10 @@ def alumni_directory(request):
                 )
             else:
                 response = None
+        else:
+            response = None
             
-            alumni = response.data if response else []
+        alumni = response.data if response else []
     
     return render(
         request,
@@ -418,6 +453,9 @@ def alumni_directory(request):
         {
             "alumni": alumni,
             "search_query": search_query,
-            "search_type": search_type
+            "search_type": search_type,
+            "passout_year": passout_year,
+            "name": name,
+            "ktu_id": ktu_id,
         }
     )

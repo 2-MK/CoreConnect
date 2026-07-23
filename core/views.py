@@ -147,3 +147,180 @@ def delete_user(request):
     return JsonResponse({
         "message": "Invalid Request"
     })
+
+
+
+import bcrypt
+
+
+def user_login(request):
+
+    print("METHOD:", request.method)
+
+    if request.method == "POST":
+
+        ktu_id = request.POST.get("ktu_id")
+        name = request.POST.get("name")
+
+        print("KTU ID:", ktu_id)
+        print("NAME:", name)
+
+        result = (
+            supabase.table("users")
+            .select("*")
+            .eq("ktu_id", ktu_id)
+            .eq("name", name)
+            .execute()
+        )
+
+        print("RESULT:", result.data)
+
+        if not result.data:
+            return render(
+                request,
+                "user/user_login.html",
+                {"error": "Invalid KTU ID or Name"}
+            )
+
+        user = result.data[0]
+
+        print("USER FOUND:", user)
+
+        request.session["user_id"] = user["id"]
+
+        # First-time login
+        if not user.get("password"):
+            print("Redirecting to set_password")
+            return redirect("set_password")
+
+        # Password already exists
+        print("Redirecting to password_login")
+        return redirect("password_login")
+
+    return render(request, "user/user_login.html")
+
+
+def set_password(request):
+
+    if "user_id" not in request.session:
+        return redirect("user_login")
+
+    if request.method == "POST":
+
+        password = request.POST.get("password")
+        confirm = request.POST.get("confirm_password")
+
+        if password != confirm:
+            return render(
+                request,
+                "user/set_password.html",
+                {"error": "Passwords do not match"}
+            )
+
+        hashed = bcrypt.hashpw(
+            password.encode(),
+            bcrypt.gensalt()
+        ).decode()
+
+        (
+            supabase.table("users")
+            .update({"password": hashed})
+            .eq("id", request.session["user_id"])
+            .execute()
+        )
+
+        return redirect("password_login")
+
+    return render(request, "user/set_password.html")
+
+
+def password_login(request):
+
+    if request.method == "POST":
+
+        ktu_id = request.POST.get("ktu_id")
+        password = request.POST.get("password")
+
+        result = (
+            supabase.table("users")
+            .select("*")
+            .eq("ktu_id", ktu_id)
+            .execute()
+        )
+
+        if result.data:
+
+            user = result.data[0]
+
+            if (
+                user.get("password")
+                and bcrypt.checkpw(
+                    password.encode(),
+                    user["password"].encode()
+                )
+            ):
+
+                request.session["user_id"] = user["id"]
+                request.session["user_name"] = user["name"]
+                request.session["ktu_id"] = user["ktu_id"]
+
+                return redirect("/dashboard/")
+
+        return render(
+            request,
+            "user/password_login.html",
+            {"error": "Invalid Credentials"}
+        )
+
+    return render(request, "user/password_login.html")
+
+
+def user_dashboard(request):
+
+    if "user_id" not in request.session:
+        return redirect("password_login")
+
+    return render(
+        request,
+        "user/user_dashboard.html",
+        {
+            "name": request.session.get("user_name"),
+            "ktu_id": request.session.get("ktu_id")
+        }
+    )
+
+
+def change_password(request):
+
+    if "user_id" not in request.session:
+        return redirect("password_login")
+
+    if request.method == "POST":
+
+        password = request.POST.get("password")
+
+        hashed = bcrypt.hashpw(
+            password.encode(),
+            bcrypt.gensalt()
+        ).decode()
+
+        (
+            supabase.table("users")
+            .update({"password": hashed})
+            .eq("id", request.session["user_id"])
+            .execute()
+        )
+
+        return redirect("user_dashboard")
+
+    return render(
+        request,
+        "user/change_password.html"
+    )
+
+
+def user_logout(request):
+
+    request.session.flush()
+
+    return redirect("password_login")

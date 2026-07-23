@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Login</title>
+</head>
+<body>
+
+<h2>First  Time Login</h2>
+
+{% if error %}
+<p style="color:red">{{ error }}</p>
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <input
+        type="text"
+        name="ktu_id"
+        placeholder="KTU ID"
+        required
+    >
+
+    <br><br>
+
+    <input
+        type="text"
+        name="name"
+        placeholder="Full Name"
+        required
+    >
+
+    <br><br>
+
+    <button type="submit">
+        Continue
+    </button>
+
+</form>
+
+<a href="{% url 'password_login' %}">
+    Already have password?
+</a>
+
+</body>
+</html>

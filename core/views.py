@@ -459,3 +459,253 @@ def alumni_directory(request):
             "ktu_id": ktu_id,
         }
     )
+
+def placement_management(request):
+    return render(request, 'admin/placement.html')
+
+
+def placement_opportunities(request):
+    opportunities = []
+    editing_opportunity = None
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        opportunity_id = request.POST.get("id")
+
+        try:
+            if action == "delete":
+                supabase.table("placement_opportunities").delete().eq("id", opportunity_id).execute()
+                messages.success(request, "Opportunity deleted successfully.")
+            elif action == "update":
+                update_data = {
+                    "company_name": request.POST.get("company_name"),
+                    "role": request.POST.get("role"),
+                    "eligibility": request.POST.get("eligibility"),
+                    "deadline": request.POST.get("deadline") or None,
+                    "description": request.POST.get("description"),
+                    "status": request.POST.get("status") or "Active",
+                }
+                supabase.table("placement_opportunities").update(update_data).eq("id", opportunity_id).execute()
+                messages.success(request, "Opportunity updated successfully.")
+            elif action == "create":
+                insert_data = {
+                    "company_name": request.POST.get("company_name"),
+                    "role": request.POST.get("role"),
+                    "eligibility": request.POST.get("eligibility"),
+                    "deadline": request.POST.get("deadline") or None,
+                    "description": request.POST.get("description"),
+                    "status": request.POST.get("status") or "Active",
+                }
+                supabase.table("placement_opportunities").insert(insert_data).execute()
+                messages.success(request, "Opportunity created successfully.")
+            else:
+                messages.error(request, "Invalid action.")
+        except Exception as exc:
+            messages.error(request, f"Unable to process opportunity: {exc}")
+
+        return redirect("placement_opportunities")
+
+    edit_id = request.GET.get("edit_id")
+    if edit_id:
+        response = supabase.table("placement_opportunities").select("*").eq("id", edit_id).execute()
+        if response.data:
+            editing_opportunity = response.data[0]
+
+    response = supabase.table("placement_opportunities").select("*").order("created_at", desc=True).execute()
+    opportunities = response.data if response.data else []
+
+    return render(
+        request,
+        "admin/placement_opportunities.html",
+        {
+            "opportunities": opportunities,
+            "editing_opportunity": editing_opportunity,
+        },
+    )
+
+def placement_achievements(request):
+    return render(request, 'admin/placement_achievements.html')
+
+import os
+import uuid
+import tempfile
+
+from django.shortcuts import render, redirect
+
+
+def _upload_placement_image(image):
+    if not image:
+        return None
+
+    filename = f"{uuid.uuid4()}_{image.name}"
+    extension = os.path.splitext(image.name)[1]
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=extension) as temp:
+        for chunk in image.chunks():
+            temp.write(chunk)
+        temp_path = temp.name
+
+    try:
+        supabase.storage.from_("placement-images").upload(
+            path=filename,
+            file=temp_path,
+            file_options={"content-type": image.content_type},
+        )
+        return supabase.storage.from_("placement-images").get_public_url(filename)
+    finally:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+
+
+def placement_updates(request):
+
+    if request.method == "POST":
+
+        try:
+
+            student_name = request.POST.get("student_name")
+            company_name = request.POST.get("company_name")
+            job_role = request.POST.get("job_role")
+            package_lpa = request.POST.get("package_lpa")
+            placement_date = request.POST.get("placement_date")
+            caption = request.POST.get("caption")
+
+            image = request.FILES.get("achievement_image")
+
+            image_url = _upload_placement_image(image)
+
+            # Insert into table
+            response = (
+                supabase.table("placed_students")
+                .insert({
+                    "student_name": student_name,
+                    "company_name": company_name,
+                    "job_role": job_role,
+                    "package_lpa": float(package_lpa) if package_lpa else None,
+                    "placement_date": placement_date if placement_date else None,
+                    "caption": caption,
+                    "image_url": image_url
+                })
+                .execute()
+            )
+
+            print(response)
+
+            return render(
+                request,
+                "admin/placement_achievements.html",
+                {
+                    "success_message": "Placement saved successfully."
+                }
+            )
+
+        except Exception as e:
+
+            print("ERROR:", e)
+
+            return render(
+                request,
+                "admin/placement_achievements.html",
+                {
+                    "error_message": str(e)
+                }
+            )
+
+    return render(
+        request,
+        "admin/placement_achievements.html"
+    )
+
+def manage_placement(request):
+    placements = []
+    editing_placement = None
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        placement_id = request.POST.get("id")
+
+        try:
+            if action == "delete":
+                supabase.table("placed_students").delete().eq("id", placement_id).execute()
+                messages.success(request, "Placement record deleted successfully.")
+            elif action == "update":
+                update_data = {
+                    "student_name": request.POST.get("student_name"),
+                    "company_name": request.POST.get("company_name"),
+                    "job_role": request.POST.get("job_role"),
+                    "package_lpa": float(request.POST.get("package_lpa")) if request.POST.get("package_lpa") else None,
+                    "placement_date": request.POST.get("placement_date") or None,
+                    "caption": request.POST.get("caption"),
+                }
+
+                image = request.FILES.get("achievement_image")
+                if image:
+                    update_data["image_url"] = _upload_placement_image(image)
+
+                supabase.table("placed_students").update(update_data).eq("id", placement_id).execute()
+                messages.success(request, "Placement record updated successfully.")
+            elif action == "create":
+                insert_data = {
+                    "student_name": request.POST.get("student_name"),
+                    "company_name": request.POST.get("company_name"),
+                    "job_role": request.POST.get("job_role"),
+                    "package_lpa": float(request.POST.get("package_lpa")) if request.POST.get("package_lpa") else None,
+                    "placement_date": request.POST.get("placement_date") or None,
+                    "caption": request.POST.get("caption"),
+                }
+
+                image = request.FILES.get("achievement_image")
+                if image:
+                    insert_data["image_url"] = _upload_placement_image(image)
+
+                supabase.table("placed_students").insert(insert_data).execute()
+                messages.success(request, "Placement record created successfully.")
+            else:
+                messages.error(request, "Invalid action.")
+        except Exception as exc:
+            messages.error(request, f"Unable to process placement: {exc}")
+
+        return redirect("manage_placement")
+
+    edit_id = request.GET.get("edit_id")
+    if edit_id:
+        response = supabase.table("placed_students").select("*").eq("id", edit_id).execute()
+        if response.data:
+            editing_placement = response.data[0]
+
+    response = supabase.table("placed_students").select("*").order("created_at", desc=True).execute()
+    placements = response.data if response.data else []
+
+    return render(
+        request,
+        "admin/placement_management.html",
+        {
+            "placements": placements,
+            "editing_placement": editing_placement,
+        },
+    )
+
+
+def dis_placement(request):
+    # Fetch placed students
+    placed_students = (
+        supabase.table("placed_students")
+        .select("*")
+        .order("placement_date", desc=True)
+        .execute()
+    )
+
+    # Fetch all placement opportunities (Active + Closed)
+    placement_opportunities = (
+        supabase.table("placement_opportunities")
+        .select("*")
+        .order("deadline", desc=False)
+        .execute()
+    )
+
+    context = {
+        "placed_students": placed_students.data,
+        "placement_opportunities": placement_opportunities.data,
+    }
+
+    return render(request, "home/placement.html", context)

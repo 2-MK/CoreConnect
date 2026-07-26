@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Placement Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 30px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            background: #fafafa;
+        }
+        .card h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 20px;
+        }
+        .card p {
+            color: #555;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 16px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+        .btn.secondary {
+            background: #2ecc71;
+            margin-left: 8px;
+        }
+        .button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn.manage {
+    background: #f39c12;
+}
+
+.btn.manage:hover {
+    background: #e67e22;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Placement Management</h1>
+        <p class="subtitle">Manage placement opportunities and achievements from this page.</p>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Placement Opportunities</h2>
+                <p>Update company openings, job roles, eligibility, and deadlines.</p>
+                <div class="button-group">
+                    <a href="{% url 'placement_opportunities' %}" class="btn">Manage Opportunity</a>
+                </div>
+            </div>
+
+            <div class="card">
+    <h2>Placement Achievements</h2>
+    <p>Showcase placement records, offers, and success stories.</p>
+
+    <div class="button-group">
+        <a href="{% url 'placement_achievements' %}" class="btn secondary">
+            Add Achievement
+        </a>
+
+        <a href="{% url 'manage_placement' %}" class="btn manage">
+            Manage
+        </a>
+    </div>
+</div>
+        </div>
+
+        <a href="{% url 'admin_dashboard' %}" class="btn">Back to Dashboard</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background:#f4f6f9;
+}
+
+/* Heading */
+
+.section-title{
+    text-align:center;
+    color:#1f3b73;
+    margin:40px 0 25px;
+    font-size:30px;
+    font-weight:700;
+}
+
+/* Grid */
+
+.card-container{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:30px;
+    margin-bottom:50px;
+}
+
+/* Fixed Size Card */
+
+.card{
+    width:330px;
+    height:400px;          /* Fixed Height */
+    background:#fff;
+    border-radius:15px;
+    padding:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,.12);
+    transition:.3s;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+/* Images */
+
+.company-logo,
+.student-img{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    object-fit:cover;
+    margin:0 auto 15px;
+    border:3px solid #ddd;
+}
+
+/* Heading */
+
+.card h3{
+    text-align:center;
+    color:#0d3b66;
+    margin-bottom:12px;
+    font-size:22px;
+}
+
+/* Text */
+
+.card p{
+    margin:6px 0;
+    color:#444;
+    font-size:15px;
+    line-height:1.5;
+}
+
+.description{
+    margin-top:10px;
+    overflow-y:auto;
+    flex-grow:1;
+    color:#666;
+}
+
+/* Package */
+
+.package{
+    color:#198754;
+    font-size:20px;
+    font-weight:bold;
+}
+
+/* Caption */
+
+.caption{
+    margin-top:auto;
+    font-style:italic;
+    color:#666;
+}
+
+/* Status */
+
+.status{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    animation:blink 1s infinite;
+}
+
+.active{
+    background:#1fc71f;
+}
+
+.closed{
+    background:#ff2f2f;
+}
+
+.active-text{
+    color:#198754;
+    font-weight:bold;
+}
+
+.closed-text{
+    color:#dc3545;
+    font-weight:bold;
+}
+
+@keyframes blink{
+    0%{
+        opacity:1;
+    }
+    50%{
+        opacity:.2;
+    }
+    100%{
+        opacity:1;
+    }
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+    .card{
+        width:90%;
+        height:auto;
+        min-height:450px;
+    }
+
+}

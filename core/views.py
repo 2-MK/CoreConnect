@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .supabase_client import supabase
 from django.http import JsonResponse
 from django.contrib import messages
+from django.db import connection
 import json
 
 
@@ -81,75 +82,138 @@ def get_users(request):
     users = supabase.table("users").select("*").execute()
     return JsonResponse(users.data, safe=False)
 
+import json
+import random
+import string
+import bcrypt
+
+from django.http import JsonResponse
+from django.shortcuts import render
+
+from .supabase_client import supabase
+
+
+
 def add_user(request):
 
     if request.method == "POST":
 
-        data = json.loads(request.body)
+        try:
 
-        supabase.table("users").insert({
-            "ktu_id": data["ktu_id"],
-            "name": data["name"],
-            "passout_year": data["passout_year"],
-            "email": data["email"],
-            "contact": data["contact"]
-        }).execute()
+            data = json.loads(request.body)
 
-        return JsonResponse({
-            "message": "User Added"
-        })
+            # Generate random 4-character password
+            default_password = ''.join(
+                random.choices(string.ascii_uppercase + string.digits, k=4)
+            )
 
-    return JsonResponse({
-        "message": "Invalid Request"
-    })
+            hashed_password = bcrypt.hashpw(
+                default_password.encode(),
+                bcrypt.gensalt()
+            ).decode()
 
-def update_user(request):
+            supabase.table("users").insert({
 
-    if request.method == "PUT":
-
-        data = json.loads(request.body)
-
-        ktu_id = data["ktu_id"]
-
-        supabase.table("users")\
-            .update({
+                "ktu_id": data["ktu_id"],
                 "name": data["name"],
-                "passout_year": data["passout_year"],
+                "passout_year": data.get("passout_year"),
                 "email": data["email"],
-                "contact": data["contact"]
-            })\
-            .eq("ktu_id", ktu_id)\
-            .execute()
+                "ritemail": data.get("ritemail"),
+                "contact": data.get("contact"),
 
-        return JsonResponse({
-            "message": "User updated successfully"
-        })
+                # hashed password for login
+                "password": hashed_password,
+
+                # plain password for admin reference
+                "savedpassword": default_password
+
+            }).execute()
+
+            return JsonResponse({
+
+                "message": "User added successfully.",
+                "default_password": default_password
+
+            })
+
+        except Exception as e:
+            return JsonResponse({
+                "message": str(e)
+            }, status=500)
 
     return JsonResponse({
-        "message": "Invalid Request"
-    })
+        "message": "Invalid request"
+    }, status=400)
+
+def search_user(request, ktu_id):
+
+    result = (
+        supabase.table("users")
+        .select("*")
+        .eq("ktu_id", ktu_id)
+        .execute()
+    )
+
+    if result.data:
+        return JsonResponse(result.data[0], safe=False)
+
+    return JsonResponse({"message": "User not found"}, status=404)
 
 
-def delete_user(request):
+def delete_user(request, user_id):
 
     if request.method == "DELETE":
 
-        data = json.loads(request.body)
+        supabase.table("users").delete().eq("id", user_id).execute()
 
-        supabase.table("users")\
-            .delete()\
-            .eq("ktu_id", data["ktu_id"])\
-            .execute()
+        return JsonResponse({"message": "Deleted"})
+
+    return JsonResponse({"message": "Invalid"}, status=400)
+
+def update_user(request, user_id):
+
+    if request.method != "PUT":
 
         return JsonResponse({
-            "message": "User deleted successfully"
+
+            "message": "Invalid request"
+
+        }, status=400)
+
+    try:
+
+        data = json.loads(request.body)
+
+        supabase.table("users").update({
+
+            "name": data["name"],
+            "passout_year": data["passout_year"],
+            "email": data["email"],
+            "ritemail": data["ritemail"],
+            "contact": data["contact"]
+
+        }).eq("id", user_id).execute()
+
+        return JsonResponse({
+
+            "message": "User updated successfully"
+
         })
 
-    return JsonResponse({
-        "message": "Invalid Request"
-    })
+    except Exception as e:
+
+        return JsonResponse({
+
+            "message": str(e)
+
+        }, status=500)
 
 
+def student_manage(request):
+    return render(request, "admin/student_manage.html")
+
+def alumni_approval(request):
+    return render(request, "admin/alumni_approval.html")
 
 import bcrypt
 
@@ -709,3 +773,151 @@ def dis_placement(request):
     }
 
     return render(request, "home/placement.html", context)
+
+
+
+from django.shortcuts import render
+from django.http import HttpResponse
+import csv
+
+
+def student_manage(request):
+
+    search = request.GET.get("search", "").strip()
+    year = request.GET.get("year", "").strip()
+
+    # Fetch all students
+    result = supabase.table("users").select("*").order("name").execute()
+    students = result.data if result.data else []
+
+    # Search
+    if search:
+        students = [
+            s for s in students
+            if search.lower() in s["name"].lower()
+            or search.lower() in s["ktu_id"].lower()
+        ]
+
+    # Filter by year
+    if year:
+        students = [
+            s for s in students
+            if s["passout_year"] == year
+        ]
+
+    # Download CSV
+    if request.GET.get("download") == "1":
+
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="students.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow([
+            "Name",
+            "KTU ID",
+            "Saved Password"
+        ])
+
+        for s in students:
+            writer.writerow([
+                s["name"],
+                s["ktu_id"],
+                s["savedpassword"]
+            ])
+
+        return response
+
+    # Get unique years
+    years = sorted(
+        list(
+            set(
+                student["passout_year"]
+                for student in result.data
+                if student["passout_year"]
+            )
+        )
+    )
+
+    return render(
+        request,
+        "admin/student_manage.html",
+        {
+            "students": students,
+            "years": years,
+            "search": search,
+            "selected_year": year,
+        },
+    )
+
+def alumni_approval(request):
+
+    # Get available passout years
+    year_response = (
+        supabase.table("users")
+        .select("passout_year")
+        .not_.is_("passout_year", "null")
+        .execute()
+    )
+
+    years = sorted(
+        list(set([row["passout_year"] for row in year_response.data])),
+        reverse=True
+    )
+
+    selected_year = request.GET.get("year")
+    students = []
+
+    if selected_year:
+
+        student_response = (
+            supabase.table("users")
+            .select(
+                "id,ktu_id,name,email,contact,alumni_approval"
+            )
+            .eq("passout_year", selected_year)
+            .order("name")
+            .execute()
+        )
+
+        students = student_response.data
+
+    if request.method == "POST":
+
+        # Approve One Student
+        if "approve_student" in request.POST:
+
+            student_id = request.POST.get("student_id")
+
+            (
+                supabase.table("users")
+                .update({"alumni_approval": True})
+                .eq("id", student_id)
+                .execute()
+            )
+
+            return redirect(f"/alumni-approval/?year={selected_year}")
+
+        # Approve All Students
+        if "approve_all" in request.POST:
+
+            (
+                supabase.table("users")
+                .update({"alumni_approval": True})
+                .eq("passout_year", selected_year)
+                .execute()
+            )
+
+            return redirect(f"/alumni-approval/?year={selected_year}")
+
+    total = len(students)
+    approved = sum(1 for s in students if s["alumni_approval"])
+
+    context = {
+        "years": years,
+        "students": students,
+        "selected_year": selected_year,
+        "total": total,
+        "approved": approved,
+    }
+
+    return render(request, "admin/alumni_approval.html", context)

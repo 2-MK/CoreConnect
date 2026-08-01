@@ -27,7 +27,7 @@ body{
 
 .card{
     width:330px;
-    height:400px;          /* Fixed Height */
+    height:350px;          /* Fixed Height */
     background:#fff;
     border-radius:15px;
     padding:20px;

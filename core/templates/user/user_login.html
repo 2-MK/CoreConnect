@@ -1,46 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background: #fff;
+            width: 360px;
+            padding: 35px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 18px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 14px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
-<h2>First  Time Login</h2>
+<div class="login-container">
 
-{% if error %}
-<p style="color:red">{{ error }}</p>
-{% endif %}
+    <h2>First Time Login</h2>
 
-<form method="POST">
-    {% csrf_token %}
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
 
-    <input
-        type="text"
-        name="ktu_id"
-        placeholder="KTU ID"
-        required
-    >
+    <form method="POST">
+        {% csrf_token %}
 
-    <br><br>
+        <input
+            type="text"
+            name="ktu_id"
+            placeholder="KTU ID"
+            required
+        >
 
-    <input
-        type="text"
-        name="name"
-        placeholder="Full Name"
-        required
-    >
+        <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            required
+        >
 
-    <br><br>
+        <button type="submit">
+            Continue
+        </button>
+    </form>
 
-    <button type="submit">
-        Continue
-    </button>
+    <a href="{% url 'password_login' %}">
+        Already have a password?
+    </a>
 
-</form>
-
-<a href="{% url 'password_login' %}">
-    Already have password?
-</a>
+</div>
 
 </body>
 </html>

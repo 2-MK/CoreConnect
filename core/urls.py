@@ -45,4 +45,5 @@ urlpatterns = [
         views.alumni_approval,
         name="alumni_approval"
     ),
+    path("alumni_status/", views.alumni_status, name="alumni_status"),
 ]

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alumni Status</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background:#f5f5f5;
+        }
+
+        .container{
+            width:700px;
+            margin:40px auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,.2);
+        }
+
+        h2{
+            text-align:center;
+            margin-bottom:25px;
+        }
+
+        label{
+            font-weight:bold;
+            display:block;
+            margin-top:15px;
+        }
+
+        input{
+            width:100%;
+            padding:10px;
+            margin-top:5px;
+            box-sizing:border-box;
+        }
+
+        input[readonly]{
+            background:#ececec;
+        }
+
+        button{
+            margin-top:25px;
+            width:100%;
+            padding:12px;
+            background:#007bff;
+            color:white;
+            border:none;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        button:hover{
+            background:#0056b3;
+        }
+
+        .msg{
+            text-align:center;
+            color:green;
+            margin-bottom:20px;
+        }
+
+        .not-approved{
+            text-align:center;
+            color:red;
+            font-size:22px;
+            padding:60px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+{% if approved %}
+
+<h2>Alumni Details</h2>
+
+{% if success %}
+<div class="msg">{{success}}</div>
+{% endif %}
+
+<form method="POST">
+
+{% csrf_token %}
+
+<label>KTU ID</label>
+<input
+type="text"
+value="{{user.ktu_id}}"
+readonly>
+
+<label>Name</label>
+<input
+type="text"
+value="{{user.name}}"
+readonly>
+
+<label>Email</label>
+<input
+type="email"
+name="email"
+value="{{ alumni.email|default:user.email }}"
+required>
+
+<label>RIT Mail</label>
+<input
+type="text"
+value="{{user.ritemail}}"
+readonly>
+
+<label>Contact</label>
+<input
+type="text"
+name="contact"
+value="{{ alumni.contact|default:user.contact }}"
+required>
+
+<label>Passout Year</label>
+<input
+type="text"
+value="{{ user.passout_year }}"
+readonly>
+
+<label>Designation</label>
+<input
+type="text"
+name="designation"
+value="{{ alumni.designation }}"
+required>
+
+<label>Company Name</label>
+<input
+type="text"
+name="company_name"
+value="{{ alumni.company_name }}"
+required>
+
+<button type="submit">
+Save Details
+</button>
+
+</form>
+
+{% else %}
+
+<div class="not-approved">
+
+🎓
+<br><br>
+
+<h2>You are not an alumni yet.</h2>
+
+<p>Please complete your studies first.</p>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

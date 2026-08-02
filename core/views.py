@@ -391,8 +391,13 @@ def user_profile_update(request):
 
     user_id = request.session.get("user_id")
 
-    # Fetch current user data
-    result = supabase.table("users").select("*").eq("id", user_id).execute()
+    result = (
+        supabase.table("users")
+        .select("*")
+        .eq("id", user_id)
+        .execute()
+    )
+
     user = result.data[0] if result.data else None
 
     if not user:
@@ -400,25 +405,19 @@ def user_profile_update(request):
 
     if request.method == "POST":
 
-        name = request.POST.get("name")
         email = request.POST.get("email")
         contact = request.POST.get("contact")
-        designation = request.POST.get("designation")
-        company_name = request.POST.get("company_name")
+        parent_contact = request.POST.get("parent_contact")
 
         supabase.table("users").update({
-            "name": name,
             "email": email,
             "contact": contact,
-            "designation": designation,
-            "company_name": company_name
+            "parent_contact": parent_contact
         }).eq("id", user_id).execute()
 
-        request.session["user_name"] = name
-        
-        messages.success(request, "Profile updated successfully")
+        messages.success(request, "Profile updated successfully.")
 
-        return redirect("user_dashboard")
+        return redirect("user_profile_update")
 
     return render(
         request,
@@ -428,7 +427,6 @@ def user_profile_update(request):
         }
     )
 
-
 def user_logout(request):
 
     request.session.flush()
@@ -437,91 +435,71 @@ def user_logout(request):
 
 
 def alumni_directory(request):
-    
+
     if not request.session.get("admin_name"):
         return redirect("admins")
-    
+
     alumni = []
-    search_query = None
-    search_type = None
+
     passout_year = ""
     name = ""
     ktu_id = ""
-    
+
+    search_query = None
+    search_type = None
+
     if request.method == "POST":
-        search_type = request.POST.get("search_type")
-        search_query = request.POST.get("search_query")
+
         passout_year = request.POST.get("passout_year", "").strip()
         name = request.POST.get("name", "").strip()
         ktu_id = request.POST.get("ktu_id", "").strip()
 
+        query = supabase.table("alumni_details").select("*")
+
+        # Filter by Passout Year
         if passout_year:
+            query = query.eq("passout_year", passout_year)
             search_type = "passout_year"
             search_query = passout_year
-            response = (
-                supabase.table("users")
-                .select("*")
-                .eq("passout_year", search_query)
-                .execute()
-            )
-        elif name:
-            search_type = "name"
-            search_query = name
-            response = (
-                supabase.table("users")
-                .select("*")
-                .ilike("name", f"%{search_query}%")
-                .execute()
-            )
-        elif ktu_id:
-            search_type = "ktu_id"
-            search_query = ktu_id
-            response = (
-                supabase.table("users")
-                .select("*")
-                .eq("ktu_id", search_query)
-                .execute()
-            )
-        elif search_type and search_query:
-            if search_type == "passout_year":
-                response = (
-                    supabase.table("users")
-                    .select("*")
-                    .eq("passout_year", search_query)
-                    .execute()
-                )
-            elif search_type == "name":
-                response = (
-                    supabase.table("users")
-                    .select("*")
-                    .ilike("name", f"%{search_query}%")
-                    .execute()
-                )
-            elif search_type == "ktu_id":
-                response = (
-                    supabase.table("users")
-                    .select("*")
-                    .eq("ktu_id", search_query)
-                    .execute()
-                )
-            else:
-                response = None
-        else:
-            response = None
-            
-        alumni = response.data if response else []
-    
+
+        # Optional Name filter
+        if name:
+            query = query.ilike("name", f"%{name}%")
+            if not search_type:
+                search_type = "name"
+                search_query = name
+
+        # Optional KTU ID filter
+        if ktu_id:
+            query = query.eq("ktu_id", ktu_id)
+            if not search_type:
+                search_type = "ktu_id"
+                search_query = ktu_id
+
+        response = query.order("passout_year").order("name").execute()
+        alumni = response.data
+
+    else:
+        response = (
+            supabase.table("alumni_details")
+            .select("*")
+            .order("passout_year")
+            .order("name")
+            .execute()
+        )
+        alumni = response.data
+
     return render(
         request,
         "admin/alumni_directory.html",
         {
             "alumni": alumni,
-            "search_query": search_query,
-            "search_type": search_type,
             "passout_year": passout_year,
             "name": name,
             "ktu_id": ktu_id,
-        }
+            "search_query": search_query,
+            "search_type": search_type,
+        },
     )
 
 def placement_management(request):
@@ -921,3 +899,101 @@ def alumni_approval(request):
     }
 
     return render(request, "admin/alumni_approval.html", context)
+
+
+def alumni_status(request):
+
+    ktu_id = request.session.get("ktu_id")
+
+    if not ktu_id:
+        return redirect("login")
+
+    user_res = (
+        supabase.table("users")
+        .select("*")
+        .eq("ktu_id", ktu_id)
+        .execute()
+    )
+
+    if not user_res.data:
+        return render(request, "user/alumni_status.html", {
+            "error": "User not found."
+        })
+
+    user = user_res.data[0]
+
+    if not user["alumni_approval"]:
+        return render(request, "user/alumni_status.html", {
+            "approved": False
+        })
+
+    if request.method == "POST":
+
+        email = request.POST.get("email")
+        contact = request.POST.get("contact")
+        designation = request.POST.get("designation")
+        company_name = request.POST.get("company_name")
+
+        data = {
+            "ktu_id": user["ktu_id"],
+            "name": user["name"],
+            "email": email,
+            "ritemail": user["ritemail"],
+            "contact": contact,
+            "passout_year": user["passout_year"],
+            "designation": designation,
+            "company_name": company_name,
+        }
+
+        existing = (
+            supabase.table("alumni_details")
+            .select("*")
+            .eq("ktu_id", ktu_id)
+            .execute()
+        )
+
+        if existing.data:
+            (
+                supabase.table("alumni_details")
+                .update(data)
+                .eq("ktu_id", ktu_id)
+                .execute()
+            )
+        else:
+            (
+                supabase.table("alumni_details")
+                .insert(data)
+                .execute()
+            )
+
+        alumni = data
+
+        return render(
+            request,
+            "user/alumni_status.html",
+            {
+                "approved": True,
+                "user": user,
+                "alumni": alumni,
+                "success": "Alumni details saved successfully."
+            }
+        )
+
+    details = (
+        supabase.table("alumni_details")
+        .select("*")
+        .eq("ktu_id", ktu_id)
+        .execute()
+    )
+
+    alumni = details.data[0] if details.data else {}
+
+    return render(
+        request,
+        "user/alumni_status.html",
+        {
+            "approved": True,
+            "user": user,
+            "alumni": alumni
+        }
+    )

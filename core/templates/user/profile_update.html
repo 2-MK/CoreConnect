@@ -1,231 +1,284 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Update Profile</title>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+    <title>Profile Update</title>
 
-        .container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
-        }
+    {% load static %}
 
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 24px;
-            text-align: center;
-        }
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
 
-        label {
-            display: block;
-            color: #333;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'corecss/profile_update.css' %}">
 
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="tel"]:focus {
-            outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
-        }
-
-        .readonly-field {
-            background-color: #f9f9f9;
-            color: #666;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 30px;
-        }
-
-        button,
-        a.btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-
-        button[type="submit"] {
-            background-color: #28a745;
-            color: white;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #218838;
-        }
-
-        a.btn-cancel {
-            background-color: #6c757d;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        a.btn-cancel:hover {
-            background-color: #5a6268;
-        }
-
-        .info-text {
-            color: #666;
-            font-size: 12px;
-            margin-top: 3px;
-        }
-
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert {
-            animation: slideDown 0.3s ease-in-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .alert.fade-out {
-            animation: fadeOut 0.3s ease-in-out forwards;
-        }
-
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-        }
-    </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h1>Update Profile</h1>
+<div class="page-wrapper">
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-success">
-                {{ message }}
+    <div class="profile-card">
+
+        <!-- ================= HEADER ================= -->
+
+        <div class="profile-header">
+
+            <div class="avatar">
+
+                {% if user.name %}
+                    {{ user.name|slice:":1"|upper }}
+                {% else %}
+                    <i class="fa-solid fa-user"></i>
+                {% endif %}
+
             </div>
-        {% endfor %}
-    {% endif %}
 
-    <form method="POST">
-        {% csrf_token %}
+            <h1>Update Profile</h1>
 
-        <div class="form-group">
-            <label>KTU ID</label>
-            <input type="text" value="{{ user.ktu_id }}" readonly class="readonly-field">
-            <p class="info-text">KTU ID cannot be changed</p>
+            <p>
+                Keep your contact information up to date.
+            </p>
+
         </div>
 
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" value="{{ user.name }}" required>
-        </div>
+        <!-- ================= SUCCESS MESSAGE ================= -->
 
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" value="{{ user.email }}" required>
-        </div>
+        {% if messages %}
 
-        <div class="form-group">
-            <label for="contact">Contact</label>
-            <input type="tel" id="contact" name="contact" value="{{ user.contact }}" required>
-        </div>
+            {% for message in messages %}
 
-        <div class="form-group">
-            <label for="designation">Designation</label>
-            <input type="text" id="designation" name="designation" value="{{ user.designation }}" required>
-        </div>
+            <div class="alert success-message">
 
-        <div class="form-group">
-            <label for="company_name">Company Name</label>
-            <input type="text" id="company_name" name="company_name" value="{{ user.company_name }}" required>
-        </div>
-            <button type="submit">Update Profile</button>
-            <a href="{% url 'user_dashboard' %}" class="btn btn-cancel">Cancel</a>
-        </div>
-    </form>
+                <i class="fa-solid fa-circle-check"></i>
+
+                <span>{{ message }}</span>
+
+            </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+        <!-- ================= FORM ================= -->
+
+        <form method="POST" id="profileForm">
+
+            {% csrf_token %}
+
+            <!-- ================= ACADEMIC INFO ================= -->
+
+            <div class="section">
+
+                <div class="section-header">
+
+                    <i class="fa-solid fa-graduation-cap"></i>
+
+                    <h2>Academic Information</h2>
+
+                </div>
+
+                <div class="grid">
+
+                    <div class="form-group">
+
+                        <label>
+
+                            <i class="fa-solid fa-id-card"></i>
+
+                            KTU ID
+
+                        </label>
+
+                        <input
+                            type="text"
+                            value="{{ user.ktu_id }}"
+                            readonly
+                            class="readonly">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+
+                            <i class="fa-solid fa-envelope-circle-check"></i>
+
+                            RIT Email
+
+                        </label>
+
+                        <input
+                            type="text"
+                            value="{{ user.ritemail }}"
+                            readonly
+                            class="readonly">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+
+                            <i class="fa-solid fa-calendar-days"></i>
+
+                            Passout Year
+
+                        </label>
+
+                        <input
+                            type="text"
+                            value="{{ user.passout_year }}"
+                            readonly
+                            class="readonly">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+
+                            <i class="fa-solid fa-user-check"></i>
+
+                            Alumni Status
+
+                        </label>
+
+                        {% if user.alumni_approval %}
+
+                        <input
+                            type="text"
+                            value="Approved"
+                            readonly
+                            class="readonly approved">
+
+                        {% else %}
+
+                        <input
+                            type="text"
+                            value="Pending Approval"
+                            readonly
+                            class="readonly pending">
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================= CONTACT INFO ================= -->
+
+            <div class="section">
+
+                <div class="section-header">
+
+                    <i class="fa-solid fa-address-book"></i>
+
+                    <h2>Contact Information</h2>
+
+                </div>
+
+                <div class="grid">
+
+                    <div class="form-group">
+
+                        <label>
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                            Personal Email
+
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            value="{{ user.email }}"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+
+                            <i class="fa-solid fa-phone"></i>
+
+                            Mobile Number
+
+                        </label>
+
+                        <input
+                            type="tel"
+                            name="contact"
+                            value="{{ user.contact }}"
+                            maxlength="10"
+                            required>
+
+                    </div>
+
+                    <div class="form-group full-width">
+
+                        <label>
+
+                            <i class="fa-solid fa-user-group"></i>
+
+                            Parent Contact Number
+
+                        </label>
+
+                        <input
+                            type="tel"
+                            name="parent_contact"
+                            value="{{ user.parent_contact }}"
+                            maxlength="10"
+                            required>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================= BUTTONS ================= -->
+
+            <div class="button-area">
+
+                <button type="submit" class="btn btn-save">
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    Save Changes
+
+                </button>
+
+                <a href="{% url 'user_dashboard' %}" class="btn btn-back">
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                    Back to Dashboard
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
 </div>
 
-<script>
-    // Auto-dismiss success messages after 3 seconds
-    const alerts = document.querySelectorAll('.alert-success');
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            alert.classList.add('fade-out');
-            setTimeout(() => {
-                alert.remove();
-            }, 300);
-        }, 3000);
-    });
-</script>
+<script src="{% static 'js/profile_update.js' %}"></script>
 
 </body>
 </html>

@@ -997,3 +997,35 @@ def alumni_status(request):
             "alumni": alumni
         }
     )
+
+def events(request):
+
+    if request.method == "POST":
+
+        data = {
+            "event_name": request.POST.get("event_name"),
+            "description": request.POST.get("description"),
+            "category": request.POST.get("category"),
+            "venue": request.POST.get("venue"),
+            "event_date": request.POST.get("event_date"),
+            "start_time": request.POST.get("start_time"),
+            "end_time": request.POST.get("end_time"),
+            "registration_deadline": request.POST.get("registration_deadline"),
+            "max_participants": int(request.POST.get("max_participants")),
+            "organizer": request.POST.get("organizer")
+        }
+
+        supabase.table("events").insert(data).execute()
+
+        return redirect("events")
+
+    events = (
+        supabase.table("events")
+        .select("*")
+        .order("event_date")
+        .execute()
+    )
+
+    return render(request, "admin/events.html", {
+        "events": events.data
+    })

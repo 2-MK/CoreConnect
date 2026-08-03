@@ -1,109 +1,62 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-
-    <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial, sans-serif;
-        }
-
-        body{
-            background:#f4f6f9;
-            padding:30px;
-        }
-
-        h1{
-            text-align:center;
-            color:#333;
-            margin-bottom:10px;
-        }
-
-        p{
-            text-align:center;
-            color:#666;
-            margin-bottom:30px;
-        }
-
-        .dashboard{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-            gap:20px;
-        }
-
-        .card-link{
-            text-decoration:none;
-            color:inherit;
-        }
-
-        .card{
-            background:white;
-            border-radius:15px;
-            padding:30px;
-            text-align:center;
-            box-shadow:0 4px 10px rgba(0,0,0,0.1);
-            transition:0.3s;
-            cursor:pointer;
-        }
-
-        .card:hover{
-            transform:translateY(-5px);
-        }
-
-        .card h2{
-            color:#2c3e50;
-            margin-bottom:15px;
-        }
-
-        .card p{
-            color:#3498db;
-            font-size:28px;
-            font-weight:bold;
-            margin:0;
-        }
-    </style>
+    <!-- Importing a clean, modern font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="{% static 'corecss/adminstyle.css' %}">
 </head>
 <body>
 
-<h1>Welcome Admin</h1>
-<p>Login Successful</p>
-
-<div class="dashboard">
-
-    <a href="{% url 'profile_update' %}" class="card-link">
-        <div class="card">
-            <h2>Profile</h2>
-            <p>Update</p>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome Admin</h1>
+            <p>Login Successful</p>
         </div>
-    </a>
 
-    <a href="{% url 'user_details' %}" class="card-link">
+        <div class="dashboard">
+
+            <a href="{% url 'profile_update' %}" class="card-link">
+                <div class="card">
+                    <h2>Profile</h2>
+                    <p class="text-highlight">Update</p>
+                </div>
+            </a>
+
+            <a href="{% url 'user_details' %}" class="card-link">
+                <div class="card">
+                    <h2>Users</h2>
+                    <p>120</p>
+                </div>
+            </a>
+
+            <a href="{% url 'alumni_directory' %}" class="card-link">
+                <div class="card">
+                    <h2>Alumni Directory</h2>
+                    <p>45</p>
+                </div>
+            </a>
+
+            <a href="{% url 'placement_management' %}" class="card-link">
+                <div class="card">
+                    <h2>Placement</h2>
+                    <p>85</p>
+                </div>
+            </a>
+
+            <a href="{% url 'events' %}" class="card-link">
     <div class="card">
-        <h2>Users</h2>
-        <p>120</p>
+        <h2>Events</h2>
+        <p>85</p>
     </div>
 </a>
 
-    <a href="{% url 'alumni_directory' %}" class="card-link">
-        <div class="card">
-            <h2>Alumni Directory</h2>
-            <p>45</p>
         </div>
-    </a>
-
-    <a href="{% url 'placement_management' %}" class="card-link">
-        <div class="card">
-            <h2>Placement Management</h2>
-            <p>85</p>
-        </div>
-    </a>
-
-   
-
-</div>
+    </div>
 
 </body>
 </html>

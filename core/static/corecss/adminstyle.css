@@ -1,0 +1,149 @@
+/* Base Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+/* Background setup with blurred blobs to enhance the glass/clay effect */
+body {
+    background: #99b9e6;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow-x: hidden;
+    z-index: 0;
+}
+
+/* Abstract Background Shapes */
+body::before, body::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+body::before {
+    width: 500px;
+    height: 500px;
+    background: #6098f3;
+    top: -150px;
+    left: -100px;
+    filter: blur(80px);
+}
+
+body::after {
+    width: 400px;
+    height: 400px;
+    background: #d0ecf9;
+    bottom: -100px;
+    right: -50px;
+    filter: blur(90px);
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+}
+
+/* Header Styling */
+.header h1 {
+    text-align: center;
+    color: #2d3748;
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.header p {
+    text-align: center;
+    color: #718096;
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+/* Grid Layout */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 35px;
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    outline: none;
+}
+
+/* 
+  Claymorphism + Glassmorphism Card 
+  - Translucent background (rgba)
+  - Backdrop filter (blur)
+  - Heavy border-radius
+  - Outer drop shadows + Inner inset shadows (Clay 3D effect)
+*/
+.card {
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 35px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    
+    /* The Claymorphic Box Shadow Magic */
+    box-shadow: 
+        10px 10px 20px rgba(166, 180, 200, 0.4), /* Outer dark shadow */
+        -10px -10px 20px rgba(255, 255, 255, 0.8), /* Outer light shadow */
+        inset 4px 4px 10px rgba(255, 255, 255, 0.7), /* Inner top highlight */
+        inset -4px -4px 15px rgba(166, 180, 200, 0.2); /* Inner bottom shadow */
+}
+
+/* Hover State - Lifts up slightly */
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+        15px 15px 25px rgba(166, 180, 200, 0.5), 
+        -15px -15px 25px rgba(255, 255, 255, 0.9), 
+        inset 4px 4px 10px rgba(255, 255, 255, 0.8), 
+        inset -4px -4px 15px rgba(166, 180, 200, 0.15);
+}
+
+/* Active State - Squishes down like clay */
+.card:active {
+    transform: translateY(2px);
+    box-shadow: 
+        5px 5px 10px rgba(166, 180, 200, 0.3), 
+        -5px -5px 10px rgba(255, 255, 255, 0.6), 
+        inset 8px 8px 15px rgba(166, 180, 200, 0.3), 
+        inset -8px -8px 15px rgba(255, 255, 255, 0.7);
+}
+
+/* Card Typography */
+.card h2 {
+    color: #4a5568;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.card p {
+    color: #3b82f6;
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+}
+
+.card p.text-highlight {
+    font-size: 1.8rem;
+    margin-top: 15px;
+}

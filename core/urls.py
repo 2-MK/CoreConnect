@@ -46,4 +46,6 @@ urlpatterns = [
         name="alumni_approval"
     ),
     path("alumni_status/", views.alumni_status, name="alumni_status"),
+    path("events/", views.events, name="events"),
+
 ]

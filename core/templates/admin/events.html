@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Management</title>
+</head>
+<body>
+
+<h2>Add Event</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <input type="text" name="event_name" placeholder="Event Name" required><br><br>
+
+    <textarea
+        name="description"
+        placeholder="Description"></textarea><br><br>
+
+    <input
+        type="text"
+        name="category"
+        placeholder="Category"
+        required><br><br>
+
+    <input
+        type="text"
+        name="venue"
+        placeholder="Venue"
+        required><br><br>
+
+    <label>Event Date</label><br>
+    <input
+        type="date"
+        name="event_date"
+        required><br><br>
+
+    <label>Start Time</label><br>
+    <input
+        type="time"
+        name="start_time"
+        required><br><br>
+
+    <label>End Time</label><br>
+    <input
+        type="time"
+        name="end_time"
+        required><br><br>
+
+    <label>Registration Deadline</label><br>
+    <input
+        type="date"
+        name="registration_deadline"
+        required><br><br>
+
+    <input
+        type="number"
+        name="max_participants"
+        placeholder="Maximum Participants"
+        required><br><br>
+
+    <input
+        type="text"
+        name="organizer"
+        placeholder="Organizer"
+        required><br><br>
+
+    <button type="submit">
+        Add Event
+    </button>
+
+</form>
+
+<hr>
+
+<h2>Events</h2>
+
+<table border="1" cellpadding="8">
+
+<tr>
+    <th>ID</th>
+    <th>Event</th>
+    <th>Category</th>
+    <th>Date</th>
+    <th>Venue</th>
+    <th>Organizer</th>
+</tr>
+
+{% for event in events %}
+
+<tr>
+    <td>{{ event.id }}</td>
+    <td>{{ event.event_name }}</td>
+    <td>{{ event.category }}</td>
+    <td>{{ event.event_date }}</td>
+    <td>{{ event.venue }}</td>
+    <td>{{ event.organizer }}</td>
+</tr>
+
+{% empty %}
+
+<tr>
+    <td colspan="6">No Events Available</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

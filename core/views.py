@@ -1177,3 +1177,22 @@ def cancel_registration(request, event_name):
     )
 
     return redirect("user_events")
+
+def view_participants(request):
+
+    response = (
+        supabase.table("event_participants")
+        .select("*")
+        .order("registered_at", desc=True)
+        .execute()
+    )
+
+    participants = response.data
+
+    return render(
+        request,
+        "admin/view_participants.html",
+        {
+            "participants": participants
+        },
+    )

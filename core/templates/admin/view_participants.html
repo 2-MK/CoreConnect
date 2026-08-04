@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Event Participants</title>
+
+    <link rel="stylesheet"
+          href="{% static 'corecss/events.css' %}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Event Participants</h1>
+
+        <p>Registered Students</p>
+
+    </div>
+
+    <div class="card table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Event</th>
+                    <th>KTU ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Registered At</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for p in participants %}
+
+                <tr>
+
+                    <td>{{ p.id }}</td>
+
+                    <td>{{ p.event_name }}</td>
+
+                    <td>{{ p.ktu_id }}</td>
+
+                    <td>{{ p.name }}</td>
+
+                    <td>{{ p.email }}</td>
+
+                    <td>{{ p.contact }}</td>
+
+                    <td>{{ p.registered_at }}</td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="7">
+
+                        No participants found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -183,15 +183,33 @@
 
         <div class="card table-card">
 
-            <div class="table-header">
+            <div class="table-header-grid">
 
-                <h2>Events List</h2>
+    <!-- Left Card (5/6 Width) -->
+    <div class="table-header-main">
 
-                <input type="text"
-                       id="searchInput"
-                       placeholder="Search Event...">
+        <h2>Events List</h2>
 
-            </div>
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search Event..."
+        >
+
+    </div>
+
+    <!-- Right Card (1/6 Width) -->
+    <div class="participants-card">
+
+        <h3>View Participants</h3>
+
+        <a href="{% url 'view_participants' %}" class="participants-btn">
+    View
+</a>
+
+    </div>
+
+</div>
 
             <table id="eventTable">
 

@@ -65,4 +65,5 @@ urlpatterns = [
     name="cancel_registration",
     ),
 
+    path("participants/", views.view_participants, name="view_participants"),
 ]

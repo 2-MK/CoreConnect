@@ -1000,6 +1000,29 @@ def alumni_status(request):
 
 def events(request):
 
+    # ---------------- DELETE ----------------
+    delete_id = request.GET.get("delete")
+
+    if delete_id:
+        supabase.table("events").delete().eq("id", delete_id).execute()
+        return redirect("events")
+
+    # ---------------- EDIT ----------------
+    edit_event = None
+    edit_id = request.GET.get("edit")
+
+    if edit_id:
+        res = (
+            supabase.table("events")
+            .select("*")
+            .eq("id", edit_id)
+            .execute()
+        )
+
+        if res.data:
+            edit_event = res.data[0]
+
+    # ---------------- INSERT / UPDATE ----------------
     if request.method == "POST":
 
         data = {
@@ -1012,10 +1035,24 @@ def events(request):
             "end_time": request.POST.get("end_time"),
             "registration_deadline": request.POST.get("registration_deadline"),
             "max_participants": int(request.POST.get("max_participants")),
-            "organizer": request.POST.get("organizer")
+            "organizer": request.POST.get("organizer"),
         }
 
-        supabase.table("events").insert(data).execute()
+        event_id = request.POST.get("event_id")
+
+        if event_id:
+            (
+                supabase.table("events")
+                .update(data)
+                .eq("id", event_id)
+                .execute()
+            )
+        else:
+            (
+                supabase.table("events")
+                .insert(data)
+                .execute()
+            )
 
         return redirect("events")
 
@@ -1026,6 +1063,117 @@ def events(request):
         .execute()
     )
 
-    return render(request, "admin/events.html", {
-        "events": events.data
-    })
+    return render(
+        request,
+        "admin/events.html",
+        {
+            "events": events.data,
+            "edit_event": edit_event,
+        },
+    )
+
+def user_events(request):
+
+    ktu_id = request.session.get("ktu_id")
+
+    events = (
+        supabase.table("events")
+        .select("*")
+        .order("event_date")
+        .execute()
+    )
+
+    registrations = (
+        supabase.table("event_participants")
+        .select("event_name")
+        .eq("ktu_id", ktu_id)
+        .execute()
+    )
+
+    registered_events = [
+        row["event_name"]
+        for row in registrations.data
+    ]
+
+    return render(
+        request,
+        "user/events.html",
+        {
+            "events": events.data,
+            "registered_events": registered_events
+        }
+    )
+
+def register_event(request, event_id):
+
+    ktu_id = request.session.get("ktu_id")
+
+    if not ktu_id:
+        return redirect("password_login")
+
+    user = (
+        supabase.table("users")
+        .select("*")
+        .eq("ktu_id", ktu_id)
+        .execute()
+    )
+
+    if not user.data:
+        return redirect("user_events")
+
+    user = user.data[0]
+
+    event = (
+        supabase.table("events")
+        .select("*")
+        .eq("id", event_id)
+        .execute()
+    )
+
+    if not event.data:
+        return redirect("user_events")
+
+    event = event.data[0]
+
+    check = (
+        supabase.table("event_participants")
+        .select("*")
+        .eq("ktu_id", ktu_id)
+        .eq("event_name", event["event_name"])
+        .execute()
+    )
+
+    if check.data:
+        return redirect("user_events")
+
+    data = {
+
+        "event_name": event["event_name"],
+
+        "ktu_id": user["ktu_id"],
+
+        "name": user["name"],
+
+        "email": user["email"],
+
+        "contact": user["contact"]
+
+    }
+
+    supabase.table("event_participants").insert(data).execute()
+
+    return redirect("user_events")
+
+def cancel_registration(request, event_name):
+
+    ktu_id = request.session.get("ktu_id")
+
+    (
+        supabase.table("event_participants")
+        .delete()
+        .eq("ktu_id", ktu_id)
+        .eq("event_name", event_name)
+        .execute()
+    )
+
+    return redirect("user_events")

@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Events</title>
+
+    <link rel="stylesheet" href="{% static 'css/user_events.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+   <link rel="stylesheet" href="{% static 'corecss/user_events.css' %}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>📅 Upcoming Events</h1>
+
+        <p>Register and participate in departmental events.</p>
+
+    </div>
+
+    {% if events %}
+
+    <div class="events-grid">
+
+        {% for event in events %}
+
+        <div class="event-card">
+
+            <div class="event-top">
+
+                <span class="category">
+
+                    {{ event.category }}
+
+                </span>
+
+                <span class="date">
+
+                    {{ event.event_date }}
+
+                </span>
+
+            </div>
+
+            <h2>
+
+                {{ event.event_name }}
+
+            </h2>
+
+            <p class="description">
+
+                {{ event.description }}
+
+            </p>
+
+            <div class="details">
+
+                <div>
+
+                    <i class="fa-solid fa-location-dot"></i>
+
+                    {{ event.venue }}
+
+                </div>
+
+                <div>
+
+                    <i class="fa-solid fa-clock"></i>
+
+                    {{ event.start_time }} - {{ event.end_time }}
+
+                </div>
+
+                <div>
+
+                    <i class="fa-solid fa-user-group"></i>
+
+                    {{ event.max_participants }} Participants
+
+                </div>
+
+                <div>
+
+                    <i class="fa-solid fa-user"></i>
+
+                    {{ event.organizer }}
+
+                </div>
+
+                <div>
+
+                    <i class="fa-solid fa-calendar-check"></i>
+
+                    Registration Ends:
+                    {{ event.registration_deadline }}
+
+                </div>
+
+            </div>
+
+            <div class="buttons">
+
+                    {% if event.event_name in registered_events %}
+
+                    <button class="registered-btn" disabled>
+
+                    ✓ Registered
+
+                    </button>
+
+                    <a href="{% url 'cancel_registration' event.event_name %}"
+                    class="cancel-btn"
+                    onclick="return confirm('Cancel your registration?')">
+
+                    Cancel Registration
+
+                    </a>
+
+                    {% else %}
+
+                    <a href="{% url 'register_event' event.id %}"
+                    class="register-btn">
+
+                    Register Now
+
+                    </a>
+
+                    {% endif %}
+
+                    </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty">
+
+        <i class="fa-solid fa-calendar-xmark"></i>
+
+        <h2>No Events Available</h2>
+
+        <p>Please check again later.</p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

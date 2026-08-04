@@ -1,110 +1,275 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Event Management</title>
+
+    <link rel="stylesheet" href="{% static 'corecss/events.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
 
-<h2>Add Event</h2>
+<div class="container">
 
-<form method="POST">
-    {% csrf_token %}
+    <div class="header">
 
-    <input type="text" name="event_name" placeholder="Event Name" required><br><br>
+        <h1>Event Management</h1>
 
-    <textarea
-        name="description"
-        placeholder="Description"></textarea><br><br>
+        <p>Create, Edit, Update and Delete Events</p>
 
-    <input
-        type="text"
-        name="category"
-        placeholder="Category"
-        required><br><br>
+    </div>
 
-    <input
-        type="text"
-        name="venue"
-        placeholder="Venue"
-        required><br><br>
+    <div class="content">
 
-    <label>Event Date</label><br>
-    <input
-        type="date"
-        name="event_date"
-        required><br><br>
+        <!-- ================= FORM ================= -->
 
-    <label>Start Time</label><br>
-    <input
-        type="time"
-        name="start_time"
-        required><br><br>
+        <div class="card form-card">
 
-    <label>End Time</label><br>
-    <input
-        type="time"
-        name="end_time"
-        required><br><br>
+            <h2>
 
-    <label>Registration Deadline</label><br>
-    <input
-        type="date"
-        name="registration_deadline"
-        required><br><br>
+                {% if edit_event %}
 
-    <input
-        type="number"
-        name="max_participants"
-        placeholder="Maximum Participants"
-        required><br><br>
+                    Update Event
 
-    <input
-        type="text"
-        name="organizer"
-        placeholder="Organizer"
-        required><br><br>
+                {% else %}
 
-    <button type="submit">
-        Add Event
-    </button>
+                    Add Event
 
-</form>
+                {% endif %}
 
-<hr>
+            </h2>
 
-<h2>Events</h2>
+            <form method="POST">
 
-<table border="1" cellpadding="8">
+                {% csrf_token %}
 
-<tr>
-    <th>ID</th>
-    <th>Event</th>
-    <th>Category</th>
-    <th>Date</th>
-    <th>Venue</th>
-    <th>Organizer</th>
-</tr>
+                <input type="hidden"
+                       name="event_id"
+                       value="{{ edit_event.id }}">
 
-{% for event in events %}
+                <label>Event Name</label>
 
-<tr>
-    <td>{{ event.id }}</td>
-    <td>{{ event.event_name }}</td>
-    <td>{{ event.category }}</td>
-    <td>{{ event.event_date }}</td>
-    <td>{{ event.venue }}</td>
-    <td>{{ event.organizer }}</td>
-</tr>
+                <input type="text"
+                       name="event_name"
+                       value="{{ edit_event.event_name }}"
+                       required>
 
-{% empty %}
+                <label>Description</label>
 
-<tr>
-    <td colspan="6">No Events Available</td>
-</tr>
+                <textarea
+                    name="description">{{ edit_event.description }}</textarea>
 
-{% endfor %}
+                <label>Category</label>
 
-</table>
+                <input type="text"
+                       name="category"
+                       value="{{ edit_event.category }}"
+                       required>
+
+                <label>Venue</label>
+
+                <input type="text"
+                       name="venue"
+                       value="{{ edit_event.venue }}"
+                       required>
+
+                <div class="grid2">
+
+                    <div>
+
+                        <label>Event Date</label>
+
+                        <input type="date"
+                               name="event_date"
+                               value="{{ edit_event.event_date }}"
+                               required>
+
+                    </div>
+
+                    <div>
+
+                        <label>Registration Deadline</label>
+
+                        <input type="date"
+                               name="registration_deadline"
+                               value="{{ edit_event.registration_deadline }}"
+                               required>
+
+                    </div>
+
+                </div>
+
+                <div class="grid2">
+
+                    <div>
+
+                        <label>Start Time</label>
+
+                        <input type="time"
+                               name="start_time"
+                               value="{{ edit_event.start_time }}"
+                               required>
+
+                    </div>
+
+                    <div>
+
+                        <label>End Time</label>
+
+                        <input type="time"
+                               name="end_time"
+                               value="{{ edit_event.end_time }}"
+                               required>
+
+                    </div>
+
+                </div>
+
+                <label>Maximum Participants</label>
+
+                <input type="number"
+                       name="max_participants"
+                       value="{{ edit_event.max_participants }}"
+                       required>
+
+                <label>Organizer</label>
+
+                <input type="text"
+                       name="organizer"
+                       value="{{ edit_event.organizer }}"
+                       required>
+
+                <div class="buttons">
+
+                    <button class="btn save">
+
+                        {% if edit_event %}
+
+                            Update Event
+
+                        {% else %}
+
+                            Add Event
+
+                        {% endif %}
+
+                    </button>
+
+                    {% if edit_event %}
+
+                    <a href="{% url 'events' %}" class="btn cancel">
+
+                        Cancel
+
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </form>
+
+        </div>
+
+        <!-- ================= TABLE ================= -->
+
+        <div class="card table-card">
+
+            <div class="table-header">
+
+                <h2>Events List</h2>
+
+                <input type="text"
+                       id="searchInput"
+                       placeholder="Search Event...">
+
+            </div>
+
+            <table id="eventTable">
+
+                <thead>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Event</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Venue</th>
+                    <th>Organizer</th>
+                    <th>Action</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for event in events %}
+
+                <tr>
+
+                    <td>{{ event.id }}</td>
+
+                    <td>{{ event.event_name }}</td>
+
+                    <td>{{ event.category }}</td>
+
+                    <td>{{ event.event_date }}</td>
+
+                    <td>{{ event.venue }}</td>
+
+                    <td>{{ event.organizer }}</td>
+
+                    <td>
+
+                        <a href="?edit={{ event.id }}"
+                           class="edit-btn">
+                            Edit
+                        </a>
+
+                        <a href="?delete={{ event.id }}"
+                           class="delete-btn delete-link">
+                            Delete
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="7">
+
+                        No Events Available
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="{% static 'js/events.js' %}"></script>
 
 </body>
 </html>

@@ -48,4 +48,21 @@ urlpatterns = [
     path("alumni_status/", views.alumni_status, name="alumni_status"),
     path("events/", views.events, name="events"),
 
+    path(
+    "user-events/",
+    views.user_events,
+    name="user_events",
+    ),
+
+    path(
+        "register-event/<int:event_id>/",
+        views.register_event,
+        name="register_event",
+    ),
+    path(
+    "cancel-registration/<str:event_name>/",
+    views.cancel_registration,
+    name="cancel_registration",
+    ),
+
 ]

@@ -4,7 +4,7 @@
 
 <head>
 
-    <title>Event Participants</title>
+    <title>View Participants</title>
 
     <link rel="stylesheet"
           href="{% static 'corecss/events.css' %}">
@@ -19,11 +19,59 @@
 
         <h1>Event Participants</h1>
 
-        <p>Registered Students</p>
+    </div>
+
+    <div class="card">
+
+        <form method="GET">
+
+            <select name="event" required>
+
+                <option value="">
+                    Select Event
+                </option>
+
+                {% for event in events %}
+
+                <option value="{{ event }}"
+                    {% if event == selected_event %}
+                        selected
+                    {% endif %}>
+
+                    {{ event }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button class="btn save">
+
+                Search
+
+            </button>
+
+        </form>
 
     </div>
 
+    {% if selected_event %}
+
     <div class="card table-card">
+
+        <div class="table-header">
+
+            <h2>{{ selected_event }}</h2>
+
+            <a href="{% url 'download_participants_pdf' %}?event={{ selected_event }}"
+               class="btn save">
+
+                Download PDF
+
+            </a>
+
+        </div>
 
         <table>
 
@@ -31,13 +79,15 @@
 
                 <tr>
 
-                    <th>ID</th>
-                    <th>Event</th>
+                    <th>Event Name</th>
+
+                    <th>Participant Name</th>
+
                     <th>KTU ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
+
                     <th>Contact</th>
-                    <th>Registered At</th>
+
+                    <th>Email</th>
 
                 </tr>
 
@@ -49,19 +99,15 @@
 
                 <tr>
 
-                    <td>{{ p.id }}</td>
-
                     <td>{{ p.event_name }}</td>
-
-                    <td>{{ p.ktu_id }}</td>
 
                     <td>{{ p.name }}</td>
 
-                    <td>{{ p.email }}</td>
+                    <td>{{ p.ktu_id }}</td>
 
                     <td>{{ p.contact }}</td>
 
-                    <td>{{ p.registered_at }}</td>
+                    <td>{{ p.email }}</td>
 
                 </tr>
 
@@ -69,9 +115,9 @@
 
                 <tr>
 
-                    <td colspan="7">
+                    <td colspan="5">
 
-                        No participants found.
+                        No Participants Found
 
                     </td>
 
@@ -85,7 +131,10 @@
 
     </div>
 
+    {% endif %}
+
 </div>
 
 </body>
+
 </html>

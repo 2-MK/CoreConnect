@@ -1180,19 +1180,100 @@ def cancel_registration(request, event_name):
 
 def view_participants(request):
 
-    response = (
+    # Get unique event names
+    event_response = (
         supabase.table("event_participants")
-        .select("*")
-        .order("registered_at", desc=True)
+        .select("event_name")
         .execute()
     )
 
-    participants = response.data
+    event_names = sorted(
+        list(
+            set(
+                item["event_name"]
+                for item in event_response.data
+            )
+        )
+    )
+
+    selected_event = request.GET.get("event")
+
+    participants = []
+
+    if selected_event:
+
+        response = (
+            supabase.table("event_participants")
+            .select("event_name,name,ktu_id,contact,email")
+            .eq("event_name", selected_event)
+            .execute()
+        )
+
+        participants = response.data
 
     return render(
         request,
         "admin/view_participants.html",
         {
-            "participants": participants
+            "events": event_names,
+            "participants": participants,
+            "selected_event": selected_event,
         },
     )
+
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib import colors
+
+def download_participants_pdf(request):
+
+    event = request.GET.get("event")
+
+    response = (
+        supabase.table("event_participants")
+        .select("event_name,name,ktu_id,contact,email")
+        .eq("event_name", event)
+        .execute()
+    )
+
+    pdf = HttpResponse(content_type="application/pdf")
+
+    pdf["Content-Disposition"] = (
+        f'attachment; filename="{event}_participants.pdf"'
+    )
+
+    doc = SimpleDocTemplate(pdf)
+
+    data = [
+        [
+            "Event",
+            "Name",
+            "KTU ID",
+            "Contact",
+            "Email",
+        ]
+    ]
+
+    for p in response.data:
+
+        data.append([
+            p["event_name"],
+            p["name"],
+            p["ktu_id"],
+            p["contact"],
+            p["email"],
+        ])
+
+    table = Table(data)
+
+    table.setStyle(TableStyle([
+        ("BACKGROUND",(0,0),(-1,0),colors.grey),
+        ("TEXTCOLOR",(0,0),(-1,0),colors.white),
+        ("GRID",(0,0),(-1,-1),1,colors.black),
+        ("BACKGROUND",(0,1),(-1,-1),colors.beige),
+        ("BOTTOMPADDING",(0,0),(-1,0),10),
+    ]))
+
+    doc.build([table])
+
+    return pdf

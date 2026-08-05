@@ -39,10 +39,10 @@ deactivate nondestructive
 if [ "${OSTYPE:-}" = "cygwin" ] || [ "${OSTYPE:-}" = "msys" ] ; then
     # transform D:\path\to\venv to /d/path/to/venv on MSYS
     # and to /cygdrive/d/path/to/venv on Cygwin
-    export VIRTUAL_ENV=$(cygpath "C:\Users\vaisa\Desktop\CC versions\CC V3\CoreConnect\venv")
+    export VIRTUAL_ENV=$(cygpath "C:\26\test\CoreConnect\venv")
 else
     # use the path as-is
-    export VIRTUAL_ENV="C:\Users\vaisa\Desktop\CC versions\CC V3\CoreConnect\venv"
+    export VIRTUAL_ENV="C:\26\test\CoreConnect\venv"
 fi
 
 _OLD_VIRTUAL_PATH="$PATH"

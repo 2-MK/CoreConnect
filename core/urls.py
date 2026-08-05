@@ -66,4 +66,10 @@ urlpatterns = [
     ),
 
     path("participants/", views.view_participants, name="view_participants"),
+
+    path(
+    "download-participants-pdf/",
+    views.download_participants_pdf,
+    name="download_participants_pdf",
+    ),
 ]

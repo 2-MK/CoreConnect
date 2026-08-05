@@ -21,22 +21,9 @@
 
     <div class="header">
 
-        <div class="header-text">
-            <h1>Event Management</h1>
-            <p>Create, Edit, Update and Delete Events</p>
-        </div>
+        <h1>Event Management</h1>
 
-        <div class="header-actions">
-    <a href="{% url 'events' %}" class="header-btn">
-        <span class="header-btn-icon">
-            <i class="fa-solid fa-flask"></i>
-        </span>
-        <span class="header-btn-text">
-            <small>Quick Access</small>
-            <strong>Test</strong>
-        </span>
-    </a>
-</div>
+        <p>Create, Edit, Update and Delete Events</p>
 
     </div>
 
@@ -196,33 +183,18 @@
 
         <div class="card table-card">
 
-            <div class="table-header-grid">
+            <div class="table-header">
 
-    <!-- Left Card (5/6 Width) -->
-    <div class="table-header-main">
+                <h2>Events List</h2>
 
-        <h2>Events List</h2>
+                <div class="header-actions">
+                    <a href="{% url 'view_participants' %}"  class="edit-btn">View </a>
+                    <input type="text"
+                           id="searchInput"
+                           placeholder="Search Event...">
+                </div>
 
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="Search Event..."
-        >
-
-    </div>
-
-    <!-- Right Card (1/6 Width) -->
-    <div class="participants-card">
-
-        <h3>View Participants</h3>
-
-        <a href="{% url 'view_participants' %}" class="participants-btn">
-    View
-</a>
-
-    </div>
-
-</div>
+            </div>
 
             <table id="eventTable">
 

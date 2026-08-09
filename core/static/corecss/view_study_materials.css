@@ -1,0 +1,222 @@
+/* =========================================
+   Study Materials - Student Page
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #f4f7fc;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* =========================================
+   Container
+========================================= */
+
+.container {
+    max-width: 1300px;
+}
+
+/* =========================================
+   Header
+========================================= */
+
+.page-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.page-header p {
+    margin-top: 5px;
+    font-size: 15px;
+}
+
+/* =========================================
+   Cards
+========================================= */
+
+.card {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.card-header {
+    background: #0d6efd;
+    color: white;
+    padding: 16px 22px;
+    border: none;
+}
+
+.card-header h5 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 25px;
+}
+
+/* =========================================
+   Form
+========================================= */
+
+.form-label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.form-control,
+.form-select {
+    height: 48px;
+    border-radius: 10px;
+    border: 1px solid #d8d8d8;
+    transition: .3s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 .2rem rgba(13,110,253,.15);
+}
+
+.btn {
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.btn-primary {
+    padding: 10px 28px;
+}
+
+.btn-outline-secondary {
+    padding: 10px 28px;
+}
+
+/* =========================================
+   Table
+========================================= */
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead {
+    background: #0d6efd;
+    color: white;
+}
+
+.table thead th {
+    padding: 15px;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background: #f7fbff;
+}
+
+.description-column {
+    max-width: 300px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+/* =========================================
+   Buttons
+========================================= */
+
+.btn-success {
+    border-radius: 8px;
+    font-size: 14px;
+    padding: 7px 16px;
+}
+
+/* =========================================
+   Empty State
+========================================= */
+
+.empty-image {
+    width: 140px;
+    opacity: .7;
+}
+
+.text-muted {
+    color: #777 !important;
+}
+
+/* =========================================
+   Filter Card
+========================================= */
+
+.filter-card {
+    margin-bottom: 25px;
+}
+
+/* =========================================
+   Responsive
+========================================= */
+
+@media (max-width: 992px) {
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .table {
+        font-size: 14px;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .page-header h2 {
+        font-size: 28px;
+    }
+
+    .page-header p {
+        font-size: 14px;
+    }
+
+    .btn-primary,
+    .btn-outline-secondary {
+        width: 100%;
+    }
+
+    .d-flex {
+        flex-direction: column;
+    }
+
+}
+
+@media (max-width: 576px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .table {
+        font-size: 13px;
+    }
+
+    .empty-image {
+        width: 100px;
+    }
+
+}

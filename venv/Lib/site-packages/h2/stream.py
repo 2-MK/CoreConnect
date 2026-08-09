@@ -7,7 +7,7 @@ An implementation of a HTTP/2 stream.
 from __future__ import annotations
 
 from enum import Enum, IntEnum
-from typing import TYPE_CHECKING, Any, Union, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from hpack import HeaderTuple
 from hyperframe.frame import AltSvcFrame, ContinuationFrame, DataFrame, Frame, HeadersFrame, PushPromiseFrame, RstStreamFrame, WindowUpdateFrame
@@ -968,7 +968,10 @@ class H2Stream:
         self.state_machine.process_input(StreamInputs.SEND_DATA)
 
         df = DataFrame(self.stream_id)
-        df.data = data
+        if isinstance(data, memoryview):
+            df.data = data.tobytes()
+        else:
+            df.data = data
         if end_stream:
             self.state_machine.process_input(StreamInputs.SEND_END_STREAM)
             df.flags.add("END_STREAM")
@@ -978,7 +981,7 @@ class H2Stream:
 
         # Subtract flow_controlled_length to account for possible padding
         self.outbound_flow_control_window -= df.flow_controlled_length
-        assert self.outbound_flow_control_window >= 0
+        assert self.outbound_flow_control_window >= 0 or df.flow_controlled_length == 0
 
         return [df]
 
@@ -1076,7 +1079,7 @@ class H2Stream:
 
         events = self.state_machine.process_input(input_)
         headers_event = cast(
-            "Union[RequestReceived, ResponseReceived, TrailersReceived, InformationalResponseReceived]",
+            "RequestReceived | ResponseReceived | TrailersReceived | InformationalResponseReceived",
             events[0],
         )
 
@@ -1086,7 +1089,7 @@ class H2Stream:
             )
             # We ensured it's not an information response at the beginning of the method.
             cast(
-                "Union[RequestReceived, ResponseReceived, TrailersReceived]",
+                "RequestReceived | ResponseReceived | TrailersReceived",
                 headers_event,
             ).stream_ended = cast("StreamEnded", es_events[0])
             events += es_events
@@ -1361,15 +1364,28 @@ class H2Stream:
             self._expected_content_length = 0
             return
 
+        content_length = None
+
         for n, v in headers:
             if n == b"content-length":
+                if not v.isdigit():
+                    # https://www.rfc-editor.org/rfc/rfc9110.html#name-content-length
+                    # RFC grammar for content-length is 1*DIGIT, so any non-digit value is invalid.
+                    msg = f"Invalid content-length header: {v!r}"
+                    raise ProtocolError(msg)
                 try:
-                    self._expected_content_length = int(v, 10)
+                    parsed_content_length = int(v, 10)
                 except ValueError as err:
                     msg = f"Invalid content-length header: {v!r}"
                     raise ProtocolError(msg) from err
 
-                return
+                if content_length is None:
+                    content_length = parsed_content_length
+                elif parsed_content_length != content_length:
+                    msg = f"Conflicting content-length headers: {content_length} and {parsed_content_length}"
+                    raise ProtocolError(msg)
+
+        self._expected_content_length = content_length
 
     def _track_content_length(self, length: int, end_stream: bool) -> None:
         """

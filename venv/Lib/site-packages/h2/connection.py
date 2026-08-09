@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import base64
 from enum import Enum, IntEnum
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 from hpack.exceptions import HPACKError, OversizedHeaderListError
 from hpack.hpack import Decoder, Encoder
@@ -66,9 +66,11 @@ from .utilities import SizeLimitDict, guard_increment_window
 from .windows import WindowManager
 
 if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import Iterable
+    from collections.abc import Callable, Iterable
 
     from hpack.struct import Header, HeaderWeaklyTyped
+
+    from ._typing import Buffer
 
 
 class ConnectionState(Enum):
@@ -780,7 +782,7 @@ class H2Connection:
             on the stream given in ``priority_depends_on`` for priority
             purposes. See :meth:`prioritize
             <h2.connection.H2Connection.prioritize>` for more about how this
-            field workds. Defaults to ``None``, which means that no priority
+            field works. Defaults to ``None``, which means that no priority
             information will be sent.
         :type priority_depends_on: ``bool`` or ``None``
 
@@ -888,7 +890,7 @@ class H2Connection:
             "Frame size on stream ID %d is %d", stream_id, frame_size,
         )
 
-        if frame_size > self.local_flow_control_window(stream_id):
+        if frame_size > 0 and frame_size > self.local_flow_control_window(stream_id):
             msg = f"Cannot send {frame_size} bytes, flow control window is {self.local_flow_control_window(stream_id)}"
             raise FlowControlError(msg)
         if frame_size > self.max_outbound_frame_size:
@@ -907,7 +909,7 @@ class H2Connection:
             "Outbound flow control window size is %d",
             self.outbound_flow_control_window,
         )
-        assert self.outbound_flow_control_window >= 0
+        assert self.outbound_flow_control_window >= 0 or frame_size == 0
 
     def end_stream(self, stream_id: int) -> None:
         """
@@ -919,10 +921,14 @@ class H2Connection:
         :param stream_id: The ID of the stream to end.
         :type stream_id: ``int``
         :returns: Nothing
+        :raises NoSuchStreamError: If the stream ID does not correspond to a
+            known stream and is higher than the current maximum stream ID.
+        :raises StreamClosedError: If the stream ID corresponds to a stream
+            that has been closed.
         """
         self.config.logger.debug("End stream ID %d", stream_id)
         self.state_machine.process_input(ConnectionInputs.SEND_DATA)
-        frames = self.streams[stream_id].end_stream()
+        frames = self._get_stream_by_id(stream_id).end_stream()
         self._prepare_for_sending(frames)
 
     def increment_flow_control_window(self, increment: int, stream_id: int | None = None) -> None:
@@ -1492,12 +1498,12 @@ class H2Connection:
         for stream in self.streams.values():
             stream._inbound_flow_control_change_from_settings(delta)
 
-    def receive_data(self, data: bytes) -> list[Event]:
+    def receive_data(self, data: Buffer) -> list[Event]:
         """
         Pass some received HTTP/2 data to the connection for handling.
 
         :param data: The data received from the remote peer on the network.
-        :type data: ``bytes``
+        :type data: An object implementing the buffer protocol.
         :returns: A list of events that the remote peer triggered by sending
             this data.
         """
@@ -1771,6 +1777,8 @@ class H2Connection:
             return [], events
 
         # Add the new settings.
+        for setting, value in frame.settings.items():
+            self.remote_settings.validate_received_setting(setting, value)
         self.remote_settings.update(frame.settings)
         events.append(
             RemoteSettingsChanged.from_settings(
@@ -1897,8 +1905,7 @@ class H2Connection:
         new_event = ConnectionTerminated()
         new_event.error_code = _error_code_from_int(frame.error_code)
         new_event.last_stream_id = frame.last_stream_id
-        new_event.additional_data = (frame.additional_data
-                                     if frame.additional_data else None)
+        new_event.additional_data = frame.additional_data or None
         events.append(new_event)
 
         return [], events

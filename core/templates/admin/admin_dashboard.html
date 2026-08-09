@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+
     <!-- Importing a clean, modern font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
     <!-- Link to external CSS -->
     <link rel="stylesheet" href="{% static 'corecss/adminstyle.css' %}">
 </head>
@@ -49,11 +51,19 @@
             </a>
 
             <a href="{% url 'events' %}" class="card-link">
-    <div class="card">
-        <h2>Events</h2>
-        <p>85</p>
-    </div>
-</a>
+                <div class="card">
+                    <h2>Events</h2>
+                    <p>85</p>
+                </div>
+            </a>
+
+            <!-- New Study Materials Card -->
+            <a href="{% url 'study_materials' %}" class="card-link">
+                <div class="card">
+                    <h2>Study Materials</h2>
+                    <p>Resources</p>
+                </div>
+            </a>
 
         </div>
     </div>

@@ -1,0 +1,209 @@
+/* ===========================
+   Study Materials Page
+=========================== */
+
+body {
+    background: #f4f7fc;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===========================
+   Cards
+=========================== */
+
+.card {
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.card-header {
+    background: #0d6efd;
+    color: white;
+    padding: 18px 25px;
+    border: none;
+}
+
+.card-header h2,
+.card-header h3 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+/* ===========================
+   Labels
+=========================== */
+
+.form-label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+/* ===========================
+   Inputs
+=========================== */
+
+.form-control,
+.form-select {
+    border-radius: 10px;
+    min-height: 46px;
+    border: 1px solid #d9d9d9;
+    transition: .3s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 .18rem rgba(13,110,253,.15);
+}
+
+textarea.form-control {
+    min-height: 130px;
+}
+
+/* ===========================
+   Buttons
+=========================== */
+
+.btn {
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    padding: 10px 24px;
+}
+
+.btn-secondary {
+    padding: 10px 24px;
+}
+
+.btn-warning {
+    color: #fff;
+}
+
+.btn-sm {
+    padding: 6px 14px;
+}
+
+/* ===========================
+   Table
+=========================== */
+
+.table {
+    margin: 0;
+}
+
+.table thead {
+    background: #0d6efd;
+    color: #fff;
+}
+
+.table thead th {
+    vertical-align: middle;
+    white-space: nowrap;
+    padding: 15px;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    padding: 15px;
+}
+
+.table-hover tbody tr:hover {
+    background: #f8fbff;
+}
+
+/* ===========================
+   Description
+=========================== */
+
+.description-column {
+    max-width: 260px;
+    word-break: break-word;
+}
+
+/* ===========================
+   Action Buttons
+=========================== */
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* ===========================
+   Alerts
+=========================== */
+
+.alert {
+    border-radius: 10px;
+}
+
+/* ===========================
+   Upload Card
+=========================== */
+
+.upload-card {
+    margin-bottom: 35px;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width:992px) {
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .table {
+        font-size: 14px;
+    }
+
+}
+
+@media (max-width:768px) {
+
+    .card-header h2,
+    .card-header h3 {
+        font-size: 22px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-sm {
+        width: 100%;
+    }
+
+}
+
+@media (max-width:576px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+
+    .d-flex {
+        flex-direction: column;
+    }
+
+}

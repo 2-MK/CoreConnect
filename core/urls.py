@@ -72,4 +72,20 @@ urlpatterns = [
     views.download_participants_pdf,
     name="download_participants_pdf",
     ),
+
+    path(
+        "study-materials/",
+        views.study_materials,
+        name="study_materials"
+    ),
+   path(
+    "study-materials/delete/<int:id>/",
+    views.delete_study_material,
+    name="delete_study_material",
+    ),
+    path(
+    "view-study-materials/",
+    views.view_study_materials,
+    name="view_study_materials",
+    ),
 ]

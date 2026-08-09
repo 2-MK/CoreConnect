@@ -1277,3 +1277,175 @@ def download_participants_pdf(request):
     doc.build([table])
 
     return pdf
+
+
+import os
+import uuid
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+def study_materials(request):
+
+    edit_id = request.GET.get("edit")
+    edit_material = None
+
+    if edit_id:
+        result = (
+            supabase.table("study_materials")
+            .select("*")
+            .eq("id", edit_id)
+            .single()
+            .execute()
+        )
+
+        if result.data:
+            edit_material = result.data
+
+    if request.method == "POST":
+
+        material_id = request.POST.get("material_id")
+
+        semester = request.POST.get("semester")
+        subject = request.POST.get("subject")
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+
+        uploaded_file = request.FILES.get("file")
+
+        # ----------------------------
+        # UPDATE
+        # ----------------------------
+        if material_id:
+
+            update_data = {
+                "semester": semester,
+                "subject": subject,
+                "title": title,
+                "description": description,
+            }
+
+            if uploaded_file:
+
+                extension = uploaded_file.name.split(".")[-1]
+                unique_name = f"{uuid.uuid4()}.{extension}"
+
+                path = f"{semester}/{subject}/{unique_name}"
+
+                file_bytes = uploaded_file.read()
+
+                supabase.storage.from_("study-materials").upload(
+                    path,
+                    file_bytes,
+                    {
+                        "content-type": uploaded_file.content_type
+                    }
+                )
+
+                file_url = supabase.storage.from_("study-materials").get_public_url(path)
+
+                update_data["file_name"] = uploaded_file.name
+                update_data["file_url"] = file_url
+
+            (
+                supabase.table("study_materials")
+                .update(update_data)
+                .eq("id", material_id)
+                .execute()
+            )
+
+            messages.success(request, "Material Updated Successfully")
+
+            return redirect("study_materials")
+
+        # ----------------------------
+        # INSERT
+        # ----------------------------
+        else:
+
+            if uploaded_file:
+
+                extension = uploaded_file.name.split(".")[-1]
+
+                unique_name = f"{uuid.uuid4()}.{extension}"
+
+                path = f"{semester}/{subject}/{unique_name}"
+
+                file_bytes = uploaded_file.read()
+
+                supabase.storage.from_("study-materials").upload(
+                    path,
+                    file_bytes,
+                    {
+                        "content-type": uploaded_file.content_type
+                    }
+                )
+
+                file_url = supabase.storage.from_("study-materials").get_public_url(path)
+
+                supabase.table("study_materials").insert({
+
+                    "semester": semester,
+                    "subject": subject,
+                    "title": title,
+                    "description": description,
+                    "file_name": uploaded_file.name,
+                    "file_url": file_url
+
+                }).execute()
+
+                messages.success(request, "Material Uploaded Successfully")
+
+                return redirect("study_materials")
+
+    materials = (
+        supabase.table("study_materials")
+        .select("*")
+        .order("created_at", desc=True)
+        .execute()
+    )
+
+    context = {
+        "materials": materials.data,
+        "edit_material": edit_material
+    }
+
+    return render(request, "admin/study_materials.html", context)
+def delete_study_material(request, id):
+
+    supabase.table("study_materials").delete().eq("id", id).execute()
+
+    messages.success(request, "Material Deleted Successfully")
+
+    return redirect("study_materials")
+
+def view_study_materials(request):
+
+    semester = request.GET.get("semester", "").strip()
+    subject = request.GET.get("subject", "").strip()
+    title = request.GET.get("title", "").strip()
+
+    query = supabase.table("study_materials").select("*")
+
+    # Apply filters only if they are provided
+
+    if semester:
+        query = query.eq("semester", semester)
+
+    if subject:
+        query = query.eq("subject", subject)
+
+    if title:
+        query = query.ilike("title", f"%{title}%")
+
+    materials = query.order("created_at", desc=True).execute()
+
+    return render(
+        request,
+        "home/view_study_materials.html",
+        {
+            "materials": materials.data,
+            "selected_semester": semester,
+            "selected_subject": subject,
+            "title": title,
+        },
+    )

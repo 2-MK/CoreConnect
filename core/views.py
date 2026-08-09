@@ -1449,3 +1449,239 @@ def view_study_materials(request):
             "title": title,
         },
     )
+
+def fund_management(request):
+
+    # =========================
+    # ADD STUDY MATERIAL
+    # =========================
+    if request.method == "POST":
+
+        title = request.POST.get("title", "").strip()
+        description = request.POST.get("description", "").strip()
+        uploaded_file = request.FILES.get("file")
+
+        if not title:
+            messages.error(request, "Title is required.")
+            return redirect("fund_management")
+
+        if not uploaded_file:
+            messages.error(request, "Please select a file.")
+            return redirect("fund_management")
+
+        try:
+            # Create unique filename
+            original_name = uploaded_file.name
+            extension = os.path.splitext(original_name)[1]
+
+            file_name = f"{uuid.uuid4()}{extension}"
+
+            # Path inside the fund bucket
+            file_path = f"study_materials/{file_name}"
+
+            # Read file
+            file_data = uploaded_file.read()
+
+            # =========================
+            # UPLOAD TO SUPABASE BUCKET
+            # =========================
+            supabase.storage.from_("fund").upload(
+                file_path,
+                file_data,
+                {
+                    "content-type": uploaded_file.content_type
+                }
+            )
+
+            # =========================
+            # GET PUBLIC URL
+            # =========================
+            file_url = supabase.storage.from_("fund").get_public_url(
+                file_path
+            )
+
+            # =========================
+            # SAVE DATA TO TABLE
+            # =========================
+            supabase.table("fund_management").insert({
+                "title": title,
+                "description": description,
+                "file_url": file_url
+            }).execute()
+
+            messages.success(
+                request,
+                "Study material uploaded successfully."
+            )
+
+        except Exception as e:
+            messages.error(
+                request,
+                f"Upload failed: {str(e)}"
+            )
+
+        return redirect("fund_management")
+
+    # =========================
+    # GET ALL MATERIALS
+    # =========================
+    try:
+        response = (
+            supabase
+            .table("fund_management")
+            .select("*")
+            .order("created_at", desc=True)
+            .execute()
+        )
+
+        materials = response.data or []
+
+    except Exception as e:
+        materials = []
+        messages.error(
+            request,
+            f"Could not load materials: {str(e)}"
+        )
+
+    return render(
+        request,
+        "admin/fund_management.html",
+        {
+            "materials": materials
+        }
+    )
+
+def delete_fund_management(request, material_id):
+
+    if request.method != "POST":
+        return redirect("fund_management")
+
+    try:
+        # Get the fund record
+        response = (
+            supabase
+            .table("fund_management")
+            .select("*")
+            .eq("id", material_id)
+            .single()
+            .execute()
+        )
+
+        material = response.data
+
+        if not material:
+            messages.error(request, "Fund document not found.")
+            return redirect("fund_mangement")
+
+        file_url = material.get("file_url")
+
+        # --------------------------------
+        # Delete PDF from "fund" bucket
+        # --------------------------------
+        if file_url:
+
+            marker = "/storage/v1/object/public/fund/"
+
+            if marker in file_url:
+
+                file_path = file_url.split(marker, 1)[1]
+
+                supabase.storage \
+                    .from_("fund") \
+                    .remove([file_path])
+
+        # --------------------------------
+        # Delete database record
+        # --------------------------------
+        supabase.table("fund_management") \
+            .delete() \
+            .eq("id", material_id) \
+            .execute()
+
+        messages.success(
+            request,
+            "Fund document deleted successfully."
+        )
+
+    except Exception as e:
+
+        messages.error(
+            request,
+            f"Delete failed: {str(e)}"
+        )
+
+    return redirect("fund_management")
+
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from .supabase_client import supabase
+
+
+def view_fund(request):
+    """
+    Display all fund records as cards.
+    """
+
+    try:
+        response = (
+            supabase
+            .table("fund_management")
+            .select("*")
+            .order("created_at", desc=True)
+            .execute()
+        )
+
+        funds = response.data or []
+
+        return render(
+            request,
+            "user/view_fund.html",
+            {
+                "funds": funds
+            }
+        )
+
+    except Exception as e:
+        print("Fund fetch error:", e)
+
+        return render(
+            request,
+            "user/view_fund.html",
+            {
+                "funds": [],
+                "error": "Unable to load fund details."
+            }
+        )
+
+
+def fund_detail(request, fund_id):
+    """
+    Display the selected fund's file.
+    """
+
+    try:
+        response = (
+            supabase
+            .table("fund_management")
+            .select("*")
+            .eq("id", fund_id)
+            .single()
+            .execute()
+        )
+
+        fund = response.data
+
+        if not fund:
+            return HttpResponse("Fund not found.", status=404)
+
+        return render(
+            request,
+            "user/fund_detail.html",
+            {
+                "fund": fund
+            }
+        )
+
+    except Exception as e:
+        print("Fund detail error:", e)
+        return HttpResponse("Fund not found.", status=404)

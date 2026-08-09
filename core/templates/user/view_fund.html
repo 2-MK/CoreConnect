@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fund Details</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .header h1 {
+            font-size: 26px;
+            color: #222;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            background: #333;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            background: #111;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 25px;
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h2 {
+            font-size: 28px;
+            color: #222;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            color: #666;
+            font-size: 15px;
+        }
+
+        .fund-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .fund-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-decoration: none;
+            color: inherit;
+
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+
+            border: 1px solid #eee;
+        }
+
+        .fund-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .fund-icon {
+            width: 55px;
+            height: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #eef2ff;
+            border-radius: 12px;
+
+            font-size: 28px;
+
+            margin-bottom: 18px;
+        }
+
+        .fund-card h3 {
+            font-size: 20px;
+            color: #222;
+            margin-bottom: 10px;
+        }
+
+        .fund-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+
+            min-height: 45px;
+        }
+
+        .view-file {
+            display: inline-block;
+
+            margin-top: 20px;
+
+            padding: 9px 15px;
+
+            background: #2563eb;
+            color: white;
+
+            border-radius: 7px;
+
+            font-size: 13px;
+        }
+
+        .empty-message {
+            background: white;
+            padding: 50px;
+            text-align: center;
+            border-radius: 15px;
+            color: #666;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 600px) {
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .header h1 {
+                font-size: 21px;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+
+            .fund-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="header">
+
+        <h1>Fund Details</h1>
+
+        
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="page-title">
+
+            <h2>Available Funds</h2>
+
+            <p>
+                Select a fund to view its details and file.
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+            <div class="error-message">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        {% if funds %}
+
+            <div class="fund-grid">
+
+                {% for fund in funds %}
+
+                    <a
+                        href="{% url 'fund_detail' fund.id %}"
+                        class="fund-card"
+                    >
+
+                        <div class="fund-icon">
+                            💰
+                        </div>
+
+
+                        <h3>
+                            {{ fund.title }}
+                        </h3>
+
+
+                        <p>
+                            {% if fund.description %}
+                                {{ fund.description }}
+                            {% else %}
+                                No description available.
+                            {% endif %}
+                        </p>
+
+
+                        <span class="view-file">
+                            View Fund →
+                        </span>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-message">
+
+                <h3>No Funds Available</h3>
+
+                <p>
+                    There are currently no fund details available.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>

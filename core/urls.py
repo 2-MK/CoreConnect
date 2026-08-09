@@ -88,4 +88,26 @@ urlpatterns = [
     views.view_study_materials,
     name="view_study_materials",
     ),
+    path(
+        "fund-management/",
+        views.fund_management,
+        name="fund_management"
+    ),
+    path(
+        "delete/<uuid:material_id>/",
+        views.delete_fund_management,
+        name="delete_fund_management"
+    ),
+
+    path(
+        "view-fund/",
+        views.view_fund,
+        name="view_fund"
+    ),
+
+    path(
+        "fund-detail/<uuid:fund_id>/",
+        views.fund_detail,
+        name="fund_detail"
+    ),
 ]

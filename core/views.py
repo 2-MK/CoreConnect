@@ -1685,3 +1685,9 @@ def fund_detail(request, fund_id):
     except Exception as e:
         print("Fund detail error:", e)
         return HttpResponse("Fund not found.", status=404)
+    
+
+
+
+def ptaupdates(request):
+    return render(request, 'admin/ptaupdates.html')

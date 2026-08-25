@@ -110,4 +110,6 @@ urlpatterns = [
         views.fund_detail,
         name="fund_detail"
     ),
+    path('pta/', views.ptaupdates, name='ptaupdates'),
+
 ]

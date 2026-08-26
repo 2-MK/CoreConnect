@@ -1,12 +1,151 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>PTA Connect</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PTA Updates</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        select,
+        button {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f1f5f9;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+    </style>
 </head>
+
 <body>
 
+<div class="container">
+
     <h1>PTA Connect</h1>
-    <p>Welcome to the PTA Connect page.</p>
+
+    <form method="GET" class="filter">
+
+        <select name="year">
+            <option value="">Select Passout Year</option>
+
+            {% for year in years %}
+                <option value="{{ year }}"
+                    {% if selected_year == year %}selected{% endif %}>
+                    {{ year }}
+                </option>
+            {% endfor %}
+
+        </select>
+
+        <button type="submit">Filter</button>
+
+    </form>
+
+
+    {% if selected_year %}
+
+        <h2>Students - {{ selected_year }}</h2>
+
+        {% if students %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Sl No.</th>
+                        <th>Student Name</th>
+                        <th>KTU ID</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for student in students %}
+
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.ktu_id }}</td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        {% else %}
+
+            <div class="no-data">
+                No students found for {{ selected_year }}.
+            </div>
+
+        {% endif %}
+
+    {% else %}
+
+        <div class="no-data">
+            Select a passout year to view students.
+        </div>
+
+    {% endif %}
+
+</div>
 
 </body>
 </html>

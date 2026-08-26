@@ -1690,4 +1690,41 @@ def fund_detail(request, fund_id):
 
 
 def ptaupdates(request):
-    return render(request, 'admin/ptaupdates.html')
+    selected_year = request.GET.get("year", "")
+
+    # Get available years
+    users_response = (
+        supabase
+        .table("users")
+        .select("name, ktu_id, passout_year")
+        .order("passout_year")
+        .execute()
+    )
+
+    all_users = users_response.data or []
+
+    # Get unique years
+    years = sorted(
+        {
+            user["passout_year"]
+            for user in all_users
+            if user.get("passout_year")
+        }
+    )
+
+    # Filter students by selected year
+    if selected_year:
+        students = [
+            user for user in all_users
+            if user.get("passout_year") == selected_year
+        ]
+    else:
+        students = []
+
+    context = {
+        "students": students,
+        "years": years,
+        "selected_year": selected_year,
+    }
+
+    return render(request, "admin/ptaupdates.html", context)

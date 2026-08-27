@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Update Student Insights</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .student-card,
+        .semester-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .student-card h1 {
+            margin-top: 0;
+        }
+
+        .student-info {
+            display: flex;
+            gap: 80px;
+        }
+
+        .student-info p {
+            margin-top: 8px;
+            font-size: 17px;
+        }
+
+        .semester-card h2 {
+            margin-top: 0;
+            color: #1e293b;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 14px;
+            background: #f1f5f9;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .subject-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            background: white;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .save-btn {
+            padding: 14px 35px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .student-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <a href="{% url 'ptaupdates' %}"
+       class="back-btn">
+
+        ← Back to PTA
+
+    </a>
+
+
+    <!-- STUDENT INFORMATION -->
+
+    <div class="student-card">
+
+        <h1>Update Student Insights</h1>
+
+        <div class="student-info">
+
+            <div>
+
+                <strong>Student Name</strong>
+
+                <p>
+                    {{ student.name }}
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <strong>KTU ID</strong>
+
+                <p>
+                    {{ student.ktu_id }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <!-- JAVASCRIPT WILL CREATE THE SUBJECT TABLES -->
+
+        <div id="semester-container"></div>
+
+
+        <button type="submit"
+                class="save-btn">
+
+            Save Insights
+
+        </button>
+
+    </form>
+
+
+</div>
+
+
+
+<script>
+
+
+// ===========================================
+// SUBJECT LIST
+// ===========================================
+
+const subjects = {
+
+    1: [
+
+        {
+            code: "20MCA101",
+            name: "Mathematical Foundations for Computing"
+        },
+
+        {
+            code: "20MCA103",
+            name: "Digital Fundamentals & Computer Architecture"
+        },
+
+        {
+            code: "20MCA105",
+            name: "Advanced Data Structures"
+        },
+
+        {
+            code: "20MCA107",
+            name: "Advanced Software Engineering"
+        },
+
+        {
+            code: "20MCA131",
+            name: "Programming Lab"
+        },
+
+        {
+            code: "20MCA133",
+            name: "Web Programming Lab"
+        },
+
+        {
+            code: "20MCA135",
+            name: "Data Structures Lab"
+        }
+
+    ],
+
+
+    2: [
+
+        {
+            code: "20MCA102",
+            name: "Avanced Database Management System"
+        },
+
+        {
+            code: "20MCA104",
+            name: "Advanced Computer Networks"
+        },
+
+        {
+            code: "20MCA162",
+            name: "Applied Statistics"
+        },
+
+        {
+            code: "20MCA164",
+            name: "Organisational Behaviour"
+        },
+
+        {
+            code: "20MCA188",
+            name: "Artificial Intelligence"
+        },
+
+        {
+            code: "20MCA192",
+            name: "IPR and Cyber Laws"
+        },
+
+        {
+            code: "20MCA132",
+            name: "Object Oriented Programming"
+        },
+
+        {
+            code: "20MCA134",
+            name: "Advanced DBMS Lab"
+        },
+
+        {
+            code: "20MCA136",
+            name: "Networking & System Administration Lab"
+        }
+
+    ],
+
+
+    3: [
+
+        {
+            code: "20MCA201",
+            name: "Data Science & Machine Learning"
+        },
+
+        {
+            code: "20MCA203",
+            name: "Design & Analysis of Algorithms"
+        },
+
+        {
+            code: "20MCA263",
+            name: "Cyber Security & Cryptography"
+        },
+
+        {
+            code: "20MCA283",
+            name: "Deep Learning"
+        },
+
+        {
+            code: "S20MCA287",
+            name: "Bioinformatics"
+        },
+
+        {
+            code: "20MCA241",
+            name: "Data Science Lab"
+        },
+
+        {
+            code: "20MCA243",
+            name: "Mobile Application Develpoment Lab"
+        },
+
+        {
+            code: "20MCA245",
+            name: "Mini Project"
+        }
+
+    ],
+
+
+    4: [
+
+        {
+            code: "20MCA242",
+            name: "Comprehensive Viva"
+        },
+
+        {
+            code: "20MCA244",
+            name: "Seminar"
+        },
+
+        {
+            code: "20MCA246",
+            name: "Main Project"
+        }
+
+    ]
+
+};
+
+
+// ===========================================
+// EXISTING DATA FROM DATABASE
+// ===========================================
+
+const existingInsights =
+    {{ insights|safe }};
+
+
+// ===========================================
+// FIND EXISTING RECORD
+// ===========================================
+
+function getExisting(semester, code) {
+
+    return existingInsights.find(
+        item =>
+            Number(item.semester) === Number(semester)
+            &&
+            item.subject_code === code
+    );
+
+}
+
+
+// ===========================================
+// CREATE SEMESTER TABLE
+// ===========================================
+
+function createSemester(semester) {
+
+    const container =
+        document.getElementById("semester-container");
+
+
+    const card =
+        document.createElement("div");
+
+    card.className = "semester-card";
+
+
+    const title =
+        document.createElement("h2");
+
+    title.textContent =
+        `Semester ${semester}`;
+
+
+    card.appendChild(title);
+
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.className =
+        "table-wrapper";
+
+
+    const table =
+        document.createElement("table");
+
+
+    table.innerHTML = `
+
+        <thead>
+
+            <tr>
+
+                <th>Subject</th>
+
+                <th>Internal</th>
+
+                <th>External</th>
+
+                <th>Attendance (%)</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody></tbody>
+
+    `;
+
+
+    const tbody =
+        table.querySelector("tbody");
+
+
+    subjects[semester].forEach(subject => {
+
+
+        const existing =
+            getExisting(
+                semester,
+                subject.code
+            );
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+
+                <select
+                    class="subject-select"
+                    disabled
+                >
+
+                    <option value="${subject.code}">
+                        ${subject.code} - ${subject.name}
+                    </option>
+
+                </select>
+
+
+                <input
+                    type="hidden"
+                    name="subject_code"
+                    value="${subject.code}"
+                >
+
+
+                <input
+                    type="hidden"
+                    name="semester_${subject.code}"
+                    value="${semester}"
+                >
+
+
+                <input
+                    type="hidden"
+                    name="subject_name_${subject.code}"
+                    value="${subject.name}"
+                >
+
+            </td>
+
+
+            <td>
+
+                <input
+                    type="number"
+                    name="internal_${subject.code}"
+                    min="0"
+                    max="100"
+                    value="${existing?.internal ?? ''}"
+                    placeholder="Internal"
+                >
+
+            </td>
+
+
+            <td>
+
+                <input
+                    type="number"
+                    name="external_${subject.code}"
+                    min="0"
+                    max="100"
+                    value="${existing?.external ?? ''}"
+                    placeholder="External"
+                >
+
+            </td>
+
+
+            <td>
+
+                <input
+                    type="number"
+                    name="attendance_${subject.code}"
+                    min="0"
+                    max="100"
+                    value="${existing?.attendance ?? ''}"
+                    placeholder="Attendance"
+                >
+
+            </td>
+
+        `;
+
+
+        tbody.appendChild(row);
+
+    });
+
+
+    wrapper.appendChild(table);
+
+    card.appendChild(wrapper);
+
+    container.appendChild(card);
+
+}
+
+
+// ===========================================
+// CREATE ALL SEMESTERS
+// ===========================================
+
+Object.keys(subjects).forEach(
+    semester => {
+
+        createSemester(
+            Number(semester)
+        );
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>

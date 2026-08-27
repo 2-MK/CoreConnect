@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>PTA Updates</title>
 
+
     <style>
+
         body {
             font-family: Arial, sans-serif;
             background: #f4f7fb;
             margin: 0;
             padding: 40px;
         }
+
 
         .container {
             max-width: 1000px;
@@ -23,15 +30,18 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
 
+
         h1 {
             margin-bottom: 25px;
         }
+
 
         .filter {
             display: flex;
             gap: 10px;
             margin-bottom: 25px;
         }
+
 
         select,
         button {
@@ -41,6 +51,7 @@
             font-size: 15px;
         }
 
+
         button {
             background: #2563eb;
             color: white;
@@ -48,10 +59,17 @@
             cursor: pointer;
         }
 
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
+
 
         th,
         td {
@@ -60,92 +78,268 @@
             border-bottom: 1px solid #eee;
         }
 
+
         th {
             background: #f1f5f9;
         }
+
 
         .no-data {
             text-align: center;
             padding: 30px;
             color: #777;
         }
+
+
+        /* SUCCESS MESSAGE */
+
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+            padding: 14px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: opacity 0.5s ease;
+        }
+
+
+        /* UPDATE BUTTON */
+
+        .update-btn {
+            display: inline-block;
+            padding: 9px 16px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 14px;
+            border: none;
+        }
+
+
+        .update-btn:hover {
+            background: #1d4ed8;
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <div class="container">
+
 
     <h1>PTA Connect</h1>
 
-    <form method="GET" class="filter">
+
+    <!-- SUCCESS MESSAGE -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="success-message">
+
+                ✓ {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+
+    <!-- YEAR FILTER -->
+
+    <form method="GET"
+          class="filter">
 
         <select name="year">
-            <option value="">Select Passout Year</option>
+
+            <option value="">
+                Select Passout Year
+            </option>
+
 
             {% for year in years %}
+
                 <option value="{{ year }}"
-                    {% if selected_year == year %}selected{% endif %}>
+                    {% if selected_year == year %}
+                        selected
+                    {% endif %}>
+
                     {{ year }}
+
                 </option>
+
             {% endfor %}
 
         </select>
 
-        <button type="submit">Filter</button>
+
+        <button type="submit">
+            Filter
+        </button>
 
     </form>
 
 
+
+    <!-- STUDENTS -->
+
     {% if selected_year %}
 
-        <h2>Students - {{ selected_year }}</h2>
+
+        <h2>
+            Students - {{ selected_year }}
+        </h2>
+
 
         {% if students %}
+
 
             <table>
 
                 <thead>
+
                     <tr>
-                        <th>Sl No.</th>
-                        <th>Student Name</th>
-                        <th>KTU ID</th>
+
+                        <th>
+                            Sl No.
+                        </th>
+
+                        <th>
+                            Student Name
+                        </th>
+
+                        <th>
+                            KTU ID
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
                     </tr>
+
                 </thead>
+
 
                 <tbody>
 
+
                     {% for student in students %}
 
+
                     <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ student.name }}</td>
-                        <td>{{ student.ktu_id }}</td>
+
+
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+
+                        <td>
+                            {{ student.name }}
+                        </td>
+
+
+                        <td>
+                            {{ student.ktu_id }}
+                        </td>
+
+
+                        <td>
+
+                            <a
+                                href="{% url 'update_insights' student.ktu_id %}"
+                                class="update-btn"
+                            >
+
+                                Update
+
+                            </a>
+
+                        </td>
+
+
                     </tr>
 
+
                     {% endfor %}
+
 
                 </tbody>
 
             </table>
 
+
         {% else %}
 
+
             <div class="no-data">
-                No students found for {{ selected_year }}.
+
+                No students found for
+                {{ selected_year }}.
+
             </div>
+
 
         {% endif %}
 
+
     {% else %}
 
+
         <div class="no-data">
+
             Select a passout year to view students.
+
         </div>
+
 
     {% endif %}
 
+
 </div>
 
+
+
+<!-- AUTO HIDE SUCCESS MESSAGE -->
+
+<script>
+
+    setTimeout(function () {
+
+        const message =
+            document.querySelector(".success-message");
+
+
+        if (message) {
+
+            message.style.opacity = "0";
+
+
+            setTimeout(function () {
+
+                message.remove();
+
+            }, 500);
+
+        }
+
+    }, 4000);
+
+</script>
+
+
 </body>
+
 </html>

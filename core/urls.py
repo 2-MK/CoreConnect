@@ -112,4 +112,10 @@ urlpatterns = [
     ),
     path('pta/', views.ptaupdates, name='ptaupdates'),
 
+    path(
+        'pta/update/<str:ktu_id>/',
+        views.update_insights,
+        name='update_insights'
+    ),
+
 ]

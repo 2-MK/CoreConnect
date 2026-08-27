@@ -1728,3 +1728,182 @@ def ptaupdates(request):
     }
 
     return render(request, "admin/ptaupdates.html", context)
+
+
+def ptaupdates(request):
+
+    selected_year = request.GET.get("year", "")
+
+    response = (
+        supabase
+        .table("users")
+        .select("name, ktu_id, passout_year")
+        .order("name")
+        .execute()
+    )
+
+    all_users = response.data or []
+
+    years = sorted(
+        {
+            user["passout_year"]
+            for user in all_users
+            if user.get("passout_year")
+        }
+    )
+
+    if selected_year:
+        students = [
+            user for user in all_users
+            if user.get("passout_year") == selected_year
+        ]
+    else:
+        students = []
+
+    return render(
+        request,
+        "admin/ptaupdates.html",
+        {
+            "students": students,
+            "years": years,
+            "selected_year": selected_year,
+        }
+    )
+
+
+def update_insights(request, ktu_id):
+
+    # --------------------------------
+    # GET STUDENT FROM USERS TABLE
+    # --------------------------------
+
+    student_response = (
+        supabase
+        .table("users")
+        .select("name, ktu_id")
+        .eq("ktu_id", ktu_id)
+        .single()
+        .execute()
+    )
+
+    student = student_response.data
+
+    if not student:
+        messages.error(request, "Student not found.")
+        return redirect("ptaupdates")
+
+
+    # --------------------------------
+    # GET EXISTING INSIGHTS
+    # --------------------------------
+
+    insights_response = (
+        supabase
+        .table("insights")
+        .select("*")
+        .eq("ktu_id", ktu_id)
+        .order("semester")
+        .execute()
+    )
+
+    insights = insights_response.data or []
+
+
+    # --------------------------------
+    # SAVE DATA
+    # --------------------------------
+
+    if request.method == "POST":
+
+        subjects = request.POST.getlist("subject_code")
+
+        for subject_code in subjects:
+
+            semester = request.POST.get(
+                f"semester_{subject_code}"
+            )
+
+            subject_name = request.POST.get(
+                f"subject_name_{subject_code}"
+            )
+
+            internal = request.POST.get(
+                f"internal_{subject_code}"
+            )
+
+            external = request.POST.get(
+                f"external_{subject_code}"
+            )
+
+            attendance = request.POST.get(
+                f"attendance_{subject_code}"
+            )
+
+
+            data = {
+                "ktu_id": student["ktu_id"],
+                "name": student["name"],
+                "semester": int(semester),
+                "subject_code": subject_code,
+                "subject_name": subject_name,
+                "internal": internal if internal else None,
+                "external": external if external else None,
+                "attendance": attendance if attendance else None,
+            }
+
+
+            # Check existing record
+
+            existing_response = (
+                supabase
+                .table("insights")
+                .select("id")
+                .eq("ktu_id", student["ktu_id"])
+                .eq("semester", int(semester))
+                .eq("subject_code", subject_code)
+                .execute()
+            )
+
+
+            if existing_response.data:
+
+                insight_id = existing_response.data[0]["id"]
+
+                (
+                    supabase
+                    .table("insights")
+                    .update(data)
+                    .eq("id", insight_id)
+                    .execute()
+                )
+
+            else:
+
+                (
+                    supabase
+                    .table("insights")
+                    .insert(data)
+                    .execute()
+                )
+
+
+        messages.success(
+            request,
+            "Student insights updated successfully."
+        )
+
+        return redirect("ptaupdates")
+
+
+    # --------------------------------
+    # DISPLAY PAGE
+    # --------------------------------
+
+    return render(
+        request,
+        "admin/update_insights.html",
+        {
+            "student": student,
+            "insights": insights,
+        }
+    )

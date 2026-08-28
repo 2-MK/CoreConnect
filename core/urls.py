@@ -35,6 +35,7 @@ urlpatterns = [
     path("placement-updates/",views.placement_updates,name="placement_updates"),
     path("manage_placement/",views.manage_placement,name="manage_placement"),
     path("dis_placement/",views.dis_placement,name="dis_placement"),
+    path("dis_placedstd/",views.dis_placedstd,name="dis_placedstd"),
     path(
         "student-manage/",
         views.student_manage,

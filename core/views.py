@@ -727,8 +727,7 @@ def manage_placement(request):
         },
     )
 
-
-def dis_placement(request):
+def dis_placedstd(request):
     # Fetch placed students
     placed_students = (
         supabase.table("placed_students")
@@ -736,6 +735,14 @@ def dis_placement(request):
         .order("placement_date", desc=True)
         .execute()
     )
+    context = {
+        "placed_students": placed_students.data,
+    }
+    return render(request, "home/placement.html",context)
+
+
+def dis_placement(request):
+    
 
     # Fetch all placement opportunities (Active + Closed)
     placement_opportunities = (
@@ -746,11 +753,11 @@ def dis_placement(request):
     )
 
     context = {
-        "placed_students": placed_students.data,
+        
         "placement_opportunities": placement_opportunities.data,
     }
 
-    return render(request, "home/placement.html", context)
+    return render(request, "user/placement.html", context)
 
 
 

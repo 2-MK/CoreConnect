@@ -2,42 +2,6 @@
 
 <link rel="stylesheet" href="{% static 'corecss/placement.css' %}">
 
-<!-- Placement Opportunities -->
-<h2 class="section-title">Placement Opportunities</h2>
-
-{% if placement_opportunities %}
-<div class="card-container">
-
-    {% for job in placement_opportunities %}
-    <div class="card">
-
-        {% if job.company_logo %}
-        <img src="{{ job.company_logo }}" class="company-logo">
-        {% endif %}
-
-        <div class="status">
-            {% if job.status == "Active" %}
-                <span class="dot active"></span>
-                <span class="status-text active-text">Active</span>
-            {% else %}
-                <span class="dot closed"></span>
-                <span class="status-text closed-text">Closed</span>
-            {% endif %}
-        </div>
-
-        <h3>{{ job.company_name }}</h3>
-
-        <p><strong>Role:</strong> {{ job.role }}</p>
-        <p><strong>Eligibility:</strong> {{ job.eligibility }}</p>
-        <p><strong>Deadline:</strong> {{ job.deadline }}</p>
-        <p class="description">{{ job.description }}</p>
-
-    </div>
-    {% endfor %}
-
-</div>
-{% endif %}
-
 
 <h2 class="section-title">Placement Achievements</h2>
 

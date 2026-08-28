@@ -1,0 +1,701 @@
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+    padding: 40px 20px;
+
+    font-family: "Poppins", sans-serif;
+
+    background: linear-gradient(
+        135deg,
+        #eef4ff 0%,
+        #f8fbff 50%,
+        #eef6ff 100%
+    );
+
+    color: #1e293b;
+}
+
+
+.page-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+
+
+/* =================================
+   PAGE HEADER
+================================= */
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+
+.page-header > div {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+.page-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: #2563eb;
+
+    font-size: 24px;
+
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.20);
+}
+
+
+.page-header h1 {
+    margin: 0;
+
+    font-size: 30px;
+    font-weight: 700;
+
+    color: #123b73;
+}
+
+
+.page-header p {
+    margin: 4px 0 0;
+
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+
+/* =================================
+   SEARCH CARD
+================================= */
+
+.search-card {
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 28px;
+
+    margin-bottom: 25px;
+
+    box-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.07);
+}
+
+
+.search-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 25px;
+}
+
+
+.search-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #eff6ff;
+
+    font-size: 20px;
+}
+
+
+.search-heading h2 {
+    margin: 0;
+
+    font-size: 20px;
+
+    color: #123b73;
+}
+
+
+.search-heading p {
+    margin: 3px 0 0;
+
+    font-size: 13px;
+
+    color: #64748b;
+}
+
+
+
+/* =================================
+   SEARCH FORM
+================================= */
+
+.search-form {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr
+        auto;
+
+    gap: 18px;
+
+    align-items: end;
+}
+
+
+.input-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #475569;
+}
+
+
+.input-group input {
+    width: 100%;
+
+    height: 48px;
+
+    padding: 0 15px;
+
+    border: 1px solid #dbe3ef;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 14px;
+
+    color: #1e293b;
+
+    transition: 0.2s;
+}
+
+
+.input-group input:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+.input-group input::placeholder {
+    color: #94a3b8;
+}
+
+
+
+/* =================================
+   SEARCH BUTTON
+================================= */
+
+.search-btn {
+    height: 48px;
+
+    padding: 0 24px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    white-space: nowrap;
+}
+
+
+.search-btn:hover {
+    background: #1d4ed8;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 18px rgba(37, 99, 235, 0.20);
+}
+
+
+
+/* =================================
+   ERROR
+================================= */
+
+.error-message {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 14px;
+
+    background: #fff1f2;
+
+    border: 1px solid #fecdd3;
+
+    color: #be123c;
+
+    padding: 16px 18px;
+
+    border-radius: 12px;
+
+    margin-bottom: 25px;
+}
+
+
+.error-icon {
+    width: 28px;
+    height: 28px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #e11d48;
+
+    color: white;
+
+    font-weight: 700;
+}
+
+
+.error-message strong {
+    font-size: 14px;
+}
+
+
+.error-message p {
+    margin: 3px 0 0;
+
+    font-size: 13px;
+}
+
+
+
+/* =================================
+   STUDENT CARD
+================================= */
+
+.student-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 22px 25px;
+
+    margin-bottom: 30px;
+
+    box-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.07);
+
+    border-left: 5px solid #2563eb;
+}
+
+
+.student-avatar {
+    width: 58px;
+    height: 58px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 23px;
+
+    font-weight: 700;
+}
+
+
+.student-details h2 {
+    margin: 4px 0 2px;
+
+    font-size: 21px;
+
+    color: #123b73;
+}
+
+
+.student-details p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+.student-details p strong {
+    color: #1e293b;
+}
+
+
+.verified {
+    display: inline-block;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.8px;
+
+    color: #15803d;
+
+    background: #f0fdf4;
+
+    border: 1px solid #bbf7d0;
+
+    padding: 4px 8px;
+
+    border-radius: 20px;
+}
+
+
+
+/* =================================
+   ACADEMIC HEADING
+================================= */
+
+.academic-heading {
+    margin-bottom: 20px;
+}
+
+
+.academic-heading h2 {
+    margin: 0;
+
+    color: #123b73;
+
+    font-size: 23px;
+}
+
+
+.academic-heading p {
+    margin: 4px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+
+/* =================================
+   SEMESTER CARD
+================================= */
+
+.semester-card {
+    background: white;
+
+    border-radius: 18px;
+
+    margin-bottom: 25px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.07);
+
+    border: 1px solid #e5edf7;
+}
+
+
+
+/* =================================
+   SEMESTER HEADER
+================================= */
+
+.semester-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 20px 24px;
+
+    background: linear-gradient(
+        90deg,
+        #eff6ff,
+        #f8fbff
+    );
+
+    border-bottom: 1px solid #dbeafe;
+}
+
+
+.semester-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.semester-number {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: 700;
+}
+
+
+.semester-label {
+    display: block;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    color: #64748b;
+}
+
+
+.semester-header h3 {
+    margin: 2px 0 0;
+
+    font-size: 20px;
+
+    color: #123b73;
+}
+
+
+.subject-count {
+    padding: 8px 13px;
+
+    border-radius: 20px;
+
+    background: white;
+
+    border: 1px solid #dbeafe;
+
+    color: #2563eb;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+
+/* =================================
+   TABLE
+================================= */
+
+.table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+table {
+    width: 100%;
+
+    min-width: 750px;
+
+    border-collapse: collapse;
+}
+
+
+thead th {
+    padding: 14px 20px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-align: left;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+
+tbody td {
+    padding: 15px 20px;
+
+    color: #475569;
+
+    font-size: 13px;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+tbody tr:hover td {
+    background: #f8fafc;
+}
+
+
+
+/* =================================
+   SUBJECT
+================================= */
+
+.subject-code {
+    display: inline-block;
+
+    padding: 5px 9px;
+
+    border-radius: 7px;
+
+    background: #eef2ff;
+
+    color: #3730a3;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.subject-name {
+    color: #1e293b !important;
+
+    font-weight: 500;
+}
+
+
+
+/* =================================
+   MOBILE
+================================= */
+
+@media (max-width: 850px) {
+
+    body {
+        padding: 25px 15px;
+    }
+
+
+    .search-form {
+        grid-template-columns: 1fr;
+    }
+
+
+    .search-btn {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .page-header h1 {
+        font-size: 24px;
+    }
+
+
+    .search-card {
+        padding: 20px;
+    }
+
+
+    .student-card {
+        padding: 18px;
+    }
+
+
+    .semester-header {
+        padding: 17px;
+    }
+
+
+    .semester-header h3 {
+        font-size: 17px;
+    }
+
+
+    .semester-number {
+        width: 40px;
+        height: 40px;
+
+        font-size: 13px;
+    }
+
+
+    .subject-count {
+        font-size: 10px;
+
+        padding: 6px 9px;
+    }
+
+}

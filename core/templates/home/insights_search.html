@@ -1,0 +1,836 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Student Insights</title>
+
+    <!-- Google Font -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- External CSS -->
+    <link
+        rel="stylesheet"
+        href="{% static 'corecss/insights.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="page-container">
+
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <div class="page-icon">
+                📊
+            </div>
+
+            <div>
+
+                <h1>
+                    Student Insights
+                </h1>
+
+                <p>
+                    View semester-wise academic performance
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         SEARCH CARD
+    ========================== -->
+
+    <div class="search-card">
+
+        <div class="search-heading">
+
+            <div class="search-icon">
+                🔍
+            </div>
+
+            <div>
+
+                <h2>
+                    Find Student
+                </h2>
+
+                <p>
+                    Enter both the student name and KTU ID
+                    to view academic insights.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form
+            method="GET"
+            class="search-form"
+        >
+
+
+            <!-- NAME -->
+
+            <div class="input-group">
+
+                <label for="name">
+                    Student Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter student name"
+                    value="{{ searched_name }}"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- KTU ID -->
+
+            <div class="input-group">
+
+                <label for="ktu_id">
+                    KTU ID
+                </label>
+
+                <input
+                    type="text"
+                    id="ktu_id"
+                    name="ktu_id"
+                    placeholder="Enter KTU ID"
+                    value="{{ searched_ktu_id }}"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- BUTTON -->
+
+            <button
+                type="submit"
+                class="search-btn"
+            >
+
+                <span>
+                    🔍
+                </span>
+
+                Search Student
+
+            </button>
+
+
+        </form>
+
+    </div>
+
+
+
+    <!-- =========================
+         ERROR MESSAGE
+    ========================== -->
+
+    {% if error %}
+
+    <div class="error-message">
+
+        <div class="error-icon">
+            !
+        </div>
+
+        <div>
+
+            <strong>
+                Student Not Found
+            </strong>
+
+            <p>
+                {{ error }}
+            </p>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =========================
+         VERIFIED STUDENT
+    ========================== -->
+
+    {% if student %}
+
+    <div class="student-card">
+
+
+        <div class="student-avatar">
+            {{ student.name|first|upper }}
+        </div>
+
+
+        <div class="student-details">
+
+            <span class="verified">
+                ✓ VERIFIED STUDENT
+            </span>
+
+            <h2>
+                {{ student.name }}
+            </h2>
+
+            <p>
+                KTU ID:
+                <strong>
+                    {{ student.ktu_id }}
+                </strong>
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         ACADEMIC SECTION
+    ========================== -->
+
+    <div class="academic-heading">
+
+        <div>
+
+            <h2>
+                Academic Performance
+            </h2>
+
+            <p>
+                Semester-wise subject performance
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         GROUP BY SEMESTER
+    ========================== -->
+
+    {% regroup insights by semester as semester_list %}
+
+
+
+    <!-- =========================
+         SEMESTER 1
+    ========================== -->
+
+    {% for semester in semester_list %}
+
+        {% if semester.grouper == 1 %}
+
+        <div class="semester-card">
+
+            <div class="semester-header">
+
+                <div class="semester-title">
+
+                    <span class="semester-number">
+                        01
+                    </span>
+
+                    <div>
+
+                        <span class="semester-label">
+                            SEMESTER
+                        </span>
+
+                        <h3>
+                            Semester 1
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="subject-count">
+                    {{ semester.list|length }}
+                    Subjects
+                </div>
+
+            </div>
+
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Subject Code
+                            </th>
+
+                            <th>
+                                Subject Name
+                            </th>
+
+                            <th>
+                                Internal
+                            </th>
+
+                            <th>
+                                External
+                            </th>
+
+                            <th>
+                                Attendance
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for row in semester.list %}
+
+                        <tr>
+
+                            <td>
+
+                                <span class="subject-code">
+                                    {{ row.subject_code }}
+                                </span>
+
+                            </td>
+
+
+                            <td class="subject-name">
+                                {{ row.subject_name }}
+                            </td>
+
+
+                            <td>
+
+                                {% if row.internal is not None %}
+                                    {{ row.internal }}
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if row.external is not None %}
+                                    {{ row.external }}
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if row.attendance is not None %}
+                                    {{ row.attendance }}%
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+
+
+    <!-- =========================
+         SEMESTER 2
+    ========================== -->
+
+    {% for semester in semester_list %}
+
+        {% if semester.grouper == 2 %}
+
+        <div class="semester-card">
+
+            <div class="semester-header">
+
+                <div class="semester-title">
+
+                    <span class="semester-number">
+                        02
+                    </span>
+
+                    <div>
+
+                        <span class="semester-label">
+                            SEMESTER
+                        </span>
+
+                        <h3>
+                            Semester 2
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="subject-count">
+                    {{ semester.list|length }}
+                    Subjects
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Subject Code
+                            </th>
+
+                            <th>
+                                Subject Name
+                            </th>
+
+                            <th>
+                                Internal
+                            </th>
+
+                            <th>
+                                External
+                            </th>
+
+                            <th>
+                                Attendance
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for row in semester.list %}
+
+                        <tr>
+
+                            <td>
+
+                                <span class="subject-code">
+                                    {{ row.subject_code }}
+                                </span>
+
+                            </td>
+
+
+                            <td class="subject-name">
+                                {{ row.subject_name }}
+                            </td>
+
+
+                            <td>
+
+                                {% if row.internal is not None %}
+                                    {{ row.internal }}
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if row.external is not None %}
+                                    {{ row.external }}
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if row.attendance is not None %}
+                                    {{ row.attendance }}%
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+
+
+    <!-- =========================
+         SEMESTER 3
+    ========================== -->
+
+    {% for semester in semester_list %}
+
+        {% if semester.grouper == 3 %}
+
+        <div class="semester-card">
+
+            <div class="semester-header">
+
+                <div class="semester-title">
+
+                    <span class="semester-number">
+                        03
+                    </span>
+
+                    <div>
+
+                        <span class="semester-label">
+                            SEMESTER
+                        </span>
+
+                        <h3>
+                            Semester 3
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="subject-count">
+                    {{ semester.list|length }}
+                    Subjects
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Subject Code
+                            </th>
+
+                            <th>
+                                Subject Name
+                            </th>
+
+                            <th>
+                                Internal
+                            </th>
+
+                            <th>
+                                External
+                            </th>
+
+                            <th>
+                                Attendance
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for row in semester.list %}
+
+                        <tr>
+
+                            <td>
+
+                                <span class="subject-code">
+                                    {{ row.subject_code }}
+                                </span>
+
+                            </td>
+
+
+                            <td class="subject-name">
+                                {{ row.subject_name }}
+                            </td>
+
+
+                            <td>
+
+                                {% if row.internal is not None %}
+                                    {{ row.internal }}
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if row.external is not None %}
+                                    {{ row.external }}
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if row.attendance is not None %}
+                                    {{ row.attendance }}%
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+
+
+    <!-- =========================
+         SEMESTER 4
+    ========================== -->
+
+    {% for semester in semester_list %}
+
+        {% if semester.grouper == 4 %}
+
+        <div class="semester-card">
+
+            <div class="semester-header">
+
+                <div class="semester-title">
+
+                    <span class="semester-number">
+                        04
+                    </span>
+
+                    <div>
+
+                        <span class="semester-label">
+                            SEMESTER
+                        </span>
+
+                        <h3>
+                            Semester 4
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="subject-count">
+                    {{ semester.list|length }}
+                    Subjects
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Subject Code
+                            </th>
+
+                            <th>
+                                Subject Name
+                            </th>
+
+                            <th>
+                                Internal
+                            </th>
+
+                            <th>
+                                External
+                            </th>
+
+                            <th>
+                                Attendance
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for row in semester.list %}
+
+                        <tr>
+
+                            <td>
+
+                                <span class="subject-code">
+                                    {{ row.subject_code }}
+                                </span>
+
+                            </td>
+
+
+                            <td class="subject-name">
+                                {{ row.subject_name }}
+                            </td>
+
+
+                            <td>
+
+                                {% if row.internal is not None %}
+                                    {{ row.internal }}
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if row.external is not None %}
+                                    {{ row.external }}
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if row.attendance is not None %}
+                                    {{ row.attendance }}%
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+
+
+    {% endif %}
+
+
+</div>
+
+
+</body>
+
+</html>

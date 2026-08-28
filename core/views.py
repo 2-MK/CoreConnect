@@ -1907,3 +1907,65 @@ def update_insights(request, ktu_id):
             "insights": insights,
         }
     )
+
+
+def insights_search(request):
+    student = None
+    insights = []
+    error = None
+
+    name = request.GET.get("name", "").strip()
+    ktu_id = request.GET.get("ktu_id", "").strip()
+
+    # Both Name and KTU ID are required
+    if name or ktu_id:
+
+        if not name or not ktu_id:
+            error = "Please enter both Student Name and KTU ID."
+
+        else:
+            # Verify BOTH name and KTU ID
+            user_response = (
+                supabase
+                .table("users")
+                .select("ktu_id, name")
+                .eq("ktu_id", ktu_id)
+                .ilike("name", name)
+                .execute()
+            )
+
+            # Only show results when BOTH are correct
+            if user_response.data:
+
+                student = user_response.data[0]
+
+                # Get insights only after successful verification
+                insights_response = (
+                    supabase
+                    .table("insights")
+                    .select(
+                        "semester, subject_code, subject_name, "
+                        "internal, external, attendance, created_at"
+                    )
+                    .eq("ktu_id", student["ktu_id"])
+                    .order("semester")
+                    .order("subject_code")
+                    .execute()
+                )
+
+                insights = insights_response.data
+
+            else:
+                error = "Name and KTU ID do not match. Please check your details."
+
+    return render(
+        request,
+        "home/insights_search.html",
+        {
+            "student": student,
+            "insights": insights,
+            "error": error,
+            "searched_name": name,
+            "searched_ktu_id": ktu_id,
+        },
+    )

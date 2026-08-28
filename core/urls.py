@@ -118,4 +118,7 @@ urlpatterns = [
         name='update_insights'
     ),
 
+    path("insights/", views.insights_search, name="insights_search"),
+
+
 ]

@@ -1,155 +1,440 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    background:#f4f6f9;
+/* =========================================
+   PLACEMENT ACHIEVEMENTS
+   Professional Modern Design
+========================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+
+/* =========================================
+   GLOBAL
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Heading */
-
-.section-title{
-    text-align:center;
-    color:#1f3b73;
-    margin:40px 0 25px;
-    font-size:30px;
-    font-weight:700;
+body {
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
 }
 
-/* Grid */
 
-.card-container{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:30px;
-    margin-bottom:50px;
+/* =========================================
+   SECTION
+========================================= */
+
+.section-title {
+    text-align: center;
+
+    font-size: 30px;
+    font-weight: 700;
+
+    color: #0f172a;
+
+    margin: 45px 0 38px;
+
+    letter-spacing: -0.6px;
 }
 
-/* Fixed Size Card */
+.section-title::after {
+    content: "";
 
-.card{
-    width:330px;
-    height:350px;          /* Fixed Height */
-    background:#fff;
-    border-radius:15px;
-    padding:20px;
-    box-shadow:0 5px 15px rgba(0,0,0,.12);
-    transition:.3s;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
+    display: block;
+
+    width: 55px;
+    height: 4px;
+
+    margin: 12px auto 0;
+
+    background: #2563eb;
+
+    border-radius: 10px;
 }
 
-.card:hover{
-    transform:translateY(-8px);
+
+/* =========================================
+   CARD GRID
+========================================= */
+
+.card-container {
+    width: 92%;
+    max-width: 1180px;
+
+    margin: 0 auto 60px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(300px, 1fr));
+
+    gap: 25px;
 }
 
-/* Images */
 
-.company-logo,
-.student-img{
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    object-fit:cover;
-    margin:0 auto 15px;
-    border:3px solid #ddd;
+/* =========================================
+   CARD
+========================================= */
+
+.card {
+    position: relative;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 16px;
+
+    padding: 28px 26px 24px;
+
+    text-align: center;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+
+    box-shadow:
+        0 2px 6px rgba(15, 23, 42, 0.04);
 }
 
-/* Heading */
 
-.card h3{
-    text-align:center;
-    color:#0d3b66;
-    margin-bottom:12px;
-    font-size:22px;
+/* Top line */
+
+.card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 4px;
+
+    background: #2563eb;
 }
 
-/* Text */
 
-.card p{
-    margin:6px 0;
-    color:#444;
-    font-size:15px;
-    line-height:1.5;
+/* Hover */
+
+.card:hover {
+    transform: translateY(-6px);
+
+    border-color: #bfdbfe;
+
+    box-shadow:
+        0 12px 30px rgba(15, 23, 42, 0.09);
 }
 
-.description{
-    margin-top:10px;
-    overflow-y:auto;
-    flex-grow:1;
-    color:#666;
+
+/* =========================================
+   STUDENT IMAGE
+========================================= */
+
+.student-img {
+    display: block;
+
+    width: 105px;
+    height: 105px;
+
+    margin: 4px auto 18px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 4px solid #ffffff;
+
+    outline: 2px solid #dbeafe;
+
+    box-shadow:
+        0 5px 15px rgba(37, 99, 235, 0.12);
 }
 
-/* Package */
 
-.package{
-    color:#198754;
-    font-size:20px;
-    font-weight:bold;
+/* =========================================
+   STUDENT NAME
+========================================= */
+
+.card h3 {
+    font-size: 21px;
+
+    font-weight: 700;
+
+    color: #0f172a;
+
+    margin-bottom: 18px;
+
+    line-height: 1.3;
 }
 
-/* Caption */
 
-.caption{
-    margin-top:auto;
-    font-style:italic;
-    color:#666;
+/* =========================================
+   INFORMATION
+========================================= */
+
+.card p {
+    margin: 8px 0;
+
+    font-size: 14px;
+
+    color: #64748b;
+
+    line-height: 1.5;
 }
 
-/* Status */
+.card p strong {
+    color: #334155;
 
-.status{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:8px;
-    margin-bottom:12px;
+    font-weight: 600;
 }
 
-.dot{
-    width:12px;
-    height:12px;
-    border-radius:50%;
-    animation:blink 1s infinite;
+
+/* =========================================
+   COMPANY
+========================================= */
+
+.card p:nth-of-type(1) {
+    font-size: 15px;
+
+    color: #334155;
 }
 
-.active{
-    background:#1fc71f;
+
+/* =========================================
+   ROLE
+========================================= */
+
+.card p:nth-of-type(2) {
+    font-size: 14px;
+
+    color: #64748b;
 }
 
-.closed{
-    background:#ff2f2f;
+
+/* =========================================
+   PACKAGE
+========================================= */
+
+.package {
+    display: inline-block;
+
+    margin: 16px auto 14px !important;
+
+    padding: 8px 22px;
+
+    background: #eff6ff;
+
+    border: 1px solid #bfdbfe;
+
+    border-radius: 30px;
+
+    color: #1d4ed8 !important;
+
+    font-size: 20px !important;
+
+    font-weight: 700;
+
+    letter-spacing: 0.2px;
 }
 
-.active-text{
-    color:#198754;
-    font-weight:bold;
+
+/* =========================================
+   PLACEMENT DATE
+========================================= */
+
+.card p:nth-of-type(4) {
+    padding-top: 12px;
+
+    margin-top: 12px;
+
+    border-top: 1px solid #f1f5f9;
+
+    font-size: 13px;
+
+    color: #94a3b8;
 }
 
-.closed-text{
-    color:#dc3545;
-    font-weight:bold;
+
+/* =========================================
+   CAPTION
+========================================= */
+
+.caption {
+    margin-top: 18px !important;
+
+    padding-top: 14px;
+
+    border-top: 1px solid #f1f5f9;
+
+    font-size: 13px !important;
+
+    font-style: italic;
+
+    color: #94a3b8 !important;
+
+    line-height: 1.6;
 }
 
-@keyframes blink{
-    0%{
-        opacity:1;
+
+/* =========================================
+   STATUS
+========================================= */
+
+.status {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 14px;
+}
+
+.dot {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    animation: blink 1.5s ease-in-out infinite;
+}
+
+.active {
+    background: #22c55e;
+
+    box-shadow:
+        0 0 0 4px #dcfce7;
+}
+
+.closed {
+    background: #ef4444;
+
+    box-shadow:
+        0 0 0 4px #fee2e2;
+}
+
+.active-text {
+    color: #15803d;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.closed-text {
+    color: #dc2626;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   BLINKING DOT
+========================================= */
+
+@keyframes blink {
+
+    0% {
+        opacity: 1;
     }
-    50%{
-        opacity:.2;
+
+    50% {
+        opacity: 0.35;
     }
-    100%{
-        opacity:1;
+
+    100% {
+        opacity: 1;
     }
 }
 
-/* Responsive */
 
-@media(max-width:768px){
+/* =========================================
+   TABLET
+========================================= */
 
-    .card{
-        width:90%;
-        height:auto;
-        min-height:450px;
+@media (max-width: 900px) {
+
+    .section-title {
+        font-size: 28px;
+
+        margin-top: 35px;
     }
 
+    .card-container {
+        grid-template-columns:
+            repeat(2, minmax(260px, 1fr));
+
+        gap: 20px;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+
+    .section-title {
+        font-size: 25px;
+
+        margin: 30px 0 28px;
+    }
+
+    .card-container {
+        width: 90%;
+
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+    }
+
+    .card {
+        padding: 25px 20px 22px;
+    }
+
+    .student-img {
+        width: 95px;
+        height: 95px;
+    }
+
+    .card h3 {
+        font-size: 20px;
+    }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 380px) {
+
+    .section-title {
+        font-size: 23px;
+    }
+
+    .card {
+        padding: 23px 17px;
+    }
+
+    .student-img {
+        width: 88px;
+        height: 88px;
+    }
+
+    .package {
+        font-size: 18px !important;
+    }
 }

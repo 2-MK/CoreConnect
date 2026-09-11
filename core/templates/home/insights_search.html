@@ -31,6 +31,12 @@
         rel="stylesheet"
     >
 
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
     <!-- External CSS -->
     <link
         rel="stylesheet"
@@ -41,7 +47,6 @@
 
 
 <body>
-
 
 <div class="page-container">
 
@@ -55,7 +60,7 @@
         <div>
 
             <div class="page-icon">
-                📊
+                <i class="fa-solid fa-chart-line"></i>
             </div>
 
             <div>
@@ -85,7 +90,7 @@
         <div class="search-heading">
 
             <div class="search-icon">
-                🔍
+                <i class="fa-solid fa-magnifying-glass"></i>
             </div>
 
             <div>
@@ -108,7 +113,6 @@
             method="GET"
             class="search-form"
         >
-
 
             <!-- NAME -->
 
@@ -152,21 +156,44 @@
 
 
 
-            <!-- BUTTON -->
+            <!-- ACTION BUTTONS -->
 
-            <button
-                type="submit"
-                class="search-btn"
-            >
+            <div class="search-actions">
 
-                <span>
-                    🔍
-                </span>
+                <!-- SEARCH STUDENT -->
 
-                Search Student
+                <button
+                    type="submit"
+                    class="search-btn"
+                >
 
-            </button>
+                    <i class="fa-solid fa-magnifying-glass"></i>
 
+                    <span>
+                        Search Student
+                    </span>
+
+                </button>
+
+
+                <!-- AI SUMMARY -->
+
+                <button
+                    type="submit"
+                    name="ai_summary"
+                    value="true"
+                    class="ai-summary-btn"
+                >
+
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                    <span>
+                        AI Summary
+                    </span>
+
+                </button>
+
+            </div>
 
         </form>
 
@@ -212,16 +239,15 @@
 
     <div class="student-card">
 
-
         <div class="student-avatar">
             {{ student.name|first|upper }}
         </div>
 
-
         <div class="student-details">
 
             <span class="verified">
-                ✓ VERIFIED STUDENT
+                <i class="fa-solid fa-circle-check"></i>
+                VERIFIED STUDENT
             </span>
 
             <h2>
@@ -237,8 +263,47 @@
 
         </div>
 
+    </div>
+
+
+
+    <!-- =========================
+         AI SUMMARY RESULT
+    ========================== -->
+
+    {% if ai_summary %}
+
+    <div class="ai-summary-card">
+
+        <div class="ai-summary-header">
+
+            <div class="ai-summary-icon">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+
+            <div>
+
+                <h2>
+                    AI Academic Summary
+                </h2>
+
+                <p>
+                    AI-generated analysis of the student's academic performance
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="ai-summary-content">
+
+            {{ ai_summary|linebreaks }}
+
+        </div>
 
     </div>
+
+    {% endif %}
 
 
 
@@ -273,12 +338,10 @@
 
 
     <!-- =========================
-         SEMESTER 1
+         SEMESTER CARDS
     ========================== -->
 
     {% for semester in semester_list %}
-
-        {% if semester.grouper == 1 %}
 
         <div class="semester-card">
 
@@ -287,7 +350,15 @@
                 <div class="semester-title">
 
                     <span class="semester-number">
-                        01
+                        {% if semester.grouper == 1 %}
+                            01
+                        {% elif semester.grouper == 2 %}
+                            02
+                        {% elif semester.grouper == 3 %}
+                            03
+                        {% elif semester.grouper == 4 %}
+                            04
+                        {% endif %}
                     </span>
 
                     <div>
@@ -297,7 +368,7 @@
                         </span>
 
                         <h3>
-                            Semester 1
+                            Semester {{ semester.grouper }}
                         </h3>
 
                     </div>
@@ -306,8 +377,15 @@
 
 
                 <div class="subject-count">
+
                     {{ semester.list|length }}
-                    Subjects
+
+                    {% if semester.list|length == 1 %}
+                        Subject
+                    {% else %}
+                        Subjects
+                    {% endif %}
+
                 </div>
 
             </div>
@@ -371,6 +449,8 @@
 
                                 {% if row.internal is not None %}
                                     {{ row.internal }}
+                                {% else %}
+                                    —
                                 {% endif %}
 
                             </td>
@@ -380,6 +460,8 @@
 
                                 {% if row.external is not None %}
                                     {{ row.external }}
+                                {% else %}
+                                    —
                                 {% endif %}
 
                             </td>
@@ -388,7 +470,11 @@
                             <td>
 
                                 {% if row.attendance is not None %}
-                                    {{ row.attendance }}%
+                                    <span class="attendance-value">
+                                        {{ row.attendance }}%
+                                    </span>
+                                {% else %}
+                                    —
                                 {% endif %}
 
                             </td>
@@ -405,424 +491,7 @@
 
         </div>
 
-        {% endif %}
-
     {% endfor %}
-
-
-
-    <!-- =========================
-         SEMESTER 2
-    ========================== -->
-
-    {% for semester in semester_list %}
-
-        {% if semester.grouper == 2 %}
-
-        <div class="semester-card">
-
-            <div class="semester-header">
-
-                <div class="semester-title">
-
-                    <span class="semester-number">
-                        02
-                    </span>
-
-                    <div>
-
-                        <span class="semester-label">
-                            SEMESTER
-                        </span>
-
-                        <h3>
-                            Semester 2
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="subject-count">
-                    {{ semester.list|length }}
-                    Subjects
-                </div>
-
-            </div>
-
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                Subject Code
-                            </th>
-
-                            <th>
-                                Subject Name
-                            </th>
-
-                            <th>
-                                Internal
-                            </th>
-
-                            <th>
-                                External
-                            </th>
-
-                            <th>
-                                Attendance
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        {% for row in semester.list %}
-
-                        <tr>
-
-                            <td>
-
-                                <span class="subject-code">
-                                    {{ row.subject_code }}
-                                </span>
-
-                            </td>
-
-
-                            <td class="subject-name">
-                                {{ row.subject_name }}
-                            </td>
-
-
-                            <td>
-
-                                {% if row.internal is not None %}
-                                    {{ row.internal }}
-                                {% endif %}
-
-                            </td>
-
-
-                            <td>
-
-                                {% if row.external is not None %}
-                                    {{ row.external }}
-                                {% endif %}
-
-                            </td>
-
-
-                            <td>
-
-                                {% if row.attendance is not None %}
-                                    {{ row.attendance }}%
-                                {% endif %}
-
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-        {% endif %}
-
-    {% endfor %}
-
-
-
-    <!-- =========================
-         SEMESTER 3
-    ========================== -->
-
-    {% for semester in semester_list %}
-
-        {% if semester.grouper == 3 %}
-
-        <div class="semester-card">
-
-            <div class="semester-header">
-
-                <div class="semester-title">
-
-                    <span class="semester-number">
-                        03
-                    </span>
-
-                    <div>
-
-                        <span class="semester-label">
-                            SEMESTER
-                        </span>
-
-                        <h3>
-                            Semester 3
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="subject-count">
-                    {{ semester.list|length }}
-                    Subjects
-                </div>
-
-            </div>
-
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                Subject Code
-                            </th>
-
-                            <th>
-                                Subject Name
-                            </th>
-
-                            <th>
-                                Internal
-                            </th>
-
-                            <th>
-                                External
-                            </th>
-
-                            <th>
-                                Attendance
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        {% for row in semester.list %}
-
-                        <tr>
-
-                            <td>
-
-                                <span class="subject-code">
-                                    {{ row.subject_code }}
-                                </span>
-
-                            </td>
-
-
-                            <td class="subject-name">
-                                {{ row.subject_name }}
-                            </td>
-
-
-                            <td>
-
-                                {% if row.internal is not None %}
-                                    {{ row.internal }}
-                                {% endif %}
-
-                            </td>
-
-
-                            <td>
-
-                                {% if row.external is not None %}
-                                    {{ row.external }}
-                                {% endif %}
-
-                            </td>
-
-
-                            <td>
-
-                                {% if row.attendance is not None %}
-                                    {{ row.attendance }}%
-                                {% endif %}
-
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-        {% endif %}
-
-    {% endfor %}
-
-
-
-    <!-- =========================
-         SEMESTER 4
-    ========================== -->
-
-    {% for semester in semester_list %}
-
-        {% if semester.grouper == 4 %}
-
-        <div class="semester-card">
-
-            <div class="semester-header">
-
-                <div class="semester-title">
-
-                    <span class="semester-number">
-                        04
-                    </span>
-
-                    <div>
-
-                        <span class="semester-label">
-                            SEMESTER
-                        </span>
-
-                        <h3>
-                            Semester 4
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="subject-count">
-                    {{ semester.list|length }}
-                    Subjects
-                </div>
-
-            </div>
-
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                Subject Code
-                            </th>
-
-                            <th>
-                                Subject Name
-                            </th>
-
-                            <th>
-                                Internal
-                            </th>
-
-                            <th>
-                                External
-                            </th>
-
-                            <th>
-                                Attendance
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        {% for row in semester.list %}
-
-                        <tr>
-
-                            <td>
-
-                                <span class="subject-code">
-                                    {{ row.subject_code }}
-                                </span>
-
-                            </td>
-
-
-                            <td class="subject-name">
-                                {{ row.subject_name }}
-                            </td>
-
-
-                            <td>
-
-                                {% if row.internal is not None %}
-                                    {{ row.internal }}
-                                {% endif %}
-
-                            </td>
-
-
-                            <td>
-
-                                {% if row.external is not None %}
-                                    {{ row.external }}
-                                {% endif %}
-
-                            </td>
-
-
-                            <td>
-
-                                {% if row.attendance is not None %}
-                                    {{ row.attendance }}%
-                                {% endif %}
-
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-        {% endif %}
-
-    {% endfor %}
-
 
 
     {% endif %}

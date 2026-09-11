@@ -56,9 +56,12 @@ body {
 
     background: #2563eb;
 
-    font-size: 24px;
+    color: white;
 
-    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.20);
+    font-size: 22px;
+
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.20);
 }
 
 
@@ -76,6 +79,7 @@ body {
     margin: 4px 0 0;
 
     color: #64748b;
+
     font-size: 14px;
 }
 
@@ -101,6 +105,7 @@ body {
 
 .search-heading {
     display: flex;
+
     align-items: center;
 
     gap: 14px;
@@ -121,7 +126,9 @@ body {
 
     background: #eff6ff;
 
-    font-size: 20px;
+    color: #2563eb;
+
+    font-size: 19px;
 }
 
 
@@ -194,7 +201,11 @@ body {
 
     color: #1e293b;
 
-    transition: 0.2s;
+    background: white;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
 }
 
 
@@ -213,33 +224,62 @@ body {
 
 
 /* =================================
+   ACTION BUTTONS
+================================= */
+
+.search-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+
+/* =================================
    SEARCH BUTTON
 ================================= */
 
-.search-btn {
+.search-btn,
+.ai-summary-btn {
     height: 48px;
 
-    padding: 0 24px;
+    padding: 0 20px;
 
     border: none;
 
     border-radius: 10px;
 
-    background: #2563eb;
-
     color: white;
 
     font-family: "Poppins", sans-serif;
 
-    font-size: 14px;
+    font-size: 13px;
 
     font-weight: 600;
 
     cursor: pointer;
 
-    transition: 0.2s;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
 
     white-space: nowrap;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+}
+
+
+.search-btn {
+    background: #2563eb;
 }
 
 
@@ -250,6 +290,187 @@ body {
 
     box-shadow:
         0 8px 18px rgba(37, 99, 235, 0.20);
+}
+
+
+
+/* =================================
+   AI SUMMARY BUTTON
+================================= */
+
+.ai-summary-btn {
+    background: linear-gradient(
+        135deg,
+        #7c3aed,
+        #6366f1
+    );
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+.ai-summary-btn::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 100%;
+    height: 100%;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.20),
+        transparent
+    );
+
+    transition: left 0.5s;
+}
+
+
+.ai-summary-btn:hover::before {
+    left: 100%;
+}
+
+
+.ai-summary-btn:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 20px rgba(124, 58, 237, 0.25);
+}
+
+
+.ai-summary-btn i {
+    font-size: 13px;
+}
+
+
+
+/* =================================
+   AI SUMMARY CARD
+================================= */
+
+.ai-summary-card {
+    background: white;
+
+    border-radius: 18px;
+
+    margin-bottom: 30px;
+
+    overflow: hidden;
+
+    border: 1px solid #e9d5ff;
+
+    box-shadow:
+        0 10px 30px rgba(124, 58, 237, 0.08);
+
+    animation: summaryAppear 0.4s ease;
+}
+
+
+@keyframes summaryAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+.ai-summary-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 20px 24px;
+
+    background: linear-gradient(
+        135deg,
+        #faf5ff,
+        #f5f3ff
+    );
+
+    border-bottom: 1px solid #ede9fe;
+}
+
+
+.ai-summary-icon {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 13px;
+
+    background: linear-gradient(
+        135deg,
+        #7c3aed,
+        #6366f1
+    );
+
+    color: white;
+
+    font-size: 18px;
+
+    box-shadow:
+        0 7px 16px rgba(124, 58, 237, 0.20);
+}
+
+
+.ai-summary-header h2 {
+    margin: 0;
+
+    font-size: 19px;
+
+    color: #4c1d95;
+}
+
+
+.ai-summary-header p {
+    margin: 3px 0 0;
+
+    font-size: 12px;
+
+    color: #7c3aed;
+}
+
+
+.ai-summary-content {
+    padding: 24px;
+
+    color: #475569;
+
+    font-size: 14px;
+
+    line-height: 1.8;
+}
+
+
+.ai-summary-content p {
+    margin: 0 0 12px;
+}
+
+
+.ai-summary-content p:last-child {
+    margin-bottom: 0;
 }
 
 
@@ -384,7 +605,11 @@ body {
 
 
 .verified {
-    display: inline-block;
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
 
     font-size: 10px;
 
@@ -633,12 +858,35 @@ tbody tr:hover td {
 }
 
 
+.attendance-value {
+    font-weight: 600;
+
+    color: #2563eb;
+}
+
+
 
 /* =================================
    MOBILE
 ================================= */
 
-@media (max-width: 850px) {
+@media (max-width: 950px) {
+
+    .search-form {
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .search-actions {
+        grid-column: 1 / -1;
+
+        justify-content: flex-end;
+    }
+
+}
+
+
+@media (max-width: 650px) {
 
     body {
         padding: 25px 15px;
@@ -650,7 +898,19 @@ tbody tr:hover td {
     }
 
 
-    .search-btn {
+    .search-actions {
+        grid-column: auto;
+
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        width: 100%;
+    }
+
+
+    .search-btn,
+    .ai-summary-btn {
         width: 100%;
     }
 
@@ -666,6 +926,11 @@ tbody tr:hover td {
 
     .search-card {
         padding: 20px;
+    }
+
+
+    .search-heading {
+        align-items: flex-start;
     }
 
 
@@ -696,6 +961,42 @@ tbody tr:hover td {
         font-size: 10px;
 
         padding: 6px 9px;
+    }
+
+
+    .ai-summary-header {
+        padding: 18px;
+    }
+
+
+    .ai-summary-content {
+        padding: 18px;
+    }
+
+}
+
+
+@media (max-width: 430px) {
+
+    .search-actions {
+        grid-template-columns: 1fr;
+    }
+
+
+    .search-btn,
+    .ai-summary-btn {
+        width: 100%;
+    }
+
+
+    .student-avatar {
+        width: 50px;
+        height: 50px;
+    }
+
+
+    .student-details h2 {
+        font-size: 18px;
     }
 
 }

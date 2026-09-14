@@ -1,209 +1,999 @@
-/* ===========================
-   Study Materials Page
-=========================== */
+
+/* =========================================================
+   STUDY MATERIALS - ADMIN MANAGEMENT PAGE
+   Professional Academic Management Portal
+   ========================================================= */
+
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
 
 body {
-    background: #f4f7fc;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: #f6f8fb;
+    color: #1e293b;
+    font-family:
+        "Segoe UI",
+        Inter,
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    line-height: 1.6;
 }
 
-/* ===========================
-   Cards
-=========================== */
+
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
+
+.container {
+    max-width: 1350px;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+
+/* =========================================================
+   PAGE TITLE / HEADER
+   ========================================================= */
+
+.page-header {
+    padding: 32px 0 26px;
+}
+
+.page-header h1,
+.page-header h2 {
+    margin: 0;
+
+    color: #172554;
+
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.page-header p {
+    margin: 8px 0 0;
+
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   CARD SYSTEM
+   ========================================================= */
 
 .card {
-    border: none;
-    border-radius: 18px;
+    position: relative;
+
+    margin-bottom: 28px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+
     overflow: hidden;
+
+    box-shadow:
+        0 2px 6px rgba(15, 23, 42, 0.03),
+        0 8px 24px rgba(15, 23, 42, 0.04);
+
+    transition:
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
 }
 
+.card:hover {
+    border-color: #d6dee9;
+
+    box-shadow:
+        0 4px 10px rgba(15, 23, 42, 0.04),
+        0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
 .card-header {
-    background: #0d6efd;
-    color: white;
-    padding: 18px 25px;
+    display: flex;
+    align-items: center;
+
+    min-height: 62px;
+
+    padding: 17px 24px;
+
+    background: #172554;
+
+    color: #ffffff;
+
     border: none;
+    border-bottom: 1px solid #1e3a8a;
 }
 
 .card-header h2,
-.card-header h3 {
+.card-header h3,
+.card-header h4,
+.card-header h5 {
     margin: 0;
-    font-weight: 600;
+
+    color: #ffffff;
+
+    font-size: 17px;
+    font-weight: 650;
+    letter-spacing: 0.1px;
 }
+
+
+/* =========================================================
+   CARD BODY
+   ========================================================= */
 
 .card-body {
-    padding: 30px;
+    padding: 28px;
 }
 
-/* ===========================
-   Labels
-=========================== */
+
+/* =========================================================
+   UPLOAD CARD
+   ========================================================= */
+
+.upload-card {
+    margin-bottom: 30px;
+}
+
+.upload-card .card-body {
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   FORM LABELS
+   ========================================================= */
 
 .form-label {
-    font-weight: 600;
-    color: #444;
-    margin-bottom: 8px;
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #334155;
+
+    font-size: 13px;
+    font-weight: 650;
+    letter-spacing: 0.1px;
 }
 
-/* ===========================
-   Inputs
-=========================== */
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
 
 .form-control,
 .form-select {
-    border-radius: 10px;
+    width: 100%;
+
     min-height: 46px;
-    border: 1px solid #d9d9d9;
-    transition: .3s;
+
+    padding: 10px 13px;
+
+    background: #ffffff;
+
+    color: #334155;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.form-control::placeholder {
+    color: #94a3b8;
+}
+
+.form-control:hover,
+.form-select:hover {
+    border-color: #94a3b8;
 }
 
 .form-control:focus,
 .form-select:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 .18rem rgba(13,110,253,.15);
+    outline: none;
+
+    background: #ffffff;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
 }
+
+
+/* =========================================================
+   TEXTAREA
+   ========================================================= */
 
 textarea.form-control {
-    min-height: 130px;
+    min-height: 125px;
+
+    resize: vertical;
+
+    line-height: 1.55;
 }
 
-/* ===========================
-   Buttons
-=========================== */
+
+/* =========================================================
+   FILE INPUT
+   ========================================================= */
+
+input[type="file"].form-control {
+    padding: 9px 12px;
+
+    cursor: pointer;
+}
+
+input[type="file"].form-control::file-selector-button {
+    margin-right: 12px;
+
+    padding: 7px 12px;
+
+    color: #334155;
+
+    background: #f1f5f9;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+}
+
+input[type="file"].form-control::file-selector-button:hover {
+    background: #e2e8f0;
+}
+
+
+/* =========================================================
+   BUTTON BASE
+   ========================================================= */
 
 .btn {
-    border-radius: 10px;
-    font-weight: 500;
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 40px;
+
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease;
 }
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
 
 .btn-primary {
-    padding: 10px 24px;
+    padding: 9px 22px;
+
+    background: #2563eb;
+    border: 1px solid #2563eb;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 2px 5px rgba(37, 99, 235, 0.15);
 }
+
+.btn-primary:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 4px 10px rgba(37, 99, 235, 0.20);
+}
+
+
+/* =========================================================
+   SECONDARY BUTTON
+   ========================================================= */
 
 .btn-secondary {
-    padding: 10px 24px;
+    padding: 9px 22px;
+
+    background: #475569;
+    border: 1px solid #475569;
+
+    color: #ffffff;
 }
+
+.btn-secondary:hover {
+    background: #334155;
+    border-color: #334155;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   WARNING BUTTON
+   ========================================================= */
 
 .btn-warning {
-    color: #fff;
+    padding: 7px 14px;
+
+    background: #f59e0b;
+    border: 1px solid #f59e0b;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 2px 5px rgba(245, 158, 11, 0.12);
 }
+
+.btn-warning:hover {
+    background: #d97706;
+    border-color: #d97706;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   DANGER BUTTON
+   ========================================================= */
+
+.btn-danger {
+    padding: 7px 14px;
+
+    background: #dc2626;
+    border: 1px solid #dc2626;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 2px 5px rgba(220, 38, 38, 0.10);
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   SMALL BUTTON
+   ========================================================= */
 
 .btn-sm {
-    padding: 6px 14px;
+    min-height: 34px;
+
+    padding: 6px 13px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
 }
 
-/* ===========================
-   Table
-=========================== */
 
-.table {
-    margin: 0;
+/* =========================================================
+   OUTLINE BUTTON
+   ========================================================= */
+
+.btn-outline-secondary {
+    padding: 9px 20px;
+
+    color: #475569;
+
+    background: #ffffff;
+
+    border: 1px solid #cbd5e1;
 }
 
-.table thead {
-    background: #0d6efd;
-    color: #fff;
+.btn-outline-secondary:hover {
+    color: #334155;
+
+    background: #f8fafc;
+
+    border-color: #94a3b8;
 }
 
-.table thead th {
-    vertical-align: middle;
-    white-space: nowrap;
-    padding: 15px;
-}
 
-.table tbody td {
-    vertical-align: middle;
-    padding: 15px;
-}
-
-.table-hover tbody tr:hover {
-    background: #f8fbff;
-}
-
-/* ===========================
-   Description
-=========================== */
-
-.description-column {
-    max-width: 260px;
-    word-break: break-word;
-}
-
-/* ===========================
-   Action Buttons
-=========================== */
+/* =========================================================
+   ACTION BUTTON GROUP
+   ========================================================= */
 
 .action-buttons {
     display: flex;
-    gap: 8px;
+
+    align-items: center;
+
+    gap: 7px;
+
     flex-wrap: wrap;
 }
 
-/* ===========================
-   Alerts
-=========================== */
+.action-buttons .btn {
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.table-responsive {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.table {
+    width: 100%;
+
+    margin: 0;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    color: #475569;
+
+    font-size: 13.5px;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.table thead {
+    background: #f8fafc;
+}
+
+.table thead th {
+    padding: 14px 16px;
+
+    color: #334155;
+
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #dbe3ed;
+
+    font-size: 11.5px;
+    font-weight: 700;
+
+    letter-spacing: 0.55px;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.table tbody td {
+    padding: 15px 16px;
+
+    color: #475569;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #edf1f5;
+
+    vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   TABLE HOVER
+   ========================================================= */
+
+.table-hover tbody tr {
+    transition: background 0.18s ease;
+}
+
+.table-hover tbody tr:hover td {
+    background: #f8fbff;
+}
+
+
+/* =========================================================
+   FIRST COLUMN
+   ========================================================= */
+
+.table tbody td:first-child {
+    color: #172554;
+
+    font-weight: 650;
+}
+
+
+/* =========================================================
+   DESCRIPTION COLUMN
+   ========================================================= */
+
+.description-column {
+    min-width: 220px;
+    max-width: 340px;
+
+    color: #64748b;
+
+    line-height: 1.55;
+
+    word-break: break-word;
+    white-space: normal;
+}
+
+
+/* =========================================================
+   TABLE FILE / COURSE INFORMATION
+   ========================================================= */
+
+.table td small {
+    color: #94a3b8;
+
+    font-size: 11.5px;
+}
+
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 9px;
+
+    border-radius: 5px;
+
+    font-size: 11px;
+    font-weight: 650;
+
+    letter-spacing: 0.1px;
+}
+
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
 
 .alert {
-    border-radius: 10px;
+    margin-bottom: 22px;
+
+    padding: 13px 16px;
+
+    border-radius: 7px;
+
+    font-size: 13.5px;
+
+    border: 1px solid transparent;
 }
 
-/* ===========================
-   Upload Card
-=========================== */
+.alert-success {
+    color: #166534;
 
-.upload-card {
-    margin-bottom: 35px;
+    background: #f0fdf4;
+
+    border-color: #bbf7d0;
 }
 
-/* ===========================
-   Responsive
-=========================== */
+.alert-danger {
+    color: #991b1b;
 
-@media (max-width:992px) {
+    background: #fef2f2;
+
+    border-color: #fecaca;
+}
+
+.alert-warning {
+    color: #92400e;
+
+    background: #fffbeb;
+
+    border-color: #fde68a;
+}
+
+.alert-info {
+    color: #075985;
+
+    background: #f0f9ff;
+
+    border-color: #bae6fd;
+}
+
+
+/* =========================================================
+   REQUIRED FIELD
+   ========================================================= */
+
+.required {
+    color: #dc2626;
+    margin-left: 2px;
+}
+
+
+/* =========================================================
+   FORM ACTION AREA
+   ========================================================= */
+
+.form-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 8px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #edf1f5;
+}
+
+
+/* =========================================================
+   EMPTY TABLE STATE
+   ========================================================= */
+
+.empty-state {
+    padding: 55px 20px;
+
+    text-align: center;
+}
+
+.empty-state h5 {
+    margin: 0 0 6px;
+
+    color: #334155;
+
+    font-size: 17px;
+    font-weight: 650;
+}
+
+.empty-state p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 13.5px;
+}
+
+
+/* =========================================================
+   MUTED TEXT
+   ========================================================= */
+
+.text-muted {
+    color: #64748b !important;
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+a {
+    color: #2563eb;
+
+    text-decoration: none;
+
+    transition: color 0.18s ease;
+}
+
+a:hover {
+    color: #1d4ed8;
+}
+
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+   ========================================================= */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.22);
+
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   LARGE TABLETS
+   ========================================================= */
+
+@media (max-width: 992px) {
+
+    .container {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .page-header {
+        padding-top: 26px;
+    }
+
+    .page-header h1,
+    .page-header h2 {
+        font-size: 27px;
+    }
 
     .card-body {
-        padding: 20px;
+        padding: 22px;
     }
 
     .table {
-        font-size: 14px;
+        font-size: 13px;
+    }
+
+    .table thead th,
+    .table tbody td {
+        padding: 13px;
     }
 
 }
 
-@media (max-width:768px) {
+
+/* =========================================================
+   TABLETS
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .page-header {
+        padding: 24px 0 20px;
+    }
+
+    .page-header h1,
+    .page-header h2 {
+        font-size: 24px;
+    }
+
+    .page-header p {
+        font-size: 13px;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .card-header {
+        min-height: 56px;
+
+        padding: 15px 18px;
+    }
 
     .card-header h2,
-    .card-header h3 {
-        font-size: 22px;
+    .card-header h3,
+    .card-header h4,
+    .card-header h5 {
+        font-size: 16px;
+    }
+
+    .card-body {
+        padding: 19px;
     }
 
     .action-buttons {
         flex-direction: column;
+
+        align-items: stretch;
     }
 
-    .btn-sm {
+    .action-buttons .btn {
+        width: 100%;
+    }
+
+    .form-actions {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .form-actions .btn {
         width: 100%;
     }
 
 }
 
-@media (max-width:576px) {
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 576px) {
 
     body {
-        padding: 10px;
+        background: #f6f8fb;
+    }
+
+    .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .page-header {
+        padding: 20px 0 17px;
+    }
+
+    .page-header h1,
+    .page-header h2 {
+        font-size: 21px;
+    }
+
+    .page-header p {
+        margin-top: 6px;
+
+        font-size: 12.5px;
+    }
+
+    .card {
+        margin-bottom: 20px;
+
+        border-radius: 9px;
+    }
+
+    .card-header {
+        padding: 14px 16px;
+    }
+
+    .card-header h2,
+    .card-header h3,
+    .card-header h4,
+    .card-header h5 {
+        font-size: 15px;
     }
 
     .card-body {
-        padding: 15px;
+        padding: 16px;
     }
 
-    .btn-primary,
-    .btn-secondary {
-        width: 100%;
+    .form-label {
+        font-size: 12.5px;
     }
 
-    .d-flex {
-        flex-direction: column;
+    .form-control,
+    .form-select {
+        min-height: 44px;
+
+        font-size: 13px;
+    }
+
+    textarea.form-control {
+        min-height: 110px;
+    }
+
+    .table {
+        font-size: 12.5px;
+    }
+
+    .table thead th {
+        padding: 12px;
+        font-size: 10.5px;
+    }
+
+    .table tbody td {
+        padding: 12px;
+    }
+
+    .description-column {
+        min-width: 190px;
+        max-width: 240px;
     }
 
 }
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .page-header h1,
+    .page-header h2 {
+        font-size: 19px;
+    }
+
+    .card-body {
+        padding: 14px;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-outline-secondary {
+        width: 100%;
+    }
+
+    .table thead th,
+    .table tbody td {
+        padding: 10px;
+    }
+
+}
+

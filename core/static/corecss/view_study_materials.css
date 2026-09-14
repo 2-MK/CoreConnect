@@ -1,6 +1,11 @@
-/* =========================================
-   Study Materials - Student Page
-========================================= */
+
+/* =========================================================
+   STUDY MATERIALS - PROFESSIONAL STUDENT PORTAL
+   ========================================================= */
+
+/* =========================================================
+   GLOBAL RESET
+   ========================================================= */
 
 * {
     margin: 0;
@@ -8,186 +13,523 @@
     box-sizing: border-box;
 }
 
-body {
-    background: #f4f7fc;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
+html {
+    scroll-behavior: smooth;
 }
 
-/* =========================================
-   Container
-========================================= */
+body {
+    background: #f5f7fb;
+    font-family: "Segoe UI", Inter, Roboto, Arial, sans-serif;
+    color: #1e293b;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
 
 .container {
-    max-width: 1300px;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
-/* =========================================
-   Header
-========================================= */
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.page-header {
+    padding: 35px 0 25px;
+}
 
 .page-header h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #0d6efd;
+    position: relative;
+    display: inline-block;
+    font-size: 30px;
+    font-weight: 750;
+    letter-spacing: -0.5px;
+    color: #172554;
+    margin-bottom: 7px;
+}
+
+.page-header h2::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 42px;
+    height: 3px;
+    border-radius: 3px;
+    background: #2563eb;
 }
 
 .page-header p {
-    margin-top: 5px;
+    margin-top: 15px;
+    color: #64748b;
     font-size: 15px;
+    font-weight: 400;
 }
 
-/* =========================================
-   Cards
-========================================= */
+
+/* =========================================================
+   COMMON CARD
+   ========================================================= */
 
 .card {
-    border: none;
-    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #ffffff;
     overflow: hidden;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
 }
 
+.card:hover {
+    border-color: #d7e0ec;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
 .card-header {
-    background: #0d6efd;
-    color: white;
-    padding: 16px 22px;
+    background: #172554;
+    color: #ffffff;
     border: none;
+    padding: 17px 22px;
 }
 
 .card-header h5 {
     margin: 0;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 650;
+    letter-spacing: 0.1px;
 }
+
+
+/* =========================================================
+   CARD BODY
+   ========================================================= */
 
 .card-body {
-    padding: 25px;
+    padding: 26px;
 }
 
-/* =========================================
-   Form
-========================================= */
+
+/* =========================================================
+   FILTER SECTION
+   ========================================================= */
+
+.filter-card {
+    margin-bottom: 28px;
+}
+
+.filter-card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-card .card-body {
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   FORM LABELS
+   ========================================================= */
 
 .form-label {
-    font-weight: 600;
-    color: #444;
+    display: block;
     margin-bottom: 8px;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 650;
 }
+
+
+/* =========================================================
+   INPUTS & SELECT
+   ========================================================= */
 
 .form-control,
 .form-select {
-    height: 48px;
-    border-radius: 10px;
-    border: 1px solid #d8d8d8;
-    transition: .3s;
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+
+    background: #ffffff;
+    color: #334155;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.form-control::placeholder {
+    color: #94a3b8;
+}
+
+.form-control:hover,
+.form-select:hover {
+    border-color: #94a3b8;
 }
 
 .form-control:focus,
 .form-select:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 .2rem rgba(13,110,253,.15);
+    outline: none;
+    border-color: #2563eb;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
 }
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
 
 .btn {
-    border-radius: 10px;
+    border-radius: 8px;
+    font-size: 14px;
     font-weight: 600;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
 }
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
 
 .btn-primary {
-    padding: 10px 28px;
+    padding: 10px 24px;
+    background: #2563eb;
+    border-color: #2563eb;
+    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.15);
 }
+
+.btn-primary:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    box-shadow: 0 5px 12px rgba(37, 99, 235, 0.20);
+}
+
+
+/* =========================================================
+   SECONDARY / RESET BUTTON
+   ========================================================= */
 
 .btn-outline-secondary {
-    padding: 10px 28px;
+    padding: 10px 24px;
+    color: #475569;
+    border-color: #cbd5e1;
+    background: #ffffff;
 }
 
-/* =========================================
-   Table
-========================================= */
+.btn-outline-secondary:hover {
+    color: #334155;
+    background: #f8fafc;
+    border-color: #94a3b8;
+}
+
+
+/* =========================================================
+   MATERIALS TABLE CARD
+   ========================================================= */
+
+.materials-card {
+    margin-bottom: 30px;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.table-responsive {
+    border-radius: 10px;
+}
 
 .table {
+    width: 100%;
     margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
 .table thead {
-    background: #0d6efd;
-    color: white;
+    background: #f8fafc;
+    color: #334155;
 }
 
 .table thead th {
-    padding: 15px;
-    white-space: nowrap;
-}
+    padding: 15px 16px;
 
-.table tbody td {
-    padding: 15px;
+    border-bottom: 1px solid #dbe3ed;
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    white-space: nowrap;
     vertical-align: middle;
 }
 
-.table-hover tbody tr:hover {
-    background: #f7fbff;
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.table tbody td {
+    padding: 16px;
+
+    color: #475569;
+    font-size: 14px;
+
+    border-bottom: 1px solid #edf1f5;
+    vertical-align: middle;
 }
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   TABLE HOVER
+   ========================================================= */
+
+.table-hover tbody tr {
+    transition:
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.table-hover tbody tr:hover {
+    background: #f8fbff;
+}
+
+
+/* =========================================================
+   MATERIAL TITLE
+   ========================================================= */
+
+.table tbody td:first-child {
+    color: #172554;
+    font-weight: 650;
+}
+
+
+/* =========================================================
+   DESCRIPTION COLUMN
+   ========================================================= */
 
 .description-column {
-    max-width: 300px;
+    max-width: 330px;
+    min-width: 220px;
+
     word-wrap: break-word;
     white-space: normal;
+
+    color: #64748b;
+    line-height: 1.55;
 }
 
-/* =========================================
-   Buttons
-========================================= */
+
+/* =========================================================
+   DOWNLOAD BUTTON
+   ========================================================= */
 
 .btn-success {
-    border-radius: 8px;
-    font-size: 14px;
-    padding: 7px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 105px;
+
+    padding: 8px 16px;
+
+    border-radius: 7px;
+
+    background: #0f766e;
+    border-color: #0f766e;
+
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    box-shadow: 0 2px 6px rgba(15, 118, 110, 0.12);
 }
 
-/* =========================================
-   Empty State
-========================================= */
+.btn-success:hover {
+    background: #0d665f;
+    border-color: #0d665f;
+    color: #ffffff;
+
+    box-shadow: 0 4px 10px rgba(15, 118, 110, 0.18);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    padding: 60px 25px;
+    text-align: center;
+}
 
 .empty-image {
-    width: 140px;
-    opacity: .7;
+    display: block;
+    width: 125px;
+    max-width: 100%;
+    margin: 0 auto 20px;
+
+    opacity: 0.65;
 }
+
+.empty-state h5 {
+    margin-bottom: 7px;
+
+    color: #334155;
+    font-size: 17px;
+    font-weight: 650;
+}
+
+.empty-state p {
+    max-width: 450px;
+    margin: 0 auto;
+
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   MUTED TEXT
+   ========================================================= */
 
 .text-muted {
-    color: #777 !important;
+    color: #64748b !important;
 }
 
-/* =========================================
-   Filter Card
-========================================= */
 
-.filter-card {
-    margin-bottom: 25px;
+/* =========================================================
+   BADGES / OPTIONAL STATUS
+   ========================================================= */
+
+.badge {
+    padding: 5px 9px;
+
+    border-radius: 6px;
+
+    font-size: 11px;
+    font-weight: 650;
 }
 
-/* =========================================
-   Responsive
-========================================= */
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+   ========================================================= */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.25);
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   RESPONSIVE - LARGE TABLETS
+   ========================================================= */
 
 @media (max-width: 992px) {
 
+    .container {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .page-header {
+        padding-top: 28px;
+    }
+
+    .page-header h2 {
+        font-size: 27px;
+    }
+
     .card-body {
-        padding: 20px;
+        padding: 22px;
     }
 
     .table {
         font-size: 14px;
     }
 
+    .table thead th,
+    .table tbody td {
+        padding: 13px;
+    }
+
 }
+
+
+/* =========================================================
+   RESPONSIVE - TABLETS
+   ========================================================= */
 
 @media (max-width: 768px) {
 
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .page-header {
+        padding: 25px 0 20px;
+    }
+
     .page-header h2 {
-        font-size: 28px;
+        font-size: 25px;
     }
 
     .page-header p {
         font-size: 14px;
+    }
+
+    .card-body {
+        padding: 19px;
     }
 
     .btn-primary,
@@ -195,28 +537,120 @@ body {
         width: 100%;
     }
 
-    .d-flex {
-        flex-direction: column;
+    .filter-card .row {
+        row-gap: 15px;
+    }
+
+    .description-column {
+        min-width: 200px;
+        max-width: 260px;
     }
 
 }
 
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
 @media (max-width: 576px) {
 
     body {
-        padding: 10px;
+        background: #f5f7fb;
+    }
+
+    .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .page-header {
+        padding: 20px 0 17px;
+    }
+
+    .page-header h2 {
+        font-size: 22px;
+    }
+
+    .page-header p {
+        margin-top: 13px;
+        font-size: 13px;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .card-header {
+        padding: 14px 17px;
+    }
+
+    .card-header h5 {
+        font-size: 15px;
     }
 
     .card-body {
-        padding: 15px;
+        padding: 16px;
+    }
+
+    .form-control,
+    .form-select {
+        height: 44px;
+        font-size: 13px;
     }
 
     .table {
         font-size: 13px;
     }
 
+    .table thead th,
+    .table tbody td {
+        padding: 12px;
+    }
+
+    .description-column {
+        min-width: 180px;
+        max-width: 220px;
+    }
+
+    .btn-success {
+        min-width: 90px;
+        padding: 7px 12px;
+        font-size: 12px;
+    }
+
+    .empty-state {
+        padding: 45px 15px;
+    }
+
     .empty-image {
         width: 100px;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - VERY SMALL DEVICES
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .page-header h2 {
+        font-size: 20px;
+    }
+
+    .page-header p {
+        font-size: 12px;
+    }
+
+    .card-body {
+        padding: 13px;
+    }
+
+    .table thead th,
+    .table tbody td {
+        padding: 10px;
     }
 
 }

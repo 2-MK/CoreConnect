@@ -1,63 +1,534 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    background:#f5f7fb;
+html {
+    scroll-behavior: smooth;
 }
 
-.committee-section{
-    width:90%;
-    max-width:1200px;
-    margin:60px auto;
+body {
+    min-height: 100vh;
+    font-family: "Inter", sans-serif;
+    color: #172033;
+
+    background:
+        radial-gradient(
+            circle at 10% 5%,
+            rgba(59, 130, 246, 0.08),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 95%,
+            rgba(96, 165, 250, 0.07),
+            transparent 30%
+        ),
+        #f7f8f6;
+
+    overflow-x: hidden;
 }
 
-.committee-section h1{
-    text-align:center;
-    font-size:40px;
-    color:#1f2937;
-    margin-bottom:50px;
+
+/* =========================================================
+   MAIN SECTION
+   ========================================================= */
+
+.committee-section {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+
+    padding: 75px 0 100px;
 }
 
-.members-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-    gap:35px;
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+.committee-section h1 {
+    position: relative;
+
+    text-align: center;
+
+    margin-bottom: 58px;
+
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -1.4px;
+
+    color: #172033;
 }
 
-.member-card{
-    background:white;
-    border-radius:15px;
-    padding:30px 20px;
-    text-align:center;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-    transition:.3s;
+.committee-section h1::after {
+    content: "";
+
+    display: block;
+
+    width: 58px;
+    height: 4px;
+
+    margin: 17px auto 0;
+
+    border-radius: 50px;
+
+    background: linear-gradient(
+        90deg,
+        #2563eb,
+        #7aaaf7
+    );
 }
 
-.member-card:hover{
-    transform:translateY(-8px);
+
+/* =========================================================
+   MEMBERS GRID
+   ========================================================= */
+
+.members-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: 24px;
 }
 
-.member-card img{
-    width:160px;
-    height:160px;
-    border-radius:50%;
-    object-fit:cover;
-    border:5px solid #0d6efd;
-    margin-bottom:20px;
+
+/* =========================================================
+   MEMBER CARD
+   ========================================================= */
+
+.member-card {
+    position: relative;
+
+    padding: 30px 20px 27px;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border: 1px solid #e7e9ed;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 5px 15px rgba(30, 41, 59, 0.045),
+        0 1px 3px rgba(30, 41, 59, 0.04);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
 }
 
-.member-card h3{
-    font-size:24px;
-    color:#222;
-    margin-bottom:8px;
+
+/* Top blue accent */
+
+.member-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 3px;
+
+    background: linear-gradient(
+        90deg,
+        #2563eb,
+        #93c5fd
+    );
+
+    transform: scaleX(0);
+
+    transform-origin: center;
+
+    transition: transform 0.35s ease;
 }
 
-.member-card p{
-    font-size:17px;
-    color:#666;
-    font-weight:600;
+
+/* Soft decorative circle */
+
+.member-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 130px;
+    height: 130px;
+
+    top: -85px;
+    right: -75px;
+
+    border-radius: 50%;
+
+    background: rgba(37, 99, 235, 0.045);
+
+    transition: transform 0.4s ease;
+}
+
+
+.member-card:hover {
+    transform: translateY(-7px);
+
+    border-color: #d8e4f7;
+
+    box-shadow:
+        0 18px 38px rgba(30, 41, 59, 0.09),
+        0 4px 10px rgba(30, 41, 59, 0.04);
+}
+
+.member-card:hover::before {
+    transform: scaleX(1);
+}
+
+.member-card:hover::after {
+    transform: scale(1.8);
+}
+
+
+/* =========================================================
+   MEMBER IMAGE
+   ========================================================= */
+
+.member-card img {
+    position: relative;
+    z-index: 2;
+
+    display: block;
+
+    width: 145px;
+    height: 145px;
+
+    margin: 0 auto 22px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 5px solid #ffffff;
+
+    outline: 1px solid #dfe5ed;
+
+    background: #f1f3f5;
+
+    box-shadow:
+        0 7px 20px rgba(15, 23, 42, 0.10);
+
+    transition:
+        transform 0.4s ease,
+        box-shadow 0.4s ease,
+        outline-color 0.4s ease;
+}
+
+.member-card:hover img {
+    transform: scale(1.045);
+
+    outline-color: #b9d1f5;
+
+    box-shadow:
+        0 12px 27px rgba(37, 99, 235, 0.13);
+}
+
+
+/* =========================================================
+   MEMBER NAME
+   ========================================================= */
+
+.member-card h3 {
+    position: relative;
+    z-index: 2;
+
+    margin-bottom: 9px;
+
+    color: #182235;
+
+    font-size: 1.02rem;
+
+    line-height: 1.4;
+
+    font-weight: 700;
+
+    letter-spacing: -0.2px;
+
+    transition: color 0.3s ease;
+}
+
+.member-card:hover h3 {
+    color: #1d4ed8;
+}
+
+
+/* =========================================================
+   POSITION BADGE
+   ========================================================= */
+
+.member-card p {
+    position: relative;
+    z-index: 2;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 30px;
+
+    padding: 6px 14px;
+
+    border-radius: 50px;
+
+    background: #f0f6ff;
+
+    border: 1px solid #dceaff;
+
+    color: #2563eb;
+
+    font-size: 0.72rem;
+
+    font-weight: 600;
+
+    letter-spacing: 0.15px;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.member-card:hover p {
+    background: #2563eb;
+
+    border-color: #2563eb;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   LEADERSHIP CARDS
+   ========================================================= */
+
+.member-card:first-child,
+.member-card:nth-child(2) {
+    border-color: #dce7f7;
+}
+
+.member-card:first-child::before,
+.member-card:nth-child(2)::before {
+    transform: scaleX(1);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    .committee-section {
+        padding: 60px 0 80px;
+    }
+
+    .members-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 21px;
+    }
+
+    .member-card {
+        padding: 27px 18px 25px;
+    }
+
+    .member-card img {
+        width: 130px;
+        height: 130px;
+    }
+}
+
+
+/* =========================================================
+   SMALL TABLET
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+    .committee-section {
+        width: min(650px, calc(100% - 30px));
+
+        padding: 50px 0 65px;
+    }
+
+    .committee-section h1 {
+        margin-bottom: 42px;
+
+        font-size: 2.2rem;
+    }
+
+    .members-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 17px;
+    }
+
+    .member-card {
+        padding: 24px 14px 22px;
+
+        border-radius: 17px;
+    }
+
+    .member-card img {
+        width: 120px;
+        height: 120px;
+
+        margin-bottom: 18px;
+    }
+
+    .member-card h3 {
+        font-size: 0.95rem;
+    }
+
+    .member-card p {
+        font-size: 0.68rem;
+
+        padding: 5px 11px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .committee-section {
+        width: calc(100% - 22px);
+
+        padding: 38px 0 55px;
+    }
+
+    .committee-section h1 {
+        margin-bottom: 34px;
+
+        font-size: 1.8rem;
+
+        letter-spacing: -0.8px;
+    }
+
+    .committee-section h1::after {
+        width: 45px;
+        height: 3px;
+
+        margin-top: 14px;
+    }
+
+    .members-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+
+    .member-card {
+        padding: 19px 8px 18px;
+
+        border-radius: 15px;
+    }
+
+    .member-card img {
+        width: 92px;
+        height: 92px;
+
+        margin-bottom: 14px;
+
+        border-width: 4px;
+    }
+
+    .member-card h3 {
+        margin-bottom: 7px;
+
+        font-size: 0.80rem;
+
+        line-height: 1.35;
+    }
+
+    .member-card p {
+        min-height: 27px;
+
+        max-width: 100%;
+
+        padding: 5px 8px;
+
+        font-size: 0.58rem;
+
+        line-height: 1.2;
+
+        white-space: nowrap;
+    }
+
+    .member-card:hover {
+        transform: translateY(-4px);
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+   ========================================================= */
+
+@media (max-width: 350px) {
+
+    .committee-section {
+        width: calc(100% - 16px);
+    }
+
+    .members-grid {
+        gap: 9px;
+    }
+
+    .member-card {
+        padding: 16px 6px;
+    }
+
+    .member-card img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .member-card h3 {
+        font-size: 0.73rem;
+    }
+
+    .member-card p {
+        padding: 4px 6px;
+
+        font-size: 0.53rem;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
 }

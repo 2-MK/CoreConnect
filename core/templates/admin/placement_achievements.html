@@ -1,257 +1,966 @@
+
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Placement Achievement</title>
+
+    <title>Placement Achievement | CoreConnect</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        rel="stylesheet">
 
     <style>
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial,sans-serif;
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        body{
-
-            background:#f4f6f9;
-            padding:40px;
-
+        body {
+            min-height: 100vh;
+            background: #f5f7fb;
+            color: #1f2937;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .container{
-
-            width:100%;
-            max-width:800px;
-            margin:auto;
-            background:white;
-            padding:30px;
-            border-radius:12px;
-            box-shadow:0 5px 15px rgba(0,0,0,.1);
-
+        .page-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 45px 20px 60px;
         }
 
-        h1{
 
-            color:#2c3e50;
-            margin-bottom:10px;
+        /* =========================================================
+           PAGE CARD
+        ========================================================= */
 
+        .form-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 35px rgba(15, 23, 42, 0.07);
         }
 
-        p{
 
-            color:#666;
-            margin-bottom:25px;
+        /* =========================================================
+           HEADER
+        ========================================================= */
 
+        .form-header {
+            background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+            color: #ffffff;
+            padding: 28px 32px;
         }
 
-        form{
-
-            display:grid;
-            gap:18px;
-
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        label{
-
-            font-weight:bold;
-            color:#444;
-            margin-bottom:5px;
-            display:block;
-
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            font-size: 20px;
         }
 
-        input,
-        textarea{
-
-            width:100%;
-            padding:12px;
-            border:1px solid #ccc;
-            border-radius:8px;
-            font-size:15px;
-
+        .form-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 650;
+            letter-spacing: -0.3px;
         }
 
-        textarea{
-
-            min-height:120px;
-            resize:vertical;
-
+        .form-header p {
+            margin: 4px 0 0;
+            color: rgba(255, 255, 255, 0.82);
+            font-size: 0.88rem;
         }
 
-        input[type=file]{
 
-            padding:10px;
+        /* =========================================================
+           FORM CONTENT
+        ========================================================= */
 
+        .form-content {
+            padding: 34px;
         }
 
-        .btn{
-
-            background:#2ecc71;
-            color:white;
-            border:none;
-            padding:12px;
-            border-radius:8px;
-            cursor:pointer;
-            font-size:16px;
-            transition:.3s;
-
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
         }
 
-        .btn:hover{
-
-            background:#27ae60;
-
+        .section-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            background: #eaf2ff;
+            color: #0d6efd;
+            font-size: 14px;
         }
 
-        .back{
-
-            display:inline-block;
-            margin-top:20px;
-            background:#3498db;
-            color:white;
-            text-decoration:none;
-            padding:12px 20px;
-            border-radius:8px;
-
+        .section-title h2 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 650;
+            color: #111827;
         }
 
-        .back:hover{
+        .section-title p {
+            margin: 2px 0 0;
+            font-size: 0.78rem;
+            color: #8a94a6;
+        }
 
-            background:#2980b9;
+
+        /* =========================================================
+           FORM GROUPS
+        ========================================================= */
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 8px;
+            color: #374151;
+            font-size: 0.84rem;
+            font-weight: 600;
+        }
+
+        .form-label i {
+            color: #0d6efd;
+            font-size: 0.78rem;
+        }
+
+        .required {
+            color: #dc3545;
+            margin-left: 1px;
+        }
+
+        .form-control {
+            width: 100%;
+            min-height: 46px;
+            padding: 10px 13px;
+            border: 1px solid #dfe3e8;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #1f2937;
+            font-size: 0.88rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-control::placeholder {
+            color: #a5adba;
+        }
+
+        .form-control:hover {
+            border-color: #c8ced7;
+        }
+
+        .form-control:focus {
+            border-color: #86b7fe;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.10);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.55;
+        }
+
+
+        /* =========================================================
+           FIELD HINT
+        ========================================================= */
+
+        .field-hint {
+            margin-top: 6px;
+            color: #929baa;
+            font-size: 0.74rem;
+        }
+
+
+        /* =========================================================
+           FILE UPLOAD
+        ========================================================= */
+
+        .upload-box {
+            position: relative;
+            padding: 18px;
+            border: 1px dashed #cbd3df;
+            border-radius: 10px;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+        }
+
+        .upload-box:hover {
+            border-color: #86b7fe;
+            background: #f8faff;
+        }
+
+        .upload-box input[type="file"] {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 0;
+            color: #6b7280;
+            font-size: 0.82rem;
+        }
+
+        .upload-box input[type="file"]:focus {
+            box-shadow: none;
+        }
+
+        .upload-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .upload-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            background: #eaf2ff;
+            color: #0d6efd;
+        }
+
+        .upload-info strong {
+            display: block;
+            color: #374151;
+            font-size: 0.82rem;
+        }
+
+        .upload-info span {
+            display: block;
+            margin-top: 2px;
+            color: #929baa;
+            font-size: 0.73rem;
+        }
+
+
+        /* =========================================================
+           IMAGE PREVIEW
+        ========================================================= */
+
+        .preview-container {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .preview-container.active {
+            display: block;
+        }
+
+        .preview-label {
+            display: block;
+            margin-bottom: 7px;
+            color: #6b7280;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .image-preview {
+            width: 140px;
+            height: 105px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #e1e5ea;
+            padding: 3px;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+        }
+
+
+        /* =========================================================
+           ACTION AREA
+        ========================================================= */
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 8px;
+            padding-top: 25px;
+            border-top: 1px solid #edf0f3;
+        }
+
+        .btn-primary-custom {
+            min-height: 45px;
+            padding: 10px 22px;
+            border: none;
+            border-radius: 9px;
+            background: #0d6efd;
+            color: #ffffff;
+            font-size: 0.86rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background: #0b5ed7;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(13, 110, 253, 0.20);
+        }
+
+        .btn-primary-custom:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-back {
+            min-height: 45px;
+            padding: 10px 20px;
+            border: 1px solid #dfe3e8;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 0.86rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background: #f8f9fb;
+            border-color: #cbd1d9;
+            color: #1f2937;
+        }
+
+
+        /* =========================================================
+           SUCCESS MESSAGE
+        ========================================================= */
+
+        .success-alert {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding: 13px 15px;
+            border: 1px solid #badbcc;
+            border-radius: 9px;
+            background: #f0fdf4;
+            color: #146c43;
+            font-size: 0.84rem;
+        }
+
+        .success-alert i {
+            font-size: 16px;
+        }
+
+
+        /* =========================================================
+           FOOTER NOTE
+        ========================================================= */
+
+        .footer-note {
+            margin-top: 20px;
+            text-align: center;
+            color: #9aa3af;
+            font-size: 0.74rem;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 768px) {
+
+            .page-wrapper {
+                padding: 20px 14px 40px;
+            }
+
+            .form-header {
+                padding: 22px 20px;
+            }
+
+            .form-header h1 {
+                font-size: 1.25rem;
+            }
+
+            .form-content {
+                padding: 22px 20px;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+                align-items: stretch;
+            }
+
+            .btn-primary-custom,
+            .btn-back {
+                width: 100%;
+                text-align: center;
+            }
 
         }
 
     </style>
 
 </head>
+
+
 <body>
 
-<div class="container">
+<div class="page-wrapper">
 
-    <h1>Placement Achievement</h1>
+    <div class="form-card">
 
-    <p>Add a student's placement details.</p>
 
-    {% if success_message %}
-        <p style="color: #2ecc71; font-weight: bold;">{{ success_message }}</p>
-    {% endif %}
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
 
-    <form method="POST" enctype="multipart/form-data" action="{% url 'placement_updates' %}">
+        <div class="form-header">
 
-        {% csrf_token %}
+            <div class="header-content">
 
-        <!-- Student Name -->
+                <div class="header-icon">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
 
-        <div>
+                <div>
 
-            <label>Student Name</label>
+                    <h1>
+                        Placement Achievement
+                    </h1>
 
-            <input
-                type="text"
-                name="student_name"
-                placeholder="Enter student name"
-                required>
+                    <p>
+                        Add and publish a student's placement achievement
+                    </p>
 
-        </div>
+                </div>
 
-        <!-- Company -->
-
-        <div>
-
-            <label>Company Name</label>
-
-            <input
-                type="text"
-                name="company_name"
-                placeholder="Enter company name"
-                required>
+            </div>
 
         </div>
 
-        <!-- Job Role -->
 
-        <div>
+        <!-- =====================================================
+             CONTENT
+        ====================================================== -->
 
-            <label>Job Role</label>
+        <div class="form-content">
 
-            <input
-                type="text"
-                name="job_role"
-                placeholder="Software Engineer"
-                required>
+
+            <!-- Success Message -->
+
+            {% if success_message %}
+
+                <div class="success-alert">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    <span>
+                        {{ success_message }}
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- Section Heading -->
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    <i class="fa-solid fa-file-pen"></i>
+                </div>
+
+                <div>
+
+                    <h2>
+                        Placement Information
+                    </h2>
+
+                    <p>
+                        Enter the student's placement details accurately
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORM
+            ================================================== -->
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+                action="{% url 'placement_updates' %}"
+                id="placementForm">
+
+                {% csrf_token %}
+
+
+                <div class="row">
+
+
+                    <!-- Student Name -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                <i class="fa-solid fa-user"></i>
+
+                                Student Name
+
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <input
+                                type="text"
+                                name="student_name"
+                                class="form-control"
+                                placeholder="Enter student's full name"
+                                autocomplete="name"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Company Name -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                <i class="fa-solid fa-building"></i>
+
+                                Company Name
+
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <input
+                                type="text"
+                                name="company_name"
+                                class="form-control"
+                                placeholder="Enter company name"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Job Role -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                <i class="fa-solid fa-user-tie"></i>
+
+                                Job Role
+
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <input
+                                type="text"
+                                name="job_role"
+                                class="form-control"
+                                placeholder="e.g. Software Engineer"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Package -->
+
+                    <div class="col-md-3">
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                <i class="fa-solid fa-chart-line"></i>
+
+                                Package (LPA)
+
+                            </label>
+
+                            <input
+                                type="number"
+                                name="package_lpa"
+                                class="form-control"
+                                placeholder="e.g. 6.50"
+                                min="0"
+                                step="0.01">
+
+                            <div class="field-hint">
+                                Annual compensation in Lakhs Per Annum
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Placement Date -->
+
+                    <div class="col-md-3">
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                <i class="fa-regular fa-calendar"></i>
+
+                                Placement Date
+
+                            </label>
+
+                            <input
+                                type="date"
+                                name="placement_date"
+                                class="form-control">
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Caption -->
+
+                    <div class="col-12">
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                <i class="fa-solid fa-align-left"></i>
+
+                                Achievement Caption
+
+                            </label>
+
+                            <textarea
+                                name="caption"
+                                class="form-control"
+                                placeholder="Write a short description of the student's placement achievement..."
+                                maxlength="500"></textarea>
+
+                            <div class="field-hint">
+                                Provide a concise description for the placement record.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Image -->
+
+                    <div class="col-12">
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                <i class="fa-regular fa-image"></i>
+
+                                Achievement Image
+
+                                <span class="required">*</span>
+
+                            </label>
+
+
+                            <div class="upload-box">
+
+
+                                <div class="upload-info">
+
+                                    <div class="upload-icon">
+
+                                        <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            Upload Achievement Image
+                                        </strong>
+
+                                        <span>
+                                            Choose a clear image of the student or placement achievement
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <input
+                                    type="file"
+                                    name="achievement_image"
+                                    id="achievementImage"
+                                    accept="image/jpeg,image/png,image/webp"
+                                    required>
+
+
+                                <!-- Preview -->
+
+                                <div
+                                    class="preview-container"
+                                    id="previewContainer">
+
+                                    <span class="preview-label">
+                                        Image Preview
+                                    </span>
+
+                                    <img
+                                        id="imagePreview"
+                                        class="image-preview"
+                                        alt="Achievement image preview">
+
+                                </div>
+
+                            </div>
+
+                            <div class="field-hint">
+                                Supported formats: JPG, PNG, WEBP
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =================================================
+                     ACTIONS
+                ================================================== -->
+
+                <div class="form-actions">
+
+
+                    <a
+                        href="{% url 'placement_management' %}"
+                        class="btn-back">
+
+                        <i class="fa-solid fa-arrow-left me-2"></i>
+
+                        Back to Placements
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn-primary-custom"
+                        id="submitButton">
+
+                        <i class="fa-solid fa-check me-2"></i>
+
+                        Save Achievement
+
+                    </button>
+
+
+                </div>
+
+            </form>
+
 
         </div>
 
-        <!-- Package -->
+    </div>
 
-        <div>
 
-            <label>Package (LPA)</label>
+    <div class="footer-note">
 
-            <input
-                type="number"
-                step="0.01"
-                name="package_lpa"
-                placeholder="6.50">
+        <i class="fa-solid fa-shield-halved me-1"></i>
 
-        </div>
+        Placement information is securely managed through CoreConnect.
 
-        <!-- Placement Date -->
-
-        <div>
-
-            <label>Placement Date</label>
-
-            <input
-                type="date"
-                name="placement_date">
-
-        </div>
-
-        <!-- Caption -->
-
-        <div>
-
-            <label>Caption</label>
-
-            <textarea
-                name="caption"
-                placeholder="Write a short placement achievement..."></textarea>
-
-        </div>
-
-        <!-- Image -->
-
-        <div>
-
-            <label>Student Image</label>
-
-            <input
-                type="file"
-                name="achievement_image"
-                accept="image/*"
-                required>
-
-        </div>
-
-        <button class="btn" type="submit">
-
-            Save Achievement
-
-        </button>
-
-    </form>
-
-    <a href="{% url 'placement_management' %}" class="back">
-
-        Back
-
-    </a>
+    </div>
 
 </div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+    /* =========================================================
+       IMAGE PREVIEW
+    ========================================================= */
+
+    const imageInput =
+        document.getElementById("achievementImage");
+
+    const previewContainer =
+        document.getElementById("previewContainer");
+
+    const imagePreview =
+        document.getElementById("imagePreview");
+
+
+    if (imageInput) {
+
+        imageInput.addEventListener("change", function () {
+
+            const file = this.files[0];
+
+            if (!file) {
+
+                previewContainer.classList.remove("active");
+                imagePreview.src = "";
+
+                return;
+
+            }
+
+
+            /* Validate image */
+
+            if (!file.type.startsWith("image/")) {
+
+                alert("Please select a valid image file.");
+
+                this.value = "";
+
+                previewContainer.classList.remove("active");
+
+                return;
+
+            }
+
+
+            /* File size validation: 5 MB */
+
+            const maxSize = 5 * 1024 * 1024;
+
+            if (file.size > maxSize) {
+
+                alert("Please select an image smaller than 5 MB.");
+
+                this.value = "";
+
+                previewContainer.classList.remove("active");
+
+                return;
+
+            }
+
+
+            /* Display preview */
+
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+
+                imagePreview.src = event.target.result;
+
+                previewContainer.classList.add("active");
+
+            };
+
+            reader.readAsDataURL(file);
+
+        });
+
+    }
+
+
+    /* =========================================================
+       FORM SUBMISSION
+    ========================================================= */
+
+    const form =
+        document.getElementById("placementForm");
+
+    const submitButton =
+        document.getElementById("submitButton");
+
+
+    if (form) {
+
+        form.addEventListener("submit", function () {
+
+            if (submitButton) {
+
+                submitButton.disabled = true;
+
+                submitButton.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin me-2"></i>Saving Achievement...';
+
+            }
+
+        });
+
+    }
+
+</script>
+
 
 </body>
 </html>

@@ -1,558 +1,1412 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Placement Management</title>
+    <title>Placement Management | CoreConnect</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
 
-<style>
+    <!-- Font Awesome -->
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        rel="stylesheet">
 
-body{
-    background:#f4f7fb;
-}
+    <style>
 
-.card{
-    border:none;
-    border-radius:15px;
-}
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
 
-.card-header{
-    border-radius:15px 15px 0 0!important;
-}
+        * {
+            box-sizing: border-box;
+        }
 
-.image-preview{
-    width:120px;
-    height:120px;
-    object-fit:cover;
-    border-radius:10px;
-    border:1px solid #ddd;
-}
+        body {
+            margin: 0;
+            background: #f5f7fb;
+            color: #1f2937;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-.required{
-    color:red;
-}
+        .page-wrapper {
+            max-width: 1450px;
+            margin: auto;
+            padding: 40px 24px 60px;
+        }
 
-</style>
+
+        /* =========================================================
+           MAIN CARD
+        ========================================================= */
+
+        .main-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            background: #ffffff;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+            overflow: hidden;
+        }
+
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
+        .page-header {
+            background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+            padding: 24px 28px;
+            color: #ffffff;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin: 0;
+            font-size: 1.55rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .page-title-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 11px;
+            font-size: 18px;
+        }
+
+        .page-subtitle {
+            margin: 6px 0 0 55px;
+            font-size: 0.9rem;
+            opacity: 0.85;
+        }
+
+        .new-placement-btn {
+            border: none;
+            background: #ffffff;
+            color: #0d6efd;
+            font-weight: 600;
+            padding: 9px 16px;
+            border-radius: 9px;
+            transition: all 0.2s ease;
+        }
+
+        .new-placement-btn:hover {
+            background: #f1f5ff;
+            color: #0b5ed7;
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================================================
+           CONTENT
+        ========================================================= */
+
+        .content-section {
+            padding: 30px;
+        }
+
+
+        /* =========================================================
+           FORM SECTION
+        ========================================================= */
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .section-heading-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            background: #eaf2ff;
+            color: #0d6efd;
+        }
+
+        .section-heading h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 650;
+            color: #111827;
+        }
+
+        .section-heading p {
+            margin: 2px 0 0;
+            font-size: 0.82rem;
+            color: #6b7280;
+        }
+
+        .form-label {
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .required {
+            color: #dc3545;
+            margin-left: 2px;
+        }
+
+        .form-control {
+            min-height: 45px;
+            border: 1px solid #dfe3e8;
+            border-radius: 9px;
+            padding: 10px 13px;
+            font-size: 0.9rem;
+            color: #1f2937;
+            background: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.10);
+        }
+
+        textarea.form-control {
+            min-height: 105px;
+            resize: vertical;
+        }
+
+        input[type="file"].form-control {
+            padding-top: 9px;
+        }
+
+        .form-hint {
+            margin-top: 6px;
+            color: #8a94a6;
+            font-size: 0.76rem;
+        }
+
+
+        /* =========================================================
+           IMAGE PREVIEW
+        ========================================================= */
+
+        .image-preview-wrapper {
+            margin-top: 10px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .image-preview {
+            width: 130px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #e1e5ea;
+            padding: 3px;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .preview-label {
+            display: block;
+            font-size: 0.76rem;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+
+
+        /* =========================================================
+           FORM ACTIONS
+        ========================================================= */
+
+        .form-actions {
+            margin-top: 8px;
+            padding-top: 22px;
+            border-top: 1px solid #edf0f3;
+        }
+
+        .primary-btn {
+            min-height: 44px;
+            padding: 9px 20px;
+            border: none;
+            border-radius: 9px;
+            background: #0d6efd;
+            color: #ffffff;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .primary-btn:hover {
+            background: #0b5ed7;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(13, 110, 253, 0.20);
+        }
+
+
+        /* =========================================================
+           DIVIDER
+        ========================================================= */
+
+        .section-divider {
+            border: 0;
+            border-top: 1px solid #e9ecef;
+            margin: 40px 0;
+        }
+
+
+        /* =========================================================
+           RECORDS HEADER
+        ========================================================= */
+
+        .records-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 22px;
+        }
+
+        .records-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .records-title h4 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 650;
+            color: #111827;
+        }
+
+        .records-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 27px;
+            height: 27px;
+            padding: 0 8px;
+            border-radius: 20px;
+            background: #eaf2ff;
+            color: #0d6efd;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .search-wrapper {
+            width: 320px;
+            position: relative;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 0.85rem;
+        }
+
+        .search-wrapper input {
+            padding-left: 38px;
+        }
+
+
+        /* =========================================================
+           PLACEMENT CARD
+        ========================================================= */
+
+        .placement-card {
+            margin-bottom: 24px;
+        }
+
+        .placement-item {
+            height: 100%;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            background: #ffffff;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.045);
+            transition: all 0.25s ease;
+        }
+
+        .placement-item:hover {
+            transform: translateY(-4px);
+            border-color: #d5def0;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.10);
+        }
+
+        .placement-image {
+            width: 100%;
+            height: 100%;
+            min-height: 235px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-placeholder {
+            min-height: 235px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f7f8fa;
+            color: #b7bec9;
+        }
+
+        .image-placeholder i {
+            font-size: 3.2rem;
+        }
+
+        .placement-body {
+            padding: 22px;
+        }
+
+        .student-name {
+            margin: 0 0 14px;
+            color: #111827;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .placement-detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            margin-bottom: 9px;
+            font-size: 0.84rem;
+            color: #4b5563;
+        }
+
+        .placement-detail i {
+            width: 17px;
+            margin-top: 3px;
+            color: #0d6efd;
+            font-size: 0.78rem;
+        }
+
+        .placement-detail strong {
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .package-value {
+            color: #198754;
+            font-weight: 700;
+        }
+
+        .placement-caption {
+            margin-top: 16px;
+            padding: 12px 14px;
+            background: #f8f9fb;
+            border-left: 3px solid #0d6efd;
+            border-radius: 5px;
+            color: #6b7280;
+            font-size: 0.82rem;
+            line-height: 1.55;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 18px;
+            padding-top: 15px;
+            border-top: 1px solid #edf0f3;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            border-radius: 7px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 7px 13px;
+        }
+
+        .edit-btn {
+            color: #856404;
+        }
+
+
+        /* =========================================================
+           EMPTY STATE
+        ========================================================= */
+
+        .empty-state {
+            padding: 55px 20px;
+            text-align: center;
+            border: 1px dashed #d9dee7;
+            border-radius: 13px;
+            background: #fafbfc;
+        }
+
+        .empty-state i {
+            font-size: 2.8rem;
+            color: #b9c1cc;
+            margin-bottom: 14px;
+        }
+
+        .empty-state h5 {
+            margin-bottom: 5px;
+            font-size: 1rem;
+            font-weight: 650;
+            color: #374151;
+        }
+
+        .empty-state p {
+            margin: 0;
+            color: #8a94a6;
+            font-size: 0.84rem;
+        }
+
+
+        /* =========================================================
+           ALERTS
+        ========================================================= */
+
+        .alert {
+            border: none;
+            border-radius: 9px;
+            font-size: 0.86rem;
+            margin-bottom: 22px;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 768px) {
+
+            .page-wrapper {
+                padding: 20px 14px 40px;
+            }
+
+            .page-header {
+                padding: 20px;
+            }
+
+            .page-header .d-flex {
+                align-items: flex-start !important;
+                gap: 15px;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .page-subtitle {
+                margin-left: 0;
+                margin-top: 8px;
+            }
+
+            .new-placement-btn {
+                white-space: nowrap;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .records-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-wrapper {
+                width: 100%;
+            }
+
+            .placement-image,
+            .image-placeholder {
+                min-height: 220px;
+            }
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<div class="container py-5">
+<div class="page-wrapper">
 
-<div class="row">
+    <div class="main-card">
 
-<div class="col-lg-12">
+        <!-- =====================================================
+             PAGE HEADER
+        ====================================================== -->
 
-<div class="card shadow">
+        <div class="page-header">
 
-<div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
 
-<div class="d-flex justify-content-between align-items-center">
+                <div>
 
-<h3 class="mb-0">
+                    <h1 class="page-title">
 
-<i class="fa-solid fa-briefcase"></i>
+                        <span class="page-title-icon">
+                            <i class="fa-solid fa-briefcase"></i>
+                        </span>
 
-Placement Management
+                        Placement Management
 
-</h3>
+                    </h1>
 
-<a href="{% url 'manage_placement' %}" class="btn btn-light btn-sm">
+                    <p class="page-subtitle">
+                        Manage student placement records and achievements
+                    </p>
 
-<i class="fa fa-plus"></i>
+                </div>
 
-New Placement
+                <a
+                    href="{% url 'manage_placement' %}"
+                    class="btn new-placement-btn">
 
-</a>
+                    <i class="fa-solid fa-plus me-1"></i>
+                    New Placement
 
-</div>
+                </a>
 
-</div>
+            </div>
 
-<div class="card-body">
+        </div>
 
-{% if messages %}
 
-{% for message in messages %}
+        <!-- =====================================================
+             CONTENT
+        ====================================================== -->
 
-<div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+        <div class="content-section">
 
-{{ message }}
 
-<button class="btn-close" data-bs-dismiss="alert"></button>
+            <!-- =================================================
+                 MESSAGES
+            ================================================== -->
 
-</div>
+            {% if messages %}
 
-{% endfor %}
+                {% for message in messages %}
 
-{% endif %}
+                    <div
+                        class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                        role="alert">
 
-<form method="POST" enctype="multipart/form-data">
+                        <i class="fa-solid fa-circle-info me-2"></i>
 
-{% csrf_token %}
+                        {{ message }}
 
-{% if editing_placement %}
-<input type="hidden" name="action" value="update">
-<input type="hidden" name="id" value="{{ editing_placement.id }}">
-{% else %}
-<input type="hidden" name="action" value="create">
-{% endif %}
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert">
+                        </button>
 
-<div class="row">
+                    </div>
 
-<div class="col-md-6 mb-3">
+                {% endfor %}
 
-<label class="form-label">
+            {% endif %}
 
-Student Name
 
-<span class="required">*</span>
+            <!-- =================================================
+                 FORM HEADER
+            ================================================== -->
 
-</label>
+            <div class="section-heading">
 
-<input
-type="text"
-name="student_name"
-class="form-control"
-required
-value="{{ editing_placement.student_name|default:'' }}">
+                <div class="section-heading-icon">
 
-</div>
+                    <i class="fa-solid
+                    {% if editing_placement %}
+                        fa-pen
+                    {% else %}
+                        fa-plus
+                    {% endif %}">
+                    </i>
 
-<div class="col-md-6 mb-3">
+                </div>
 
-<label class="form-label">
+                <div>
 
-Company Name
+                    <h4>
 
-<span class="required">*</span>
+                        {% if editing_placement %}
+                            Update Placement
+                        {% else %}
+                            Add Placement
+                        {% endif %}
 
-</label>
+                    </h4>
 
-<input
-type="text"
-name="company_name"
-class="form-control"
-required
-value="{{ editing_placement.company_name|default:'' }}">
+                    <p>
+                        Enter the placement details below
+                    </p>
 
-</div>
+                </div>
 
-<div class="col-md-6 mb-3">
+            </div>
 
-<label class="form-label">
 
-Job Role
+            <!-- =================================================
+                 FORM
+            ================================================== -->
 
-<span class="required">*</span>
+            <form
+                method="POST"
+                enctype="multipart/form-data">
 
-</label>
+                {% csrf_token %}
 
-<input
-type="text"
-name="job_role"
-class="form-control"
-required
-value="{{ editing_placement.job_role|default:'' }}">
+                {% if editing_placement %}
 
-</div>
+                    <input
+                        type="hidden"
+                        name="action"
+                        value="update">
 
-<div class="col-md-3 mb-3">
+                    <input
+                        type="hidden"
+                        name="id"
+                        value="{{ editing_placement.id }}">
 
-<label class="form-label">
+                {% else %}
 
-Package (LPA)
+                    <input
+                        type="hidden"
+                        name="action"
+                        value="create">
 
-</label>
+                {% endif %}
 
-<input
-type="number"
-step="0.01"
-name="package_lpa"
-class="form-control"
-value="{{ editing_placement.package_lpa|default:'' }}">
 
-</div>
+                <div class="row g-4">
 
-<div class="col-md-3 mb-3">
 
-<label class="form-label">
+                    <!-- Student Name -->
 
-Placement Date
+                    <div class="col-md-6">
 
-</label>
+                        <label class="form-label">
 
-<input
-type="date"
-name="placement_date"
-class="form-control"
-value="{{ editing_placement.placement_date|date:'Y-m-d' }}">
+                            Student Name
+                            <span class="required">*</span>
 
-</div>
+                        </label>
 
-<div class="col-md-12 mb-3">
+                        <input
+                            type="text"
+                            name="student_name"
+                            class="form-control"
+                            placeholder="Enter student name"
+                            required
+                            value="{{ editing_placement.student_name|default:'' }}">
 
-<label class="form-label">
+                    </div>
 
-Caption
 
-</label>
+                    <!-- Company Name -->
 
-<textarea
-name="caption"
-rows="3"
-class="form-control">{{ editing_placement.caption|default:'' }}</textarea>
+                    <div class="col-md-6">
 
-</div>
+                        <label class="form-label">
 
-<div class="col-md-6 mb-3">
+                            Company Name
+                            <span class="required">*</span>
 
-<label class="form-label">
+                        </label>
 
-Achievement Image
+                        <input
+                            type="text"
+                            name="company_name"
+                            class="form-control"
+                            placeholder="Enter company name"
+                            required
+                            value="{{ editing_placement.company_name|default:'' }}">
 
-</label>
+                    </div>
 
-<input
-type="file"
-name="achievement_image"
-class="form-control">
 
-</div>
+                    <!-- Job Role -->
 
-<div class="col-md-6 mb-3">
+                    <div class="col-md-6">
 
-{% if editing_placement.image_url %}
+                        <label class="form-label">
 
-<label class="form-label">
+                            Job Role
+                            <span class="required">*</span>
 
-Current Image
+                        </label>
 
-</label>
+                        <input
+                            type="text"
+                            name="job_role"
+                            class="form-control"
+                            placeholder="e.g. Software Engineer"
+                            required
+                            value="{{ editing_placement.job_role|default:'' }}">
 
-<br>
+                    </div>
 
-<img
-src="{{ editing_placement.image_url }}"
-class="image-preview">
 
-{% endif %}
+                    <!-- Package -->
 
-</div>
+                    <div class="col-md-3">
 
-<div class="col-12">
+                        <label class="form-label">
+                            Package
+                        </label>
 
-<button class="btn btn-primary">
+                        <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            name="package_lpa"
+                            class="form-control"
+                            placeholder="e.g. 6.50"
+                            value="{{ editing_placement.package_lpa|default:'' }}">
 
-{% if editing_placement %}
+                        <div class="form-hint">
+                            Annual package in LPA
+                        </div>
 
-<i class="fa-solid fa-pen"></i>
+                    </div>
 
-Update Placement
 
-{% else %}
+                    <!-- Placement Date -->
 
-<i class="fa-solid fa-plus"></i>
+                    <div class="col-md-3">
 
-Add Placement
+                        <label class="form-label">
+                            Placement Date
+                        </label>
 
-{% endif %}
+                        <input
+                            type="date"
+                            name="placement_date"
+                            class="form-control"
+                            value="{{ editing_placement.placement_date|date:'Y-m-d' }}">
 
-</button>
+                    </div>
 
-</div>
 
-</div>
+                    <!-- Caption -->
 
-</form>
+                    <div class="col-12">
 
-<hr class="my-5">
+                        <label class="form-label">
+                            Caption
+                        </label>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+                        <textarea
+                            name="caption"
+                            rows="3"
+                            class="form-control"
+                            placeholder="Add a short description or achievement caption...">{{ editing_placement.caption|default:'' }}</textarea>
 
-    <h4 class="mb-0">
-        <i class="fa-solid fa-users"></i>
-        Placement Records
-    </h4>
+                    </div>
 
-    <div style="width:300px;">
-        <input
-            type="text"
-            id="searchInput"
-            class="form-control"
-            placeholder="Search by student or company...">
+
+                    <!-- Image -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Achievement Image
+                        </label>
+
+                        <input
+                            type="file"
+                            name="achievement_image"
+                            class="form-control"
+                            accept="image/*">
+
+                        <div class="form-hint">
+                            Recommended: JPG, PNG or WEBP
+                        </div>
+
+                    </div>
+
+
+                    <!-- Current Image -->
+
+                    <div class="col-md-6">
+
+                        {% if editing_placement.image_url %}
+
+                            <span class="preview-label">
+                                Current Image
+                            </span>
+
+                            <div class="image-preview-wrapper">
+
+                                <img
+                                    src="{{ editing_placement.image_url }}"
+                                    class="image-preview"
+                                    alt="Current achievement image">
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Submit -->
+
+                    <div class="col-12">
+
+                        <div class="form-actions">
+
+                            <button
+                                type="submit"
+                                class="btn primary-btn">
+
+                                {% if editing_placement %}
+
+                                    <i class="fa-solid fa-check me-2"></i>
+                                    Update Placement
+
+                                {% else %}
+
+                                    <i class="fa-solid fa-plus me-2"></i>
+                                    Add Placement
+
+                                {% endif %}
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+
+            <hr class="section-divider">
+
+
+            <!-- =================================================
+                 RECORDS HEADER
+            ================================================== -->
+
+            <div class="records-header">
+
+                <div class="records-title">
+
+                    <div class="section-heading-icon">
+
+                        <i class="fa-solid fa-users"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Placement Records
+                            <span
+                                class="records-count"
+                                id="recordCount">
+                                {{ placements|length }}
+                            </span>
+                        </h4>
+
+                    </div>
+
+                </div>
+
+
+                <div class="search-wrapper">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="form-control"
+                        placeholder="Search student or company..."
+                        autocomplete="off">
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PLACEMENT RECORDS
+            ================================================== -->
+
+            <div
+                class="row"
+                id="placementContainer">
+
+                {% for placement in placements %}
+
+                    <div class="col-lg-6 placement-card">
+
+                        <div class="placement-item">
+
+                            <div class="row g-0 h-100">
+
+
+                                <!-- Image -->
+
+                                <div class="col-md-4">
+
+                                    {% if placement.image_url %}
+
+                                        <img
+                                            src="{{ placement.image_url }}"
+                                            class="placement-image"
+                                            alt="{{ placement.student_name }} placement achievement">
+
+                                    {% else %}
+
+                                        <div class="image-placeholder">
+
+                                            <i class="fa-regular fa-image"></i>
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <!-- Details -->
+
+                                <div class="col-md-8">
+
+                                    <div class="placement-body">
+
+                                        <h5 class="student-name">
+                                            {{ placement.student_name }}
+                                        </h5>
+
+
+                                        <!-- Company -->
+
+                                        <div class="placement-detail">
+
+                                            <i class="fa-solid fa-building"></i>
+
+                                            <div>
+
+                                                <strong>Company:</strong>
+
+                                                <span class="company-name">
+                                                    {{ placement.company_name }}
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <!-- Role -->
+
+                                        <div class="placement-detail">
+
+                                            <i class="fa-solid fa-user-tie"></i>
+
+                                            <div>
+
+                                                <strong>Role:</strong>
+                                                {{ placement.job_role }}
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <!-- Package -->
+
+                                        <div class="placement-detail">
+
+                                            <i class="fa-solid fa-chart-line"></i>
+
+                                            <div>
+
+                                                <strong>Package:</strong>
+
+                                                {% if placement.package_lpa %}
+
+                                                    <span class="package-value">
+                                                        ₹ {{ placement.package_lpa }} LPA
+                                                    </span>
+
+                                                {% else %}
+
+                                                    <span>Not specified</span>
+
+                                                {% endif %}
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <!-- Date -->
+
+                                        <div class="placement-detail">
+
+                                            <i class="fa-regular fa-calendar"></i>
+
+                                            <div>
+
+                                                <strong>Date:</strong>
+
+                                                {% if placement.placement_date %}
+                                                    {{ placement.placement_date }}
+                                                {% else %}
+                                                    Not specified
+                                                {% endif %}
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <!-- Caption -->
+
+                                        {% if placement.caption %}
+
+                                            <div class="placement-caption">
+
+                                                <i class="fa-solid fa-quote-left me-1"></i>
+
+                                                {{ placement.caption }}
+
+                                            </div>
+
+                                        {% endif %}
+
+
+                                        <!-- Actions -->
+
+                                        <div class="card-actions">
+
+                                            <a
+                                                href="?edit_id={{ placement.id }}"
+                                                class="btn btn-warning btn-sm edit-btn">
+
+                                                <i class="fa-solid fa-pen me-1"></i>
+                                                Edit
+
+                                            </a>
+
+
+                                            <form
+                                                method="POST"
+                                                class="m-0"
+                                                onsubmit="return confirm('Are you sure you want to delete this placement record?');">
+
+                                                {% csrf_token %}
+
+                                                <input
+                                                    type="hidden"
+                                                    name="action"
+                                                    value="delete">
+
+                                                <input
+                                                    type="hidden"
+                                                    name="id"
+                                                    value="{{ placement.id }}">
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-danger btn-sm delete-btn">
+
+                                                    <i class="fa-solid fa-trash me-1"></i>
+                                                    Delete
+
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                {% empty %}
+
+                    <div class="col-12">
+
+                        <div class="empty-state">
+
+                            <i class="fa-solid fa-briefcase"></i>
+
+                            <h5>
+                                No Placement Records
+                            </h5>
+
+                            <p>
+                                Placement records will appear here once they are added.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- Search Empty State -->
+
+            <div
+                id="searchEmpty"
+                class="empty-state mt-3"
+                style="display:none;">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <h5>
+                    No Matching Records
+                </h5>
+
+                <p>
+                    Try searching with a different student or company name.
+                </p>
+
+            </div>
+
+        </div>
+
     </div>
 
 </div>
 
-<div class="row" id="placementContainer">
 
-{% for placement in placements %}
+<!-- Bootstrap -->
 
-<div class="col-lg-6 mb-4 placement-card">
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
 
-<div class="card shadow-sm h-100">
-
-<div class="row g-0">
-
-<div class="col-md-4">
-
-{% if placement.image_url %}
-
-<img
-src="{{ placement.image_url }}"
-class="img-fluid rounded-start"
-style="height:100%;width:100%;object-fit:cover;">
-
-{% else %}
-
-<div class="d-flex justify-content-center align-items-center bg-light"
-style="height:100%;min-height:220px;">
-
-<i class="fa-solid fa-image fa-4x text-secondary"></i>
-
-</div>
-
-{% endif %}
-
-</div>
-
-<div class="col-md-8">
-
-<div class="card-body">
-
-<h5 class="card-title student-name">
-
-{{ placement.student_name }}
-
-</h5>
-
-<p class="mb-1">
-
-<strong>Company:</strong>
-
-<span class="company-name">
-
-{{ placement.company_name }}
-
-</span>
-
-</p>
-
-<p class="mb-1">
-
-<strong>Role:</strong>
-
-{{ placement.job_role }}
-
-</p>
-
-<p class="mb-1">
-
-<strong>Package:</strong>
-
-{% if placement.package_lpa %}
-
-₹ {{ placement.package_lpa }} LPA
-
-{% else %}
-
---
-
-{% endif %}
-
-</p>
-
-<p class="mb-1">
-
-<strong>Date:</strong>
-
-{{ placement.placement_date }}
-
-</p>
-
-{% if placement.caption %}
-
-<p class="text-muted mt-3">
-
-{{ placement.caption }}
-
-</p>
-
-{% endif %}
-
-<hr>
-
-<div class="d-flex justify-content-between">
-
-<a
-href="?edit_id={{ placement.id }}"
-class="btn btn-warning btn-sm">
-
-<i class="fa-solid fa-pen"></i>
-
-Edit
-
-</a>
-
-<form method="POST"
-onsubmit="return confirm('Delete this placement record?')">
-
-{% csrf_token %}
-
-<input
-type="hidden"
-name="action"
-value="delete">
-
-<input
-type="hidden"
-name="id"
-value="{{ placement.id }}">
-
-<button class="btn btn-danger btn-sm">
-
-<i class="fa-solid fa-trash"></i>
-
-Delete
-
-</button>
-
-</form>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-{% empty %}
-
-<div class="col-12">
-
-<div class="alert alert-info text-center">
-
-<h5>No placement records found.</h5>
-
-</div>
-
-</div>
-
-{% endfor %}
-
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 
+    /* =========================================================
+       SEARCH
+    ========================================================= */
 
-const searchInput = document.getElementById("searchInput");
+    const searchInput = document.getElementById("searchInput");
+    const recordCount = document.getElementById("recordCount");
+    const searchEmpty = document.getElementById("searchEmpty");
 
-if(searchInput){
+    if (searchInput) {
 
-searchInput.addEventListener("keyup", function(){
+        searchInput.addEventListener("input", function () {
 
-    const value = this.value.toLowerCase();
+            const value = this.value.trim().toLowerCase();
 
-    const cards = document.querySelectorAll(".placement-card");
+            const cards =
+                document.querySelectorAll(".placement-card");
 
-    cards.forEach(card => {
+            let visibleCount = 0;
 
-        const student = card.querySelector(".student-name").innerText.toLowerCase();
+            cards.forEach(function (card) {
 
-        const company = card.querySelector(".company-name").innerText.toLowerCase();
+                const student =
+                    card.querySelector(".student-name")?.innerText
+                    .toLowerCase() || "";
 
-        if(student.includes(value) || company.includes(value)){
+                const company =
+                    card.querySelector(".company-name")?.innerText
+                    .toLowerCase() || "";
 
-            card.style.display="block";
+                const role =
+                    card.innerText.toLowerCase();
 
-        }else{
+                const matched =
+                    student.includes(value) ||
+                    company.includes(value) ||
+                    role.includes(value);
 
-            card.style.display="none";
+                if (matched) {
 
-        }
+                    card.style.display = "";
 
-    });
+                    visibleCount++;
 
-});
+                } else {
 
-}
+                    card.style.display = "none";
+
+                }
+
+            });
 
 
+            if (recordCount) {
+                recordCount.textContent = visibleCount;
+            }
 
-const imageInput = document.querySelector('input[name="achievement_image"]');
 
-if(imageInput){
+            if (searchEmpty) {
 
-imageInput.addEventListener("change", function(){
+                searchEmpty.style.display =
+                    value !== "" && visibleCount === 0
+                    ? "block"
+                    : "none";
 
-    const file=this.files[0];
+            }
 
-    if(!file) return;
-
-    let preview=document.querySelector(".image-preview");
-
-    if(!preview){
-
-        preview=document.createElement("img");
-
-        preview.className="image-preview mt-3";
-
-        imageInput.parentElement.appendChild(preview);
+        });
 
     }
 
-    preview.src=URL.createObjectURL(file);
 
-});
+    /* =========================================================
+       IMAGE PREVIEW
+    ========================================================= */
 
-}
+    const imageInput =
+        document.querySelector('input[name="achievement_image"]');
+
+    if (imageInput) {
+
+        imageInput.addEventListener("change", function () {
+
+            const file = this.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            if (!file.type.startsWith("image/")) {
+                alert("Please select a valid image file.");
+                this.value = "";
+                return;
+            }
+
+            let preview =
+                document.querySelector(".image-preview");
+
+            if (!preview) {
+
+                const wrapper =
+                    document.createElement("div");
+
+                wrapper.className =
+                    "image-preview-wrapper";
+
+                preview =
+                    document.createElement("img");
+
+                preview.className =
+                    "image-preview";
+
+                preview.alt =
+                    "Achievement image preview";
+
+                wrapper.appendChild(preview);
+
+                imageInput.parentElement.appendChild(wrapper);
+
+            }
+
+            preview.src =
+                URL.createObjectURL(file);
+
+        });
+
+    }
 
 
+    /* =========================================================
+       AUTO DISMISS ALERTS
+    ========================================================= */
 
-setTimeout(function(){
+    setTimeout(function () {
 
-document.querySelectorAll(".alert").forEach(function(alert){
+        document
+            .querySelectorAll(".alert")
+            .forEach(function (alertElement) {
 
-    let bsAlert=new bootstrap.Alert(alert);
+                const alertInstance =
+                    bootstrap.Alert.getOrCreateInstance(
+                        alertElement
+                    );
 
-    bsAlert.close();
+                alertInstance.close();
 
-});
+            });
 
-},5000);
+    }, 5000);
 
 
-document.querySelectorAll(".placement-card .card").forEach(function(card){
+    /* =========================================================
+       PREVENT MULTIPLE SUBMISSIONS
+    ========================================================= */
 
-card.addEventListener("mouseenter",function(){
+    document
+        .querySelectorAll("form")
+        .forEach(function (form) {
 
-    this.style.transform="translateY(-5px)";
-    this.style.transition="0.3s";
+            form.addEventListener("submit", function () {
 
-});
+                const button =
+                    form.querySelector(
+                        'button[type="submit"]'
+                    );
 
-card.addEventListener("mouseleave",function(){
+                if (
+                    button &&
+                    form.querySelector(
+                        'input[name="action"][value="delete"]'
+                    ) === null
+                ) {
 
-    this.style.transform="translateY(0px)";
+                    button.disabled = true;
 
-});
+                    const originalHTML =
+                        button.innerHTML;
 
-});
+                    button.innerHTML =
+                        '<i class="fa-solid fa-spinner fa-spin me-2"></i>Processing...';
+
+                    setTimeout(function () {
+
+                        button.disabled = false;
+                        button.innerHTML = originalHTML;
+
+                    }, 5000);
+
+                }
+
+            });
+
+        });
 
 </script>
 

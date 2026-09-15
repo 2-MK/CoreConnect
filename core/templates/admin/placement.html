@@ -1,108 +1,655 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Placement Management</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Placement Management | CoreConnect</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        rel="stylesheet"
+    >
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
+        * {
             margin: 0;
-            padding: 30px;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+        body {
+            min-height: 100vh;
+            background: #f5f7fb;
+            color: #1f2937;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 10px;
+
+        /* =========================================
+           Page Wrapper
+        ========================================= */
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 1250px;
+            margin: 0 auto;
+            padding: 45px 24px 60px;
         }
-        .subtitle {
-            color: #666;
-            margin-bottom: 25px;
+
+        /* =========================================
+           Main Container
+        ========================================= */
+
+        .main-container {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(15, 23, 42, 0.07);
         }
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+
+        /* =========================================
+           Header
+        ========================================= */
+
+        .page-header {
+            padding: 30px 34px;
+            background: linear-gradient(
+                135deg,
+                #0d6efd 0%,
+                #0b5ed7 100%
+            );
+            color: #ffffff;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             gap: 20px;
         }
-        .card {
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 20px;
-            background: #fafafa;
+
+        .title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        .card h2 {
-            margin-top: 0;
-            color: #2c3e50;
-            font-size: 20px;
+
+        .header-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 13px;
+
+            font-size: 21px;
         }
-        .card p {
-            color: #555;
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 1.55rem;
+            font-weight: 650;
+            letter-spacing: -0.3px;
         }
-        .btn {
-            display: inline-block;
-            margin-top: 10px;
+
+        .page-header p {
+            margin: 5px 0 0;
+            color: rgba(255, 255, 255, 0.82);
+            font-size: 0.86rem;
+        }
+
+        .dashboard-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
             padding: 10px 16px;
-            background: #3498db;
-            color: white;
+
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 9px;
+
+            color: #ffffff;
             text-decoration: none;
-            border-radius: 8px;
+
+            font-size: 0.81rem;
+            font-weight: 600;
+
+            transition: all 0.2s ease;
         }
-        .btn.secondary {
-            background: #2ecc71;
-            margin-left: 8px;
+
+        .dashboard-btn:hover {
+            background: rgba(255, 255, 255, 0.21);
+            color: #ffffff;
+            transform: translateY(-1px);
         }
+
+        /* =========================================
+           Content
+        ========================================= */
+
+        .content {
+            padding: 34px;
+        }
+
+        .intro {
+            margin-bottom: 28px;
+        }
+
+        .intro h2 {
+            margin-bottom: 6px;
+            color: #111827;
+            font-size: 1.15rem;
+            font-weight: 650;
+        }
+
+        .intro p {
+            margin: 0;
+            color: #7b8492;
+            font-size: 0.83rem;
+        }
+
+        /* =========================================
+           Management Grid
+        ========================================= */
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        /* =========================================
+           Management Card
+        ========================================= */
+
+        .management-card {
+            position: relative;
+            padding: 26px;
+
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease,
+                border-color 0.25s ease;
+        }
+
+        .management-card:hover {
+            transform: translateY(-4px);
+            border-color: #cdddf7;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+        }
+
+        /* =========================================
+           Card Icon
+        ========================================= */
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 18px;
+
+            border-radius: 12px;
+
+            font-size: 19px;
+        }
+
+        .opportunity-icon {
+            background: #eaf2ff;
+            color: #0d6efd;
+        }
+
+        .achievement-icon {
+            background: #ecfdf3;
+            color: #16a34a;
+        }
+
+        /* =========================================
+           Card Content
+        ========================================= */
+
+        .management-card h3 {
+            margin-bottom: 8px;
+
+            color: #111827;
+            font-size: 1rem;
+            font-weight: 650;
+        }
+
+        .management-card p {
+            min-height: 43px;
+            margin-bottom: 22px;
+
+            color: #7b8492;
+            font-size: 0.82rem;
+            line-height: 1.65;
+        }
+
+        /* =========================================
+           Card Actions
+        ========================================= */
+
         .button-group {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
 
-.btn.manage {
-    background: #f39c12;
-}
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
 
-.btn.manage:hover {
-    background: #e67e22;
-}
+            min-height: 39px;
+            padding: 8px 14px;
+
+            border-radius: 8px;
+            text-decoration: none;
+
+            font-size: 0.78rem;
+            font-weight: 600;
+
+            transition: all 0.2s ease;
+        }
+
+        .primary-btn {
+            background: #0d6efd;
+            border: 1px solid #0d6efd;
+            color: #ffffff;
+        }
+
+        .primary-btn:hover {
+            background: #0b5ed7;
+            border-color: #0b5ed7;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 13px rgba(13, 110, 253, 0.18);
+        }
+
+        .success-btn {
+            background: #16a34a;
+            border: 1px solid #16a34a;
+            color: #ffffff;
+        }
+
+        .success-btn:hover {
+            background: #15803d;
+            border-color: #15803d;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 13px rgba(22, 163, 74, 0.18);
+        }
+
+        .warning-btn {
+            background: #fff8e6;
+            border: 1px solid #fde68a;
+            color: #a16207;
+        }
+
+        .warning-btn:hover {
+            background: #fef3c7;
+            border-color: #fcd34d;
+            color: #854d0e;
+        }
+
+        /* =========================================
+           Card Badge
+        ========================================= */
+
+        .card-label {
+            position: absolute;
+            top: 22px;
+            right: 22px;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .blue-label {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .green-label {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        /* =========================================
+           Divider
+        ========================================= */
+
+        .divider {
+            height: 1px;
+            margin: 34px 0 24px;
+            background: #e9edf2;
+        }
+
+        /* =========================================
+           Bottom Navigation
+        ========================================= */
+
+        .bottom-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 9px 15px;
+
+            background: #ffffff;
+            border: 1px solid #dfe3e8;
+            border-radius: 8px;
+
+            color: #4b5563;
+            text-decoration: none;
+
+            font-size: 0.79rem;
+            font-weight: 600;
+
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: #f8f9fb;
+            border-color: #cbd1d9;
+            color: #1f2937;
+        }
+
+        .module-info {
+            color: #9aa2ae;
+            font-size: 0.73rem;
+        }
+
+        /* =========================================
+           Responsive
+        ========================================= */
+
+        @media (max-width: 768px) {
+
+            .page-wrapper {
+                padding: 20px 14px 40px;
+            }
+
+            .page-header {
+                padding: 23px 20px;
+            }
+
+            .header-content {
+                align-items: flex-start;
+            }
+
+            .header-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .page-header h1 {
+                font-size: 1.25rem;
+            }
+
+            .page-header p {
+                font-size: 0.77rem;
+            }
+
+            .dashboard-btn {
+                display: none;
+            }
+
+            .content {
+                padding: 22px 20px;
+            }
+
+            .management-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .management-card {
+                padding: 22px;
+            }
+
+            .bottom-navigation {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .module-info {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .title-wrapper {
+                gap: 11px;
+            }
+
+            .page-header h1 {
+                font-size: 1.1rem;
+            }
+
+            .management-card p {
+                min-height: auto;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Placement Management</h1>
-        <p class="subtitle">Manage placement opportunities and achievements from this page.</p>
 
-        <div class="grid">
-            <div class="card">
-                <h2>Placement Opportunities</h2>
-                <p>Update company openings, job roles, eligibility, and deadlines.</p>
-                <div class="button-group">
-                    <a href="{% url 'placement_opportunities' %}" class="btn">Manage Opportunity</a>
+<body>
+
+<div class="page-wrapper">
+
+    <div class="main-container">
+
+        <!-- =========================================
+             Header
+        ========================================== -->
+
+        <header class="page-header">
+
+            <div class="header-content">
+
+                <div class="title-wrapper">
+
+                    <div class="header-icon">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+
+                    <div>
+                        <h1>Placement Management</h1>
+                        <p>
+                            Manage placement opportunities, achievements and recruitment activities
+                        </p>
+                    </div>
+
                 </div>
+
+                <a href="{% url 'admin_dashboard' %}" class="dashboard-btn">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Dashboard
+                </a>
+
             </div>
 
-            <div class="card">
-    <h2>Placement Achievements</h2>
-    <p>Showcase placement records, offers, and success stories.</p>
+        </header>
 
-    <div class="button-group">
-        <a href="{% url 'placement_achievements' %}" class="btn secondary">
-            Add Achievement
-        </a>
 
-        <a href="{% url 'manage_placement' %}" class="btn manage">
-            Manage
-        </a>
+        <!-- =========================================
+             Main Content
+        ========================================== -->
+
+        <main class="content">
+
+            <div class="intro">
+
+                <h2>Placement Administration</h2>
+
+                <p>
+                    Manage recruitment opportunities and maintain student placement
+                    achievement records from one centralised workspace.
+                </p>
+
+            </div>
+
+
+            <!-- =========================================
+                 Management Cards
+            ========================================== -->
+
+            <div class="management-grid">
+
+                <!-- Placement Opportunities -->
+
+                <div class="management-card">
+
+                    <span class="card-label blue-label">
+                        OPPORTUNITIES
+                    </span>
+
+                    <div class="card-icon opportunity-icon">
+                        <i class="fa-solid fa-building"></i>
+                    </div>
+
+                    <h3>Placement Opportunities</h3>
+
+                    <p>
+                        Create and manage company openings, job roles,
+                        eligibility criteria, application deadlines and
+                        opportunity status.
+                    </p>
+
+                    <div class="button-group">
+
+                        <a
+                            href="{% url 'placement_opportunities' %}"
+                            class="action-btn primary-btn"
+                        >
+                            <i class="fa-solid fa-gear"></i>
+                            Manage Opportunities
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Placement Achievements -->
+
+                <div class="management-card">
+
+                    <span class="card-label green-label">
+                        ACHIEVEMENTS
+                    </span>
+
+                    <div class="card-icon achievement-icon">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+
+                    <h3>Placement Achievements</h3>
+
+                    <p>
+                        Add and maintain student placement records,
+                        successful offers, company details and
+                        placement success stories.
+                    </p>
+
+                    <div class="button-group">
+
+                        <a
+                            href="{% url 'placement_achievements' %}"
+                            class="action-btn success-btn"
+                        >
+                            <i class="fa-solid fa-plus"></i>
+                            Add Achievement
+                        </a>
+
+                        <a
+                            href="{% url 'manage_placement' %}"
+                            class="action-btn warning-btn"
+                        >
+                            <i class="fa-solid fa-list-check"></i>
+                            Manage Records
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 Bottom Navigation
+            ========================================== -->
+
+            <div class="divider"></div>
+
+            <div class="bottom-navigation">
+
+                <a
+                    href="{% url 'admin_dashboard' %}"
+                    class="back-btn"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Admin Dashboard
+                </a>
+
+                <span class="module-info">
+                    <i class="fa-solid fa-shield-halved me-1"></i>
+                    Placement Management Module
+                </span>
+
+            </div>
+
+        </main>
+
     </div>
+
 </div>
-        </div>
 
-        <a href="{% url 'admin_dashboard' %}" class="btn">Back to Dashboard</a>
-    </div>
 </body>
 </html>

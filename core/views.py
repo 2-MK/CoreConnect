@@ -1916,22 +1916,70 @@ def update_insights(request, ktu_id):
     )
 
 
+import os
+
+from google import genai
+from django.shortcuts import render
+
+
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
+
+
+import os
+import time
+
+from google import genai
+from django.shortcuts import render
+
+# Make sure this is imported from wherever your Supabase client is defined
+# Example:
+# from .supabaseclient import supabase
+
+
+# ==========================================
+# GEMINI CLIENT
+# ==========================================
+
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
+
+
+# ==========================================
+# STUDENT INSIGHTS
+# ==========================================
+
 def insights_search(request):
+
     student = None
     insights = []
     error = None
+    ai_summary = None
 
     name = request.GET.get("name", "").strip()
     ktu_id = request.GET.get("ktu_id", "").strip()
+    ai_requested = request.GET.get("ai_summary") == "true"
 
-    # Both Name and KTU ID are required
+
+    # ==========================================
+    # SEARCH STUDENT
+    # ==========================================
+
     if name or ktu_id:
 
+        # Both Name and KTU ID are required
         if not name or not ktu_id:
+
             error = "Please enter both Student Name and KTU ID."
 
         else:
-            # Verify BOTH name and KTU ID
+
+            # ==========================================
+            # VERIFY BOTH NAME AND KTU ID
+            # ==========================================
+
             user_response = (
                 supabase
                 .table("users")
@@ -1941,12 +1989,20 @@ def insights_search(request):
                 .execute()
             )
 
-            # Only show results when BOTH are correct
+
+            # ==========================================
+            # STUDENT FOUND
+            # ==========================================
+
             if user_response.data:
 
                 student = user_response.data[0]
 
-                # Get insights only after successful verification
+
+                # ==========================================
+                # GET ACADEMIC DETAILS
+                # ==========================================
+
                 insights_response = (
                     supabase
                     .table("insights")
@@ -1962,8 +2018,193 @@ def insights_search(request):
 
                 insights = insights_response.data
 
+
+                # ==========================================
+                # AI ANALYSIS
+                # ==========================================
+
+                if ai_requested:
+
+                    # --------------------------------------
+                    # NO ACADEMIC DATA
+                    # --------------------------------------
+
+                    if not insights:
+
+                        ai_summary = (
+                            "There is no academic data available "
+                            "for this student."
+                        )
+
+
+                    else:
+
+                        # ==================================
+                        # PREPARE DATA FOR GEMINI
+                        # ==================================
+
+                        academic_data = []
+
+                        for row in insights:
+
+                            academic_data.append({
+                                "semester": row.get("semester"),
+                                "subject_code": row.get("subject_code"),
+                                "subject_name": row.get("subject_name"),
+                                "internal": row.get("internal"),
+                                "external": row.get("external"),
+                                "attendance": row.get("attendance"),
+                            })
+
+
+                        # ==================================
+                        # GEMINI PROMPT
+                        # ==================================
+
+                        prompt = f"""
+Analyze the academic performance of the following student.
+
+Student Name: {student["name"]}
+
+Academic Data:
+{academic_data}
+
+Give a short and simple academic assessment.
+
+The assessment should explain:
+
+- Whether the student is performing well, average, or needs improvement
+- Internal mark performance
+- External mark performance
+- Attendance
+- Strong subjects, if identifiable
+- Subjects or areas that need improvement
+- Overall academic performance
+
+Important rules:
+
+- Do NOT invent marks or information.
+- Use only the academic data provided.
+- If information is missing, do not assume it.
+- Do not make claims that cannot be supported by the data.
+- Keep the response around 100-150 words.
+- Use simple language that a teacher or administrator can easily understand.
+- Start directly with the overall assessment.
+"""
+
+
+                        # ==================================
+                        # GEMINI REQUEST
+                        # ==================================
+
+                        try:
+
+                            response = client.models.generate_content(
+                                model="gemini-3.8-flash",
+                                contents=prompt
+                            )
+
+                            ai_summary = response.text
+
+
+                        # ==================================
+                        # PRIMARY MODEL ERROR
+                        # ==================================
+
+                        except Exception as e:
+
+                            print(
+                                "GEMINI PRIMARY ERROR:",
+                                repr(e)
+                            )
+
+
+                            # ==================================
+                            # RETRY PRIMARY MODEL
+                            # ==================================
+
+                            try:
+
+                                print(
+                                    "Retrying Gemini request..."
+                                )
+
+                                time.sleep(2)
+
+
+                                response = client.models.generate_content(
+                                    model="gemini-3.8-flash",
+                                    contents=prompt
+                                )
+
+                                ai_summary = response.text
+
+
+                            # ==================================
+                            # RETRY FAILED
+                            # ==================================
+
+                            except Exception as retry_error:
+
+                                print(
+                                    "GEMINI RETRY ERROR:",
+                                    repr(retry_error)
+                                )
+
+
+                                # ==================================
+                                # FALLBACK MODEL
+                                # ==================================
+
+                                try:
+
+                                    print(
+                                        "Trying Gemini fallback model..."
+                                    )
+
+
+                                    response = client.models.generate_content(
+                                        model="gemini-3.8-flash-lite",
+                                        contents=prompt
+                                    )
+
+                                    ai_summary = response.text
+
+
+                                # ==================================
+                                # ALL MODELS FAILED
+                                # ==================================
+
+                                except Exception as fallback_error:
+
+                                    print(
+                                        "GEMINI FALLBACK ERROR:",
+                                        repr(fallback_error)
+                                    )
+
+
+                                    ai_summary = (
+                                        "The AI service is temporarily "
+                                        "busy. Please try again in a "
+                                        "few moments."
+                                    )
+
+
+            # ==========================================
+            # STUDENT NOT FOUND
+            # ==========================================
+
             else:
-                error = "Name and KTU ID do not match. Please check your details."
+
+                error = (
+                    "Name and KTU ID do not match. "
+                    "Please check your details."
+                )
+
+
+    # ==========================================
+    # RENDER PAGE
+    # ==========================================
 
     return render(
         request,
@@ -1972,6 +2213,7 @@ def insights_search(request):
             "student": student,
             "insights": insights,
             "error": error,
+            "ai_summary": ai_summary,
             "searched_name": name,
             "searched_ktu_id": ktu_id,
         },

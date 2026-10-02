@@ -20,17 +20,13 @@ body {
     color: #172033;
 
     background:
-        radial-gradient(
-            circle at 10% 5%,
-            rgba(59, 130, 246, 0.08),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 90% 95%,
-            rgba(96, 165, 250, 0.07),
-            transparent 30%
-        ),
-        #f7f8f6;
+        radial-gradient(circle at 0% 0%,
+            rgba(37, 99, 235, 0.13),
+            transparent 30%),
+        radial-gradient(circle at 100% 100%,
+            rgba(96, 165, 250, 0.12),
+            transparent 32%),
+        linear-gradient(135deg, #f8fbff, #f4f7fb);
 
     overflow-x: hidden;
 }
@@ -41,10 +37,10 @@ body {
    ========================================================= */
 
 .committee-section {
-    width: min(1180px, calc(100% - 40px));
+    width: min(1200px, calc(100% - 40px));
     margin: 0 auto;
 
-    padding: 75px 0 100px;
+    padding: 80px 0 105px;
 }
 
 
@@ -57,13 +53,23 @@ body {
 
     text-align: center;
 
-    margin-bottom: 58px;
+    margin-bottom: 65px;
 
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(2.1rem, 4vw, 3.2rem);
     font-weight: 800;
-    letter-spacing: -1.4px;
 
-    color: #172033;
+    letter-spacing: -1.8px;
+
+    background: linear-gradient(
+        135deg,
+        #172033,
+        #2563eb
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
 }
 
 .committee-section h1::after {
@@ -71,18 +77,22 @@ body {
 
     display: block;
 
-    width: 58px;
-    height: 4px;
+    width: 75px;
+    height: 5px;
 
-    margin: 17px auto 0;
+    margin: 18px auto 0;
 
     border-radius: 50px;
 
     background: linear-gradient(
         90deg,
-        #2563eb,
-        #7aaaf7
+        #1d4ed8,
+        #60a5fa,
+        #93c5fd
     );
+
+    box-shadow:
+        0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
 
@@ -95,7 +105,7 @@ body {
 
     grid-template-columns: repeat(4, minmax(0, 1fr));
 
-    gap: 24px;
+    gap: 26px;
 }
 
 
@@ -106,30 +116,35 @@ body {
 .member-card {
     position: relative;
 
-    padding: 30px 20px 27px;
+    padding: 32px 20px 30px;
 
     text-align: center;
 
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.88);
 
-    border: 1px solid #e7e9ed;
+    border: 1px solid rgba(219, 228, 241, 0.9);
 
-    border-radius: 20px;
+    border-radius: 24px;
 
     box-shadow:
-        0 5px 15px rgba(30, 41, 59, 0.045),
-        0 1px 3px rgba(30, 41, 59, 0.04);
+        0 8px 25px rgba(15, 23, 42, 0.055),
+        0 2px 6px rgba(15, 23, 42, 0.035);
 
     overflow: hidden;
 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
     transition:
-        transform 0.35s ease,
-        box-shadow 0.35s ease,
-        border-color 0.35s ease;
+        transform 0.4s cubic-bezier(.2,.8,.2,1),
+        box-shadow 0.4s ease,
+        border-color 0.4s ease;
 }
 
 
-/* Top blue accent */
+/* =========================================================
+   TOP ACCENT
+   ========================================================= */
 
 .member-card::before {
     content: "";
@@ -140,11 +155,12 @@ body {
     left: 0;
 
     width: 100%;
-    height: 3px;
+    height: 4px;
 
     background: linear-gradient(
         90deg,
-        #2563eb,
+        #1d4ed8,
+        #3b82f6,
         #93c5fd
     );
 
@@ -152,39 +168,52 @@ body {
 
     transform-origin: center;
 
-    transition: transform 0.35s ease;
+    transition: transform 0.4s ease;
 }
 
 
-/* Soft decorative circle */
+/* =========================================================
+   DECORATIVE CIRCLES
+   ========================================================= */
 
 .member-card::after {
     content: "";
 
     position: absolute;
 
-    width: 130px;
-    height: 130px;
+    width: 170px;
+    height: 170px;
 
-    top: -85px;
-    right: -75px;
+    top: -105px;
+    right: -95px;
 
     border-radius: 50%;
 
-    background: rgba(37, 99, 235, 0.045);
+    background:
+        radial-gradient(
+            circle,
+            rgba(59, 130, 246, 0.12),
+            rgba(59, 130, 246, 0.025)
+        );
 
-    transition: transform 0.4s ease;
+    transition:
+        transform 0.5s ease,
+        opacity 0.5s ease;
 }
 
 
-.member-card:hover {
-    transform: translateY(-7px);
+/* =========================================================
+   CARD HOVER
+   ========================================================= */
 
-    border-color: #d8e4f7;
+.member-card:hover {
+    transform: translateY(-10px);
+
+    border-color: rgba(147, 197, 253, 0.8);
 
     box-shadow:
-        0 18px 38px rgba(30, 41, 59, 0.09),
-        0 4px 10px rgba(30, 41, 59, 0.04);
+        0 22px 45px rgba(30, 64, 175, 0.12),
+        0 8px 18px rgba(15, 23, 42, 0.05);
 }
 
 .member-card:hover::before {
@@ -206,10 +235,10 @@ body {
 
     display: block;
 
-    width: 145px;
-    height: 145px;
+    width: 150px;
+    height: 150px;
 
-    margin: 0 auto 22px;
+    margin: 0 auto 23px;
 
     object-fit: cover;
 
@@ -217,26 +246,35 @@ body {
 
     border: 5px solid #ffffff;
 
-    outline: 1px solid #dfe5ed;
+    outline: 2px solid #dbe7f7;
 
-    background: #f1f3f5;
+    background: #f1f5f9;
 
     box-shadow:
-        0 7px 20px rgba(15, 23, 42, 0.10);
+        0 8px 22px rgba(15, 23, 42, 0.12);
 
     transition:
-        transform 0.4s ease,
-        box-shadow 0.4s ease,
-        outline-color 0.4s ease;
+        transform 0.45s ease,
+        box-shadow 0.45s ease,
+        outline-color 0.45s ease;
 }
 
 .member-card:hover img {
-    transform: scale(1.045);
+    transform: scale(1.06);
 
-    outline-color: #b9d1f5;
+    outline-color: #60a5fa;
 
     box-shadow:
-        0 12px 27px rgba(37, 99, 235, 0.13);
+        0 14px 30px rgba(37, 99, 235, 0.20);
+}
+
+
+/* =========================================================
+   IMAGE RING EFFECT
+   ========================================================= */
+
+.member-card img::after {
+    content: "";
 }
 
 
@@ -248,23 +286,27 @@ body {
     position: relative;
     z-index: 2;
 
-    margin-bottom: 9px;
+    margin-bottom: 11px;
 
-    color: #182235;
+    color: #172033;
 
-    font-size: 1.02rem;
+    font-size: 1.04rem;
 
-    line-height: 1.4;
+    line-height: 1.45;
 
     font-weight: 700;
 
-    letter-spacing: -0.2px;
+    letter-spacing: -0.25px;
 
-    transition: color 0.3s ease;
+    transition:
+        color 0.3s ease,
+        transform 0.3s ease;
 }
 
 .member-card:hover h3 {
     color: #1d4ed8;
+
+    transform: translateY(-1px);
 }
 
 
@@ -281,36 +323,55 @@ body {
     align-items: center;
     justify-content: center;
 
-    min-height: 30px;
+    min-height: 31px;
 
-    padding: 6px 14px;
+    padding: 6px 15px;
 
     border-radius: 50px;
 
-    background: #f0f6ff;
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #e0edff
+        );
 
-    border: 1px solid #dceaff;
+    border: 1px solid #d5e5fb;
 
     color: #2563eb;
 
-    font-size: 0.72rem;
+    font-size: 0.73rem;
 
     font-weight: 600;
 
     letter-spacing: 0.15px;
 
+    box-shadow:
+        0 3px 8px rgba(37, 99, 235, 0.06);
+
     transition:
         background 0.3s ease,
         color 0.3s ease,
-        border-color 0.3s ease;
+        border-color 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
 .member-card:hover p {
-    background: #2563eb;
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
 
     border-color: #2563eb;
 
     color: #ffffff;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 14px rgba(37, 99, 235, 0.20);
 }
 
 
@@ -320,12 +381,44 @@ body {
 
 .member-card:first-child,
 .member-card:nth-child(2) {
-    border-color: #dce7f7;
+    border-color: #cbdcf5;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.96),
+            rgba(244,249,255,0.94)
+        );
+
+    box-shadow:
+        0 10px 28px rgba(37, 99, 235, 0.08),
+        0 2px 6px rgba(15, 23, 42, 0.04);
 }
 
 .member-card:first-child::before,
 .member-card:nth-child(2)::before {
     transform: scaleX(1);
+}
+
+
+/* =========================================================
+   LEADERSHIP BADGE
+   ========================================================= */
+
+.member-card:first-child p,
+.member-card:nth-child(2) p {
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
+
+    color: #ffffff;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 5px 12px rgba(37, 99, 235, 0.15);
 }
 
 
@@ -336,21 +429,22 @@ body {
 @media (max-width: 1050px) {
 
     .committee-section {
-        padding: 60px 0 80px;
+        padding: 65px 0 85px;
     }
 
     .members-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+
         gap: 21px;
     }
 
     .member-card {
-        padding: 27px 18px 25px;
+        padding: 28px 18px 26px;
     }
 
     .member-card img {
-        width: 130px;
-        height: 130px;
+        width: 135px;
+        height: 135px;
     }
 }
 
@@ -364,25 +458,25 @@ body {
     .committee-section {
         width: min(650px, calc(100% - 30px));
 
-        padding: 50px 0 65px;
+        padding: 52px 0 70px;
     }
 
     .committee-section h1 {
-        margin-bottom: 42px;
+        margin-bottom: 45px;
 
-        font-size: 2.2rem;
+        font-size: 2.25rem;
     }
 
     .members-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
 
-        gap: 17px;
+        gap: 18px;
     }
 
     .member-card {
-        padding: 24px 14px 22px;
+        padding: 25px 14px 23px;
 
-        border-radius: 17px;
+        border-radius: 19px;
     }
 
     .member-card img {
@@ -393,7 +487,7 @@ body {
     }
 
     .member-card h3 {
-        font-size: 0.95rem;
+        font-size: 0.96rem;
     }
 
     .member-card p {
@@ -413,20 +507,20 @@ body {
     .committee-section {
         width: calc(100% - 22px);
 
-        padding: 38px 0 55px;
+        padding: 40px 0 58px;
     }
 
     .committee-section h1 {
-        margin-bottom: 34px;
+        margin-bottom: 36px;
 
-        font-size: 1.8rem;
+        font-size: 1.85rem;
 
-        letter-spacing: -0.8px;
+        letter-spacing: -1px;
     }
 
     .committee-section h1::after {
-        width: 45px;
-        height: 3px;
+        width: 50px;
+        height: 4px;
 
         margin-top: 14px;
     }
@@ -434,18 +528,18 @@ body {
     .members-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
 
-        gap: 12px;
+        gap: 13px;
     }
 
     .member-card {
-        padding: 19px 8px 18px;
+        padding: 20px 8px 19px;
 
-        border-radius: 15px;
+        border-radius: 16px;
     }
 
     .member-card img {
-        width: 92px;
-        height: 92px;
+        width: 94px;
+        height: 94px;
 
         margin-bottom: 14px;
 
@@ -457,7 +551,7 @@ body {
 
         font-size: 0.80rem;
 
-        line-height: 1.35;
+        line-height: 1.4;
     }
 
     .member-card p {
@@ -475,7 +569,7 @@ body {
     }
 
     .member-card:hover {
-        transform: translateY(-4px);
+        transform: translateY(-5px);
     }
 }
 

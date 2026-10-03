@@ -38,7 +38,8 @@
         }
 
         .student-card,
-        .semester-card {
+        .semester-card,
+        .overall-cgpa-card {
             background: white;
             border-radius: 15px;
             padding: 25px;
@@ -104,6 +105,48 @@
         select:focus {
             outline: none;
             border-color: #2563eb;
+        }
+
+        /* SEMESTER CGPA */
+
+        .cgpa-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            max-width: 300px;
+        }
+
+        .cgpa-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .cgpa-section input {
+            width: 100%;
+        }
+
+        /* OVERALL CGPA */
+
+        .overall-cgpa-card h2 {
+            margin-top: 0;
+            color: #1e293b;
+        }
+
+        .overall-cgpa-section {
+            max-width: 300px;
+        }
+
+        .overall-cgpa-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .overall-cgpa-section input {
+            width: 100%;
         }
 
         .save-btn {
@@ -194,6 +237,36 @@
         <!-- JAVASCRIPT WILL CREATE THE SUBJECT TABLES -->
 
         <div id="semester-container"></div>
+
+
+        <!-- ===========================================
+             OVERALL CGPA
+        ============================================ -->
+
+        <div class="overall-cgpa-card">
+
+            <h2>Overall CGPA</h2>
+
+            <div class="overall-cgpa-section">
+
+                <label for="overall_cgpa">
+                    Overall CGPA
+                </label>
+
+                <input
+                    type="number"
+                    id="overall_cgpa"
+                    name="overall_cgpa"
+                    min="0"
+                    max="10"
+                    step="0.01"
+                    value="{{ overall_cgpa|default:'' }}"
+                    placeholder="Enter Overall CGPA"
+                >
+
+            </div>
+
+        </div>
 
 
         <button type="submit"
@@ -401,6 +474,27 @@ function getExisting(semester, code) {
 
 
 // ===========================================
+// FIND EXISTING CGPA FOR SEMESTER
+// ===========================================
+
+function getExistingCGPA(semester) {
+
+    const existing =
+        existingInsights.find(
+            item =>
+                Number(item.semester) === Number(semester)
+                &&
+                item.cgpa !== null
+                &&
+                item.cgpa !== undefined
+        );
+
+    return existing ? existing.cgpa : '';
+
+}
+
+
+// ===========================================
 // CREATE SEMESTER TABLE
 // ===========================================
 
@@ -569,6 +663,41 @@ function createSemester(semester) {
     wrapper.appendChild(table);
 
     card.appendChild(wrapper);
+
+
+    // ===========================================
+    // SEMESTER CGPA AT END OF SEMESTER
+    // ===========================================
+
+    const cgpaSection =
+        document.createElement("div");
+
+    cgpaSection.className =
+        "cgpa-section";
+
+
+    cgpaSection.innerHTML = `
+
+        <label for="cgpa_${semester}">
+            Semester ${semester} CGPA
+        </label>
+
+        <input
+            type="number"
+            id="cgpa_${semester}"
+            name="cgpa_${semester}"
+            min="0"
+            max="10"
+            step="0.01"
+            value="${getExistingCGPA(semester)}"
+            placeholder="Enter CGPA"
+        >
+
+    `;
+
+
+    card.appendChild(cgpaSection);
+
 
     container.appendChild(card);
 

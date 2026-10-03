@@ -29,6 +29,7 @@
 
         <p><strong>Role:</strong> {{ job.role }}</p>
         <p><strong>Eligibility:</strong> {{ job.eligibility }}</p>
+        <p><strong>Minimum CGPA:</strong> {{ job.cgpa|default:"-" }}</p>
         <p><strong>Deadline:</strong> {{ job.deadline }}</p>
         <p class="description">{{ job.description }}</p>
 

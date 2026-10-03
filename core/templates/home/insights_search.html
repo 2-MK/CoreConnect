@@ -22,7 +22,7 @@
 
     <link
         rel="preconnect"
-        href="https://fonts.gstatic.com"
+        href="https://fonts.googleapis.com"
         crossorigin
     >
 
@@ -409,7 +409,7 @@
                             </th>
 
                             <th>
-                                         Internal / 50
+                                Internal / 50
                             </th>
 
                             <th>
@@ -489,9 +489,66 @@
 
             </div>
 
+
+            <!-- =========================
+                 SEMESTER CGPA
+            ========================== -->
+
+            <div class="semester-cgpa">
+
+                <strong>
+                    Semester {{ semester.grouper }} CGPA
+                </strong>
+
+                <span>
+
+                    {% for row in semester.list %}
+
+                        {% if row.cgpa is not None %}
+
+                            {{ row.cgpa }}
+
+                            {% if not forloop.last %}
+                            {% endif %}
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                </span>
+
+            </div>
+
+
         </div>
 
     {% endfor %}
+
+
+
+    <!-- =========================
+         OVERALL CGPA
+    ========================== -->
+
+    <div class="overall-cgpa">
+
+        <div>
+
+            <span class="overall-cgpa-label">
+                OVERALL CGPA
+            </span>
+
+            <h2>
+                {% if overall_cgpa %}
+                    {{ overall_cgpa }}
+                {% else %}
+                    —
+                {% endif %}
+            </h2>
+
+        </div>
+
+    </div>
 
 
     {% endif %}

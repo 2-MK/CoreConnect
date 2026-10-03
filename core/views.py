@@ -9,8 +9,10 @@ import json
 def home(request):
     return render(request, "home/home.html")
 
+
 def members(request):
-    return render(request, "home/members.html")  
+    return render(request, "home/members.html")
+
 
 def admins(request):
 
@@ -41,9 +43,11 @@ def admins(request):
         )
 
     return render(request, "admin/adhome.html")
-    
+
+
 def admin_dashboard(request):
     return render(request, "admin/admin_dashboard.html")
+
 
 def profile_update(request):
 
@@ -74,13 +78,16 @@ def profile_update(request):
 
     return render(request, "admin/profile_update.html")
 
+
 def user_details_view(request):
     # Add logic here (e.g., fetching a list of users from the database)
     return render(request, 'admin/user_details.html')
 
+
 def get_users(request):
     users = supabase.table("users").select("*").execute()
     return JsonResponse(users.data, safe=False)
+
 
 import json
 import random
@@ -93,7 +100,6 @@ from django.shortcuts import render
 from .supabase_client import supabase
 
 
-
 def add_user(request):
 
     if request.method == "POST":
@@ -104,7 +110,10 @@ def add_user(request):
 
             # Generate random 4-character password
             default_password = ''.join(
-                random.choices(string.ascii_uppercase + string.digits, k=4)
+                random.choices(
+                    string.ascii_uppercase + string.digits,
+                    k=4
+                )
             )
 
             hashed_password = bcrypt.hashpw(
@@ -145,6 +154,7 @@ def add_user(request):
         "message": "Invalid request"
     }, status=400)
 
+
 def search_user(request, ktu_id):
 
     result = (
@@ -157,18 +167,28 @@ def search_user(request, ktu_id):
     if result.data:
         return JsonResponse(result.data[0], safe=False)
 
-    return JsonResponse({"message": "User not found"}, status=404)
+    return JsonResponse(
+        {"message": "User not found"},
+        status=404
+    )
 
 
 def delete_user(request, user_id):
 
     if request.method == "DELETE":
 
-        supabase.table("users").delete().eq("id", user_id).execute()
+        supabase.table("users").delete().eq(
+            "id",
+            user_id
+        ).execute()
 
         return JsonResponse({"message": "Deleted"})
 
-    return JsonResponse({"message": "Invalid"}, status=400)
+    return JsonResponse(
+        {"message": "Invalid"},
+        status=400
+    )
+
 
 def update_user(request, user_id):
 
@@ -212,8 +232,10 @@ def update_user(request, user_id):
 def student_manage(request):
     return render(request, "admin/student_manage.html")
 
+
 def alumni_approval(request):
     return render(request, "admin/alumni_approval.html")
+
 
 import bcrypt
 
@@ -415,7 +437,10 @@ def user_profile_update(request):
             "parent_contact": parent_contact
         }).eq("id", user_id).execute()
 
-        messages.success(request, "Profile updated successfully.")
+        messages.success(
+            request,
+            "Profile updated successfully."
+        )
 
         return redirect("user_profile_update")
 
@@ -426,6 +451,7 @@ def user_profile_update(request):
             "user": user
         }
     )
+
 
 def user_logout(request):
 
@@ -450,43 +476,77 @@ def alumni_directory(request):
 
     if request.method == "POST":
 
-        passout_year = request.POST.get("passout_year", "").strip()
-        name = request.POST.get("name", "").strip()
-        ktu_id = request.POST.get("ktu_id", "").strip()
+        passout_year = request.POST.get(
+            "passout_year",
+            ""
+        ).strip()
 
-        query = supabase.table("alumni_details").select("*")
+        name = request.POST.get(
+            "name",
+            ""
+        ).strip()
+
+        ktu_id = request.POST.get(
+            "ktu_id",
+            ""
+        ).strip()
+
+        query = supabase.table(
+            "alumni_details"
+        ).select("*")
 
         # Filter by Passout Year
         if passout_year:
-            query = query.eq("passout_year", passout_year)
+            query = query.eq(
+                "passout_year",
+                passout_year
+            )
+
             search_type = "passout_year"
             search_query = passout_year
 
         # Optional Name filter
         if name:
-            query = query.ilike("name", f"%{name}%")
+            query = query.ilike(
+                "name",
+                f"%{name}%"
+            )
+
             if not search_type:
                 search_type = "name"
                 search_query = name
 
         # Optional KTU ID filter
         if ktu_id:
-            query = query.eq("ktu_id", ktu_id)
+            query = query.eq(
+                "ktu_id",
+                ktu_id
+            )
+
             if not search_type:
                 search_type = "ktu_id"
                 search_query = ktu_id
 
-        response = query.order("passout_year").order("name").execute()
+        response = (
+            query
+            .order("passout_year")
+            .order("name")
+            .execute()
+        )
+
         alumni = response.data
 
     else:
+
         response = (
-            supabase.table("alumni_details")
+            supabase
+            .table("alumni_details")
             .select("*")
             .order("passout_year")
             .order("name")
             .execute()
         )
+
         alumni = response.data
 
     return render(
@@ -502,59 +562,193 @@ def alumni_directory(request):
         },
     )
 
-def placement_management(request):
-    return render(request, 'admin/placement.html')
 
+def placement_management(request):
+    return render(
+        request,
+        'admin/placement.html'
+    )
+
+
+# ==========================================================
+# PLACEMENT OPPORTUNITIES
+# ==========================================================
 
 def placement_opportunities(request):
+
     opportunities = []
     editing_opportunity = None
 
     if request.method == "POST":
+
         action = request.POST.get("action")
         opportunity_id = request.POST.get("id")
 
         try:
-            if action == "delete":
-                supabase.table("placement_opportunities").delete().eq("id", opportunity_id).execute()
-                messages.success(request, "Opportunity deleted successfully.")
-            elif action == "update":
-                update_data = {
-                    "company_name": request.POST.get("company_name"),
-                    "role": request.POST.get("role"),
-                    "eligibility": request.POST.get("eligibility"),
-                    "deadline": request.POST.get("deadline") or None,
-                    "description": request.POST.get("description"),
-                    "status": request.POST.get("status") or "Active",
-                }
-                supabase.table("placement_opportunities").update(update_data).eq("id", opportunity_id).execute()
-                messages.success(request, "Opportunity updated successfully.")
-            elif action == "create":
-                insert_data = {
-                    "company_name": request.POST.get("company_name"),
-                    "role": request.POST.get("role"),
-                    "eligibility": request.POST.get("eligibility"),
-                    "deadline": request.POST.get("deadline") or None,
-                    "description": request.POST.get("description"),
-                    "status": request.POST.get("status") or "Active",
-                }
-                supabase.table("placement_opportunities").insert(insert_data).execute()
-                messages.success(request, "Opportunity created successfully.")
-            else:
-                messages.error(request, "Invalid action.")
-        except Exception as exc:
-            messages.error(request, f"Unable to process opportunity: {exc}")
 
-        return redirect("placement_opportunities")
+            if action == "delete":
+
+                supabase.table(
+                    "placement_opportunities"
+                ).delete().eq(
+                    "id",
+                    opportunity_id
+                ).execute()
+
+                messages.success(
+                    request,
+                    "Opportunity deleted successfully."
+                )
+
+            elif action == "update":
+
+                # NEW: Get CGPA
+                cgpa_value = request.POST.get("cgpa")
+
+                update_data = {
+
+                    "company_name": request.POST.get(
+                        "company_name"
+                    ),
+
+                    "role": request.POST.get(
+                        "role"
+                    ),
+
+                    "eligibility": request.POST.get(
+                        "eligibility"
+                    ),
+
+                    # NEW: Save CGPA
+                    "cgpa": (
+                        float(cgpa_value)
+                        if cgpa_value
+                        else None
+                    ),
+
+                    "deadline": request.POST.get(
+                        "deadline"
+                    ) or None,
+
+                    "description": request.POST.get(
+                        "description"
+                    ),
+
+                    "status": request.POST.get(
+                        "status"
+                    ) or "Active",
+                }
+
+                supabase.table(
+                    "placement_opportunities"
+                ).update(
+                    update_data
+                ).eq(
+                    "id",
+                    opportunity_id
+                ).execute()
+
+                messages.success(
+                    request,
+                    "Opportunity updated successfully."
+                )
+
+            elif action == "create":
+
+                # NEW: Get CGPA
+                cgpa_value = request.POST.get("cgpa")
+
+                insert_data = {
+
+                    "company_name": request.POST.get(
+                        "company_name"
+                    ),
+
+                    "role": request.POST.get(
+                        "role"
+                    ),
+
+                    "eligibility": request.POST.get(
+                        "eligibility"
+                    ),
+
+                    # NEW: Save CGPA
+                    "cgpa": (
+                        float(cgpa_value)
+                        if cgpa_value
+                        else None
+                    ),
+
+                    "deadline": request.POST.get(
+                        "deadline"
+                    ) or None,
+
+                    "description": request.POST.get(
+                        "description"
+                    ),
+
+                    "status": request.POST.get(
+                        "status"
+                    ) or "Active",
+                }
+
+                supabase.table(
+                    "placement_opportunities"
+                ).insert(
+                    insert_data
+                ).execute()
+
+                messages.success(
+                    request,
+                    "Opportunity created successfully."
+                )
+
+            else:
+
+                messages.error(
+                    request,
+                    "Invalid action."
+                )
+
+        except Exception as exc:
+
+            messages.error(
+                request,
+                f"Unable to process opportunity: {exc}"
+            )
+
+        return redirect(
+            "placement_opportunities"
+        )
 
     edit_id = request.GET.get("edit_id")
+
     if edit_id:
-        response = supabase.table("placement_opportunities").select("*").eq("id", edit_id).execute()
+
+        response = (
+            supabase
+            .table("placement_opportunities")
+            .select("*")
+            .eq("id", edit_id)
+            .execute()
+        )
+
         if response.data:
             editing_opportunity = response.data[0]
 
-    response = supabase.table("placement_opportunities").select("*").order("created_at", desc=True).execute()
-    opportunities = response.data if response.data else []
+    response = (
+        supabase
+        .table("placement_opportunities")
+        .select("*")
+        .order("created_at", desc=True)
+        .execute()
+    )
+
+    opportunities = (
+        response.data
+        if response.data
+        else []
+    )
 
     return render(
         request,
@@ -565,8 +759,13 @@ def placement_opportunities(request):
         },
     )
 
+
 def placement_achievements(request):
-    return render(request, 'admin/placement_achievements.html')
+    return render(
+        request,
+        'admin/placement_achievements.html'
+    )
+
 
 import os
 import uuid
@@ -576,25 +775,44 @@ from django.shortcuts import render, redirect
 
 
 def _upload_placement_image(image):
+
     if not image:
         return None
 
     filename = f"{uuid.uuid4()}_{image.name}"
     extension = os.path.splitext(image.name)[1]
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=extension) as temp:
+    with tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=extension
+    ) as temp:
+
         for chunk in image.chunks():
             temp.write(chunk)
+
         temp_path = temp.name
 
     try:
-        supabase.storage.from_("placement-images").upload(
+
+        supabase.storage.from_(
+            "placement-images"
+        ).upload(
             path=filename,
             file=temp_path,
-            file_options={"content-type": image.content_type},
+            file_options={
+                "content-type": image.content_type
+            },
         )
-        return supabase.storage.from_("placement-images").get_public_url(filename)
+
+        return (
+            supabase
+            .storage
+            .from_("placement-images")
+            .get_public_url(filename)
+        )
+
     finally:
+
         if os.path.exists(temp_path):
             os.remove(temp_path)
 
@@ -605,28 +823,61 @@ def placement_updates(request):
 
         try:
 
-            student_name = request.POST.get("student_name")
-            company_name = request.POST.get("company_name")
-            job_role = request.POST.get("job_role")
-            package_lpa = request.POST.get("package_lpa")
-            placement_date = request.POST.get("placement_date")
-            caption = request.POST.get("caption")
+            student_name = request.POST.get(
+                "student_name"
+            )
 
-            image = request.FILES.get("achievement_image")
+            company_name = request.POST.get(
+                "company_name"
+            )
 
-            image_url = _upload_placement_image(image)
+            job_role = request.POST.get(
+                "job_role"
+            )
+
+            package_lpa = request.POST.get(
+                "package_lpa"
+            )
+
+            placement_date = request.POST.get(
+                "placement_date"
+            )
+
+            caption = request.POST.get(
+                "caption"
+            )
+
+            image = request.FILES.get(
+                "achievement_image"
+            )
+
+            image_url = _upload_placement_image(
+                image
+            )
 
             # Insert into table
             response = (
-                supabase.table("placed_students")
+                supabase
+                .table("placed_students")
                 .insert({
+
                     "student_name": student_name,
                     "company_name": company_name,
                     "job_role": job_role,
-                    "package_lpa": float(package_lpa) if package_lpa else None,
-                    "placement_date": placement_date if placement_date else None,
+
+                    "package_lpa":
+                        float(package_lpa)
+                        if package_lpa
+                        else None,
+
+                    "placement_date":
+                        placement_date
+                        if placement_date
+                        else None,
+
                     "caption": caption,
                     "image_url": image_url
+
                 })
                 .execute()
             )
@@ -637,7 +888,8 @@ def placement_updates(request):
                 request,
                 "admin/placement_achievements.html",
                 {
-                    "success_message": "Placement saved successfully."
+                    "success_message":
+                        "Placement saved successfully."
                 }
             )
 
@@ -658,107 +910,281 @@ def placement_updates(request):
         "admin/placement_achievements.html"
     )
 
+
 def manage_placement(request):
+
     placements = []
     editing_placement = None
 
     if request.method == "POST":
+
         action = request.POST.get("action")
         placement_id = request.POST.get("id")
 
         try:
+
             if action == "delete":
-                supabase.table("placed_students").delete().eq("id", placement_id).execute()
-                messages.success(request, "Placement record deleted successfully.")
+
+                supabase.table(
+                    "placed_students"
+                ).delete().eq(
+                    "id",
+                    placement_id
+                ).execute()
+
+                messages.success(
+                    request,
+                    "Placement record deleted successfully."
+                )
+
             elif action == "update":
+
                 update_data = {
-                    "student_name": request.POST.get("student_name"),
-                    "company_name": request.POST.get("company_name"),
-                    "job_role": request.POST.get("job_role"),
-                    "package_lpa": float(request.POST.get("package_lpa")) if request.POST.get("package_lpa") else None,
-                    "placement_date": request.POST.get("placement_date") or None,
-                    "caption": request.POST.get("caption"),
+
+                    "student_name":
+                        request.POST.get(
+                            "student_name"
+                        ),
+
+                    "company_name":
+                        request.POST.get(
+                            "company_name"
+                        ),
+
+                    "job_role":
+                        request.POST.get(
+                            "job_role"
+                        ),
+
+                    "package_lpa":
+                        float(
+                            request.POST.get(
+                                "package_lpa"
+                            )
+                        )
+                        if request.POST.get(
+                            "package_lpa"
+                        )
+                        else None,
+
+                    "placement_date":
+                        request.POST.get(
+                            "placement_date"
+                        ) or None,
+
+                    "caption":
+                        request.POST.get(
+                            "caption"
+                        ),
                 }
 
-                image = request.FILES.get("achievement_image")
-                if image:
-                    update_data["image_url"] = _upload_placement_image(image)
+                image = request.FILES.get(
+                    "achievement_image"
+                )
 
-                supabase.table("placed_students").update(update_data).eq("id", placement_id).execute()
-                messages.success(request, "Placement record updated successfully.")
+                if image:
+                    update_data[
+                        "image_url"
+                    ] = _upload_placement_image(
+                        image
+                    )
+
+                (
+                    supabase
+                    .table("placed_students")
+                    .update(update_data)
+                    .eq("id", placement_id)
+                    .execute()
+                )
+
+                messages.success(
+                    request,
+                    "Placement record updated successfully."
+                )
+
             elif action == "create":
+
                 insert_data = {
-                    "student_name": request.POST.get("student_name"),
-                    "company_name": request.POST.get("company_name"),
-                    "job_role": request.POST.get("job_role"),
-                    "package_lpa": float(request.POST.get("package_lpa")) if request.POST.get("package_lpa") else None,
-                    "placement_date": request.POST.get("placement_date") or None,
-                    "caption": request.POST.get("caption"),
+
+                    "student_name":
+                        request.POST.get(
+                            "student_name"
+                        ),
+
+                    "company_name":
+                        request.POST.get(
+                            "company_name"
+                        ),
+
+                    "job_role":
+                        request.POST.get(
+                            "job_role"
+                        ),
+
+                    "package_lpa":
+                        float(
+                            request.POST.get(
+                                "package_lpa"
+                            )
+                        )
+                        if request.POST.get(
+                            "package_lpa"
+                        )
+                        else None,
+
+                    "placement_date":
+                        request.POST.get(
+                            "placement_date"
+                        ) or None,
+
+                    "caption":
+                        request.POST.get(
+                            "caption"
+                        ),
                 }
 
-                image = request.FILES.get("achievement_image")
+                image = request.FILES.get(
+                    "achievement_image"
+                )
+
                 if image:
-                    insert_data["image_url"] = _upload_placement_image(image)
+                    insert_data[
+                        "image_url"
+                    ] = _upload_placement_image(
+                        image
+                    )
 
-                supabase.table("placed_students").insert(insert_data).execute()
-                messages.success(request, "Placement record created successfully.")
+                (
+                    supabase
+                    .table("placed_students")
+                    .insert(insert_data)
+                    .execute()
+                )
+
+                messages.success(
+                    request,
+                    "Placement record created successfully."
+                )
+
             else:
-                messages.error(request, "Invalid action.")
+
+                messages.error(
+                    request,
+                    "Invalid action."
+                )
+
         except Exception as exc:
-            messages.error(request, f"Unable to process placement: {exc}")
 
-        return redirect("manage_placement")
+            messages.error(
+                request,
+                f"Unable to process placement: {exc}"
+            )
 
-    edit_id = request.GET.get("edit_id")
+        return redirect(
+            "manage_placement"
+        )
+
+    edit_id = request.GET.get(
+        "edit_id"
+    )
+
     if edit_id:
-        response = supabase.table("placed_students").select("*").eq("id", edit_id).execute()
+
+        response = (
+            supabase
+            .table("placed_students")
+            .select("*")
+            .eq("id", edit_id)
+            .execute()
+        )
+
         if response.data:
             editing_placement = response.data[0]
 
-    response = supabase.table("placed_students").select("*").order("created_at", desc=True).execute()
-    placements = response.data if response.data else []
+    response = (
+        supabase
+        .table("placed_students")
+        .select("*")
+        .order(
+            "created_at",
+            desc=True
+        )
+        .execute()
+    )
+
+    placements = (
+        response.data
+        if response.data
+        else []
+    )
 
     return render(
         request,
         "admin/placement_management.html",
         {
             "placements": placements,
-            "editing_placement": editing_placement,
+            "editing_placement":
+                editing_placement,
         },
     )
 
+
 def dis_placedstd(request):
+
     # Fetch placed students
     placed_students = (
-        supabase.table("placed_students")
+        supabase
+        .table("placed_students")
         .select("*")
-        .order("placement_date", desc=True)
+        .order(
+            "placement_date",
+            desc=True
+        )
         .execute()
     )
+
     context = {
-        "placed_students": placed_students.data,
+        "placed_students":
+            placed_students.data,
     }
-    return render(request, "home/placement.html",context)
+
+    return render(
+        request,
+        "home/placement.html",
+        context
+    )
 
 
 def dis_placement(request):
-    
 
-    # Fetch all placement opportunities (Active + Closed)
+    # Fetch all placement opportunities
+    # CGPA is included here
     placement_opportunities = (
-        supabase.table("placement_opportunities")
-        .select("*")
-        .order("deadline", desc=False)
+        supabase
+        .table("placement_opportunities")
+        .select(
+            "id, company_name, company_logo, role, "
+            "eligibility, cgpa, deadline, description, "
+            "status, created_at, updated_at"
+        )
+        .order(
+            "deadline",
+            desc=False
+        )
         .execute()
     )
 
     context = {
-        
-        "placement_opportunities": placement_opportunities.data,
+
+        "placement_opportunities":
+            placement_opportunities.data,
     }
 
-    return render(request, "user/placement.html", context)
-
+    return render(
+        request,
+        "user/placement.html",
+        context
+    )
 
 
 from django.shortcuts import render
@@ -768,35 +1194,68 @@ import csv
 
 def student_manage(request):
 
-    search = request.GET.get("search", "").strip()
-    year = request.GET.get("year", "").strip()
+    search = request.GET.get(
+        "search",
+        ""
+    ).strip()
+
+    year = request.GET.get(
+        "year",
+        ""
+    ).strip()
 
     # Fetch all students
-    result = supabase.table("users").select("*").order("name").execute()
-    students = result.data if result.data else []
+    result = (
+        supabase
+        .table("users")
+        .select("*")
+        .order("name")
+        .execute()
+    )
+
+    students = (
+        result.data
+        if result.data
+        else []
+    )
 
     # Search
     if search:
+
         students = [
             s for s in students
-            if search.lower() in s["name"].lower()
-            or search.lower() in s["ktu_id"].lower()
+            if search.lower()
+            in s["name"].lower()
+            or search.lower()
+            in s["ktu_id"].lower()
         ]
 
     # Filter by year
     if year:
+
         students = [
             s for s in students
             if s["passout_year"] == year
         ]
 
     # Download CSV
-    if request.GET.get("download") == "1":
+    if request.GET.get(
+        "download"
+    ) == "1":
 
-        response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = 'attachment; filename="students.csv"'
+        response = HttpResponse(
+            content_type="text/csv"
+        )
+
+        response[
+            "Content-Disposition"
+        ] = (
+            'attachment; '
+            'filename="students.csv"'
+        )
 
         writer = csv.writer(response)
+
         writer.writerow([
             "Name",
             "KTU ID",
@@ -804,6 +1263,7 @@ def student_manage(request):
         ])
 
         for s in students:
+
             writer.writerow([
                 s["name"],
                 s["ktu_id"],
@@ -834,32 +1294,50 @@ def student_manage(request):
         },
     )
 
+
 def alumni_approval(request):
 
     # Get available passout years
     year_response = (
-        supabase.table("users")
+        supabase
+        .table("users")
         .select("passout_year")
-        .not_.is_("passout_year", "null")
+        .not_.is_(
+            "passout_year",
+            "null"
+        )
         .execute()
     )
 
     years = sorted(
-        list(set([row["passout_year"] for row in year_response.data])),
+        list(
+            set([
+                row["passout_year"]
+                for row in year_response.data
+            ])
+        ),
         reverse=True
     )
 
-    selected_year = request.GET.get("year")
+    selected_year = request.GET.get(
+        "year"
+    )
+
     students = []
 
     if selected_year:
 
         student_response = (
-            supabase.table("users")
+            supabase
+            .table("users")
             .select(
-                "id,ktu_id,name,email,contact,alumni_approval"
+                "id,ktu_id,name,email,"
+                "contact,alumni_approval"
             )
-            .eq("passout_year", selected_year)
+            .eq(
+                "passout_year",
+                selected_year
+            )
             .order("name")
             .execute()
         )
@@ -871,31 +1349,56 @@ def alumni_approval(request):
         # Approve One Student
         if "approve_student" in request.POST:
 
-            student_id = request.POST.get("student_id")
+            student_id = request.POST.get(
+                "student_id"
+            )
 
             (
-                supabase.table("users")
-                .update({"alumni_approval": True})
-                .eq("id", student_id)
+                supabase
+                .table("users")
+                .update({
+                    "alumni_approval": True
+                })
+                .eq(
+                    "id",
+                    student_id
+                )
                 .execute()
             )
 
-            return redirect(f"/alumni-approval/?year={selected_year}")
+            return redirect(
+                f"/alumni-approval/"
+                f"?year={selected_year}"
+            )
 
         # Approve All Students
         if "approve_all" in request.POST:
 
             (
-                supabase.table("users")
-                .update({"alumni_approval": True})
-                .eq("passout_year", selected_year)
+                supabase
+                .table("users")
+                .update({
+                    "alumni_approval": True
+                })
+                .eq(
+                    "passout_year",
+                    selected_year
+                )
                 .execute()
             )
 
-            return redirect(f"/alumni-approval/?year={selected_year}")
+            return redirect(
+                f"/alumni-approval/"
+                f"?year={selected_year}"
+            )
 
     total = len(students)
-    approved = sum(1 for s in students if s["alumni_approval"])
+
+    approved = sum(
+        1
+        for s in students
+        if s["alumni_approval"]
+    )
 
     context = {
         "years": years,
@@ -905,70 +1408,130 @@ def alumni_approval(request):
         "approved": approved,
     }
 
-    return render(request, "admin/alumni_approval.html", context)
+    return render(
+        request,
+        "admin/alumni_approval.html",
+        context
+    )
 
 
 def alumni_status(request):
 
-    ktu_id = request.session.get("ktu_id")
+    ktu_id = request.session.get(
+        "ktu_id"
+    )
 
     if not ktu_id:
         return redirect("login")
 
     user_res = (
-        supabase.table("users")
+        supabase
+        .table("users")
         .select("*")
-        .eq("ktu_id", ktu_id)
+        .eq(
+            "ktu_id",
+            ktu_id
+        )
         .execute()
     )
 
     if not user_res.data:
-        return render(request, "user/alumni_status.html", {
-            "error": "User not found."
-        })
+
+        return render(
+            request,
+            "user/alumni_status.html",
+            {
+                "error":
+                    "User not found."
+            }
+        )
 
     user = user_res.data[0]
 
     if not user["alumni_approval"]:
-        return render(request, "user/alumni_status.html", {
-            "approved": False
-        })
+
+        return render(
+            request,
+            "user/alumni_status.html",
+            {
+                "approved": False
+            }
+        )
 
     if request.method == "POST":
 
-        email = request.POST.get("email")
-        contact = request.POST.get("contact")
-        designation = request.POST.get("designation")
-        company_name = request.POST.get("company_name")
+        email = request.POST.get(
+            "email"
+        )
+
+        contact = request.POST.get(
+            "contact"
+        )
+
+        designation = request.POST.get(
+            "designation"
+        )
+
+        company_name = request.POST.get(
+            "company_name"
+        )
 
         data = {
-            "ktu_id": user["ktu_id"],
-            "name": user["name"],
-            "email": email,
-            "ritemail": user["ritemail"],
-            "contact": contact,
-            "passout_year": user["passout_year"],
-            "designation": designation,
-            "company_name": company_name,
+
+            "ktu_id":
+                user["ktu_id"],
+
+            "name":
+                user["name"],
+
+            "email":
+                email,
+
+            "ritemail":
+                user["ritemail"],
+
+            "contact":
+                contact,
+
+            "passout_year":
+                user["passout_year"],
+
+            "designation":
+                designation,
+
+            "company_name":
+                company_name,
         }
 
         existing = (
-            supabase.table("alumni_details")
+            supabase
+            .table("alumni_details")
             .select("*")
-            .eq("ktu_id", ktu_id)
+            .eq(
+                "ktu_id",
+                ktu_id
+            )
             .execute()
         )
 
         if existing.data:
+
             (
-                supabase.table("alumni_details")
+                supabase
+                .table("alumni_details")
                 .update(data)
-                .eq("ktu_id", ktu_id)
+                .eq(
+                    "ktu_id",
+                    ktu_id
+                )
                 .execute()
             )
+
         else:
+
             (
-                supabase.table("alumni_details")
+                supabase
+                .table("alumni_details")
                 .insert(data)
                 .execute()
             )
@@ -982,18 +1545,27 @@ def alumni_status(request):
                 "approved": True,
                 "user": user,
                 "alumni": alumni,
-                "success": "Alumni details saved successfully."
+                "success":
+                    "Alumni details saved successfully."
             }
         )
 
     details = (
-        supabase.table("alumni_details")
+        supabase
+        .table("alumni_details")
         .select("*")
-        .eq("ktu_id", ktu_id)
+        .eq(
+            "ktu_id",
+            ktu_id
+        )
         .execute()
     )
 
-    alumni = details.data[0] if details.data else {}
+    alumni = (
+        details.data[0]
+        if details.data
+        else {}
+    )
 
     return render(
         request,
@@ -1005,24 +1577,46 @@ def alumni_status(request):
         }
     )
 
+
 def events(request):
 
     # ---------------- DELETE ----------------
-    delete_id = request.GET.get("delete")
+    delete_id = request.GET.get(
+        "delete"
+    )
 
     if delete_id:
-        supabase.table("events").delete().eq("id", delete_id).execute()
+
+        (
+            supabase
+            .table("events")
+            .delete()
+            .eq(
+                "id",
+                delete_id
+            )
+            .execute()
+        )
+
         return redirect("events")
 
     # ---------------- EDIT ----------------
     edit_event = None
-    edit_id = request.GET.get("edit")
+
+    edit_id = request.GET.get(
+        "edit"
+    )
 
     if edit_id:
+
         res = (
-            supabase.table("events")
+            supabase
+            .table("events")
             .select("*")
-            .eq("id", edit_id)
+            .eq(
+                "id",
+                edit_id
+            )
             .execute()
         )
 
@@ -1033,30 +1627,82 @@ def events(request):
     if request.method == "POST":
 
         data = {
-            "event_name": request.POST.get("event_name"),
-            "description": request.POST.get("description"),
-            "category": request.POST.get("category"),
-            "venue": request.POST.get("venue"),
-            "event_date": request.POST.get("event_date"),
-            "start_time": request.POST.get("start_time"),
-            "end_time": request.POST.get("end_time"),
-            "registration_deadline": request.POST.get("registration_deadline"),
-            "max_participants": int(request.POST.get("max_participants")),
-            "organizer": request.POST.get("organizer"),
+
+            "event_name":
+                request.POST.get(
+                    "event_name"
+                ),
+
+            "description":
+                request.POST.get(
+                    "description"
+                ),
+
+            "category":
+                request.POST.get(
+                    "category"
+                ),
+
+            "venue":
+                request.POST.get(
+                    "venue"
+                ),
+
+            "event_date":
+                request.POST.get(
+                    "event_date"
+                ),
+
+            "start_time":
+                request.POST.get(
+                    "start_time"
+                ),
+
+            "end_time":
+                request.POST.get(
+                    "end_time"
+                ),
+
+            "registration_deadline":
+                request.POST.get(
+                    "registration_deadline"
+                ),
+
+            "max_participants":
+                int(
+                    request.POST.get(
+                        "max_participants"
+                    )
+                ),
+
+            "organizer":
+                request.POST.get(
+                    "organizer"
+                ),
         }
 
-        event_id = request.POST.get("event_id")
+        event_id = request.POST.get(
+            "event_id"
+        )
 
         if event_id:
+
             (
-                supabase.table("events")
+                supabase
+                .table("events")
                 .update(data)
-                .eq("id", event_id)
+                .eq(
+                    "id",
+                    event_id
+                )
                 .execute()
             )
+
         else:
+
             (
-                supabase.table("events")
+                supabase
+                .table("events")
                 .insert(data)
                 .execute()
             )
@@ -1064,7 +1710,8 @@ def events(request):
         return redirect("events")
 
     events = (
-        supabase.table("events")
+        supabase
+        .table("events")
         .select("*")
         .order("event_date")
         .execute()
@@ -1079,21 +1726,29 @@ def events(request):
         },
     )
 
+
 def user_events(request):
 
-    ktu_id = request.session.get("ktu_id")
+    ktu_id = request.session.get(
+        "ktu_id"
+    )
 
     events = (
-        supabase.table("events")
+        supabase
+        .table("events")
         .select("*")
         .order("event_date")
         .execute()
     )
 
     registrations = (
-        supabase.table("event_participants")
+        supabase
+        .table("event_participants")
         .select("event_name")
-        .eq("ktu_id", ktu_id)
+        .eq(
+            "ktu_id",
+            ktu_id
+        )
         .execute()
     )
 
@@ -1107,89 +1762,142 @@ def user_events(request):
         "user/events.html",
         {
             "events": events.data,
-            "registered_events": registered_events
+            "registered_events":
+                registered_events
         }
     )
 
+
 def register_event(request, event_id):
 
-    ktu_id = request.session.get("ktu_id")
+    ktu_id = request.session.get(
+        "ktu_id"
+    )
 
     if not ktu_id:
-        return redirect("password_login")
+        return redirect(
+            "password_login"
+        )
 
     user = (
-        supabase.table("users")
+        supabase
+        .table("users")
         .select("*")
-        .eq("ktu_id", ktu_id)
+        .eq(
+            "ktu_id",
+            ktu_id
+        )
         .execute()
     )
 
     if not user.data:
-        return redirect("user_events")
+        return redirect(
+            "user_events"
+        )
 
     user = user.data[0]
 
     event = (
-        supabase.table("events")
+        supabase
+        .table("events")
         .select("*")
-        .eq("id", event_id)
+        .eq(
+            "id",
+            event_id
+        )
         .execute()
     )
 
     if not event.data:
-        return redirect("user_events")
+        return redirect(
+            "user_events"
+        )
 
     event = event.data[0]
 
     check = (
-        supabase.table("event_participants")
+        supabase
+        .table("event_participants")
         .select("*")
-        .eq("ktu_id", ktu_id)
-        .eq("event_name", event["event_name"])
+        .eq(
+            "ktu_id",
+            ktu_id
+        )
+        .eq(
+            "event_name",
+            event["event_name"]
+        )
         .execute()
     )
 
     if check.data:
-        return redirect("user_events")
+        return redirect(
+            "user_events"
+        )
 
     data = {
 
-        "event_name": event["event_name"],
+        "event_name":
+            event["event_name"],
 
-        "ktu_id": user["ktu_id"],
+        "ktu_id":
+            user["ktu_id"],
 
-        "name": user["name"],
+        "name":
+            user["name"],
 
-        "email": user["email"],
+        "email":
+            user["email"],
 
-        "contact": user["contact"]
+        "contact":
+            user["contact"]
 
     }
 
-    supabase.table("event_participants").insert(data).execute()
+    supabase.table(
+        "event_participants"
+    ).insert(data).execute()
 
-    return redirect("user_events")
+    return redirect(
+        "user_events"
+    )
 
-def cancel_registration(request, event_name):
 
-    ktu_id = request.session.get("ktu_id")
+def cancel_registration(
+    request,
+    event_name
+):
+
+    ktu_id = request.session.get(
+        "ktu_id"
+    )
 
     (
-        supabase.table("event_participants")
+        supabase
+        .table("event_participants")
         .delete()
-        .eq("ktu_id", ktu_id)
-        .eq("event_name", event_name)
+        .eq(
+            "ktu_id",
+            ktu_id
+        )
+        .eq(
+            "event_name",
+            event_name
+        )
         .execute()
     )
 
-    return redirect("user_events")
+    return redirect(
+        "user_events"
+    )
+
 
 def view_participants(request):
 
     # Get unique event names
     event_response = (
-        supabase.table("event_participants")
+        supabase
+        .table("event_participants")
         .select("event_name")
         .execute()
     )
@@ -1203,16 +1911,25 @@ def view_participants(request):
         )
     )
 
-    selected_event = request.GET.get("event")
+    selected_event = request.GET.get(
+        "event"
+    )
 
     participants = []
 
     if selected_event:
 
         response = (
-            supabase.table("event_participants")
-            .select("event_name,name,ktu_id,contact,email")
-            .eq("event_name", selected_event)
+            supabase
+            .table("event_participants")
+            .select(
+                "event_name,name,ktu_id,"
+                "contact,email"
+            )
+            .eq(
+                "event_name",
+                selected_event
+            )
             .execute()
         )
 
@@ -1228,25 +1945,43 @@ def view_participants(request):
         },
     )
 
+
 from django.http import HttpResponse
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Table,
+    TableStyle
+)
 from reportlab.lib import colors
+
 
 def download_participants_pdf(request):
 
-    event = request.GET.get("event")
+    event = request.GET.get(
+        "event"
+    )
 
     response = (
-        supabase.table("event_participants")
-        .select("event_name,name,ktu_id,contact,email")
-        .eq("event_name", event)
+        supabase
+        .table("event_participants")
+        .select(
+            "event_name,name,ktu_id,"
+            "contact,email"
+        )
+        .eq(
+            "event_name",
+            event
+        )
         .execute()
     )
 
-    pdf = HttpResponse(content_type="application/pdf")
+    pdf = HttpResponse(
+        content_type="application/pdf"
+    )
 
     pdf["Content-Disposition"] = (
-        f'attachment; filename="{event}_participants.pdf"'
+        f'attachment; '
+        f'filename="{event}_participants.pdf"'
     )
 
     doc = SimpleDocTemplate(pdf)
@@ -1273,13 +2008,47 @@ def download_participants_pdf(request):
 
     table = Table(data)
 
-    table.setStyle(TableStyle([
-        ("BACKGROUND",(0,0),(-1,0),colors.grey),
-        ("TEXTCOLOR",(0,0),(-1,0),colors.white),
-        ("GRID",(0,0),(-1,-1),1,colors.black),
-        ("BACKGROUND",(0,1),(-1,-1),colors.beige),
-        ("BOTTOMPADDING",(0,0),(-1,0),10),
-    ]))
+    table.setStyle(
+        TableStyle([
+
+            (
+                "BACKGROUND",
+                (0, 0),
+                (-1, 0),
+                colors.grey
+            ),
+
+            (
+                "TEXTCOLOR",
+                (0, 0),
+                (-1, 0),
+                colors.white
+            ),
+
+            (
+                "GRID",
+                (0, 0),
+                (-1, -1),
+                1,
+                colors.black
+            ),
+
+            (
+                "BACKGROUND",
+                (0, 1),
+                (-1, -1),
+                colors.beige
+            ),
+
+            (
+                "BOTTOMPADDING",
+                (0, 0),
+                (-1, 0),
+                10
+            ),
+
+        ])
+    )
 
     doc.build([table])
 
@@ -1291,16 +2060,26 @@ import uuid
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
+
+
 def study_materials(request):
 
-    edit_id = request.GET.get("edit")
+    edit_id = request.GET.get(
+        "edit"
+    )
+
     edit_material = None
 
     if edit_id:
+
         result = (
-            supabase.table("study_materials")
+            supabase
+            .table("study_materials")
             .select("*")
-            .eq("id", edit_id)
+            .eq(
+                "id",
+                edit_id
+            )
             .single()
             .execute()
         )
@@ -1310,14 +2089,29 @@ def study_materials(request):
 
     if request.method == "POST":
 
-        material_id = request.POST.get("material_id")
+        material_id = request.POST.get(
+            "material_id"
+        )
 
-        semester = request.POST.get("semester")
-        subject = request.POST.get("subject")
-        title = request.POST.get("title")
-        description = request.POST.get("description")
+        semester = request.POST.get(
+            "semester"
+        )
 
-        uploaded_file = request.FILES.get("file")
+        subject = request.POST.get(
+            "subject"
+        )
+
+        title = request.POST.get(
+            "title"
+        )
+
+        description = request.POST.get(
+            "description"
+        )
+
+        uploaded_file = request.FILES.get(
+            "file"
+        )
 
         # ----------------------------
         # UPDATE
@@ -1325,44 +2119,80 @@ def study_materials(request):
         if material_id:
 
             update_data = {
+
                 "semester": semester,
                 "subject": subject,
                 "title": title,
                 "description": description,
+
             }
 
             if uploaded_file:
 
-                extension = uploaded_file.name.split(".")[-1]
-                unique_name = f"{uuid.uuid4()}.{extension}"
+                extension = (
+                    uploaded_file.name
+                    .split(".")[-1]
+                )
 
-                path = f"{semester}/{subject}/{unique_name}"
+                unique_name = (
+                    f"{uuid.uuid4()}.{extension}"
+                )
 
-                file_bytes = uploaded_file.read()
+                path = (
+                    f"{semester}/"
+                    f"{subject}/"
+                    f"{unique_name}"
+                )
 
-                supabase.storage.from_("study-materials").upload(
+                file_bytes = (
+                    uploaded_file.read()
+                )
+
+                supabase.storage.from_(
+                    "study-materials"
+                ).upload(
                     path,
                     file_bytes,
                     {
-                        "content-type": uploaded_file.content_type
+                        "content-type":
+                            uploaded_file.content_type
                     }
                 )
 
-                file_url = supabase.storage.from_("study-materials").get_public_url(path)
+                file_url = (
+                    supabase
+                    .storage
+                    .from_("study-materials")
+                    .get_public_url(path)
+                )
 
-                update_data["file_name"] = uploaded_file.name
-                update_data["file_url"] = file_url
+                update_data[
+                    "file_name"
+                ] = uploaded_file.name
+
+                update_data[
+                    "file_url"
+                ] = file_url
 
             (
-                supabase.table("study_materials")
+                supabase
+                .table("study_materials")
                 .update(update_data)
-                .eq("id", material_id)
+                .eq(
+                    "id",
+                    material_id
+                )
                 .execute()
             )
 
-            messages.success(request, "Material Updated Successfully")
+            messages.success(
+                request,
+                "Material Updated Successfully"
+            )
 
-            return redirect("study_materials")
+            return redirect(
+                "study_materials"
+            )
 
         # ----------------------------
         # INSERT
@@ -1371,91 +2201,185 @@ def study_materials(request):
 
             if uploaded_file:
 
-                extension = uploaded_file.name.split(".")[-1]
+                extension = (
+                    uploaded_file.name
+                    .split(".")[-1]
+                )
 
-                unique_name = f"{uuid.uuid4()}.{extension}"
+                unique_name = (
+                    f"{uuid.uuid4()}.{extension}"
+                )
 
-                path = f"{semester}/{subject}/{unique_name}"
+                path = (
+                    f"{semester}/"
+                    f"{subject}/"
+                    f"{unique_name}"
+                )
 
-                file_bytes = uploaded_file.read()
+                file_bytes = (
+                    uploaded_file.read()
+                )
 
-                supabase.storage.from_("study-materials").upload(
+                supabase.storage.from_(
+                    "study-materials"
+                ).upload(
                     path,
                     file_bytes,
                     {
-                        "content-type": uploaded_file.content_type
+                        "content-type":
+                            uploaded_file.content_type
                     }
                 )
 
-                file_url = supabase.storage.from_("study-materials").get_public_url(path)
+                file_url = (
+                    supabase
+                    .storage
+                    .from_("study-materials")
+                    .get_public_url(path)
+                )
 
-                supabase.table("study_materials").insert({
+                supabase.table(
+                    "study_materials"
+                ).insert({
 
                     "semester": semester,
                     "subject": subject,
                     "title": title,
                     "description": description,
-                    "file_name": uploaded_file.name,
+                    "file_name":
+                        uploaded_file.name,
                     "file_url": file_url
 
                 }).execute()
 
-                messages.success(request, "Material Uploaded Successfully")
+                messages.success(
+                    request,
+                    "Material Uploaded Successfully"
+                )
 
-                return redirect("study_materials")
+                return redirect(
+                    "study_materials"
+                )
 
     materials = (
-        supabase.table("study_materials")
+        supabase
+        .table("study_materials")
         .select("*")
-        .order("created_at", desc=True)
+        .order(
+            "created_at",
+            desc=True
+        )
         .execute()
     )
 
     context = {
-        "materials": materials.data,
-        "edit_material": edit_material
+
+        "materials":
+            materials.data,
+
+        "edit_material":
+            edit_material
     }
 
-    return render(request, "admin/study_materials.html", context)
-def delete_study_material(request, id):
+    return render(
+        request,
+        "admin/study_materials.html",
+        context
+    )
 
-    supabase.table("study_materials").delete().eq("id", id).execute()
 
-    messages.success(request, "Material Deleted Successfully")
+def delete_study_material(
+    request,
+    id
+):
 
-    return redirect("study_materials")
+    supabase.table(
+        "study_materials"
+    ).delete().eq(
+        "id",
+        id
+    ).execute()
+
+    messages.success(
+        request,
+        "Material Deleted Successfully"
+    )
+
+    return redirect(
+        "study_materials"
+    )
+
 
 def view_study_materials(request):
 
-    semester = request.GET.get("semester", "").strip()
-    subject = request.GET.get("subject", "").strip()
-    title = request.GET.get("title", "").strip()
+    semester = request.GET.get(
+        "semester",
+        ""
+    ).strip()
 
-    query = supabase.table("study_materials").select("*")
+    subject = request.GET.get(
+        "subject",
+        ""
+    ).strip()
+
+    title = request.GET.get(
+        "title",
+        ""
+    ).strip()
+
+    query = (
+        supabase
+        .table("study_materials")
+        .select("*")
+    )
 
     # Apply filters only if they are provided
 
     if semester:
-        query = query.eq("semester", semester)
+        query = query.eq(
+            "semester",
+            semester
+        )
 
     if subject:
-        query = query.eq("subject", subject)
+        query = query.eq(
+            "subject",
+            subject
+        )
 
     if title:
-        query = query.ilike("title", f"%{title}%")
+        query = query.ilike(
+            "title",
+            f"%{title}%"
+        )
 
-    materials = query.order("created_at", desc=True).execute()
+    materials = (
+        query
+        .order(
+            "created_at",
+            desc=True
+        )
+        .execute()
+    )
 
     return render(
         request,
         "home/view_study_materials.html",
         {
-            "materials": materials.data,
-            "selected_semester": semester,
-            "selected_subject": subject,
-            "title": title,
+            "materials":
+                materials.data,
+
+            "selected_semester":
+                semester,
+
+            "selected_subject":
+                subject,
+
+            "title":
+                title,
         },
     )
+
 
 def fund_management(request):
 
@@ -1464,56 +2388,106 @@ def fund_management(request):
     # =========================
     if request.method == "POST":
 
-        title = request.POST.get("title", "").strip()
-        description = request.POST.get("description", "").strip()
-        uploaded_file = request.FILES.get("file")
+        title = request.POST.get(
+            "title",
+            ""
+        ).strip()
+
+        description = request.POST.get(
+            "description",
+            ""
+        ).strip()
+
+        uploaded_file = request.FILES.get(
+            "file"
+        )
 
         if not title:
-            messages.error(request, "Title is required.")
-            return redirect("fund_management")
+
+            messages.error(
+                request,
+                "Title is required."
+            )
+
+            return redirect(
+                "fund_management"
+            )
 
         if not uploaded_file:
-            messages.error(request, "Please select a file.")
-            return redirect("fund_management")
+
+            messages.error(
+                request,
+                "Please select a file."
+            )
+
+            return redirect(
+                "fund_management"
+            )
 
         try:
-            # Create unique filename
-            original_name = uploaded_file.name
-            extension = os.path.splitext(original_name)[1]
 
-            file_name = f"{uuid.uuid4()}{extension}"
+            # Create unique filename
+            original_name = (
+                uploaded_file.name
+            )
+
+            extension = os.path.splitext(
+                original_name
+            )[1]
+
+            file_name = (
+                f"{uuid.uuid4()}"
+                f"{extension}"
+            )
 
             # Path inside the fund bucket
-            file_path = f"study_materials/{file_name}"
+            file_path = (
+                f"study_materials/"
+                f"{file_name}"
+            )
 
             # Read file
-            file_data = uploaded_file.read()
+            file_data = (
+                uploaded_file.read()
+            )
 
             # =========================
             # UPLOAD TO SUPABASE BUCKET
             # =========================
-            supabase.storage.from_("fund").upload(
+            supabase.storage.from_(
+                "fund"
+            ).upload(
                 file_path,
                 file_data,
                 {
-                    "content-type": uploaded_file.content_type
+                    "content-type":
+                        uploaded_file.content_type
                 }
             )
 
             # =========================
             # GET PUBLIC URL
             # =========================
-            file_url = supabase.storage.from_("fund").get_public_url(
-                file_path
+            file_url = (
+                supabase
+                .storage
+                .from_("fund")
+                .get_public_url(
+                    file_path
+                )
             )
 
             # =========================
             # SAVE DATA TO TABLE
             # =========================
-            supabase.table("fund_management").insert({
+            supabase.table(
+                "fund_management"
+            ).insert({
+
                 "title": title,
                 "description": description,
                 "file_url": file_url
+
             }).execute()
 
             messages.success(
@@ -1522,29 +2496,41 @@ def fund_management(request):
             )
 
         except Exception as e:
+
             messages.error(
                 request,
                 f"Upload failed: {str(e)}"
             )
 
-        return redirect("fund_management")
+        return redirect(
+            "fund_management"
+        )
 
     # =========================
     # GET ALL MATERIALS
     # =========================
     try:
+
         response = (
             supabase
             .table("fund_management")
             .select("*")
-            .order("created_at", desc=True)
+            .order(
+                "created_at",
+                desc=True
+            )
             .execute()
         )
 
-        materials = response.data or []
+        materials = (
+            response.data
+            or []
+        )
 
     except Exception as e:
+
         materials = []
+
         messages.error(
             request,
             f"Could not load materials: {str(e)}"
@@ -1554,22 +2540,33 @@ def fund_management(request):
         request,
         "admin/fund_management.html",
         {
-            "materials": materials
+            "materials":
+                materials
         }
     )
 
-def delete_fund_management(request, material_id):
+
+def delete_fund_management(
+    request,
+    material_id
+):
 
     if request.method != "POST":
-        return redirect("fund_management")
+        return redirect(
+            "fund_management"
+        )
 
     try:
+
         # Get the fund record
         response = (
             supabase
             .table("fund_management")
             .select("*")
-            .eq("id", material_id)
+            .eq(
+                "id",
+                material_id
+            )
             .single()
             .execute()
         )
@@ -1577,33 +2574,58 @@ def delete_fund_management(request, material_id):
         material = response.data
 
         if not material:
-            messages.error(request, "Fund document not found.")
-            return redirect("fund_mangement")
 
-        file_url = material.get("file_url")
+            messages.error(
+                request,
+                "Fund document not found."
+            )
+
+            return redirect(
+                "fund_mangement"
+            )
+
+        file_url = material.get(
+            "file_url"
+        )
 
         # --------------------------------
         # Delete PDF from "fund" bucket
         # --------------------------------
         if file_url:
 
-            marker = "/storage/v1/object/public/fund/"
+            marker = (
+                "/storage/v1/"
+                "object/public/fund/"
+            )
 
             if marker in file_url:
 
-                file_path = file_url.split(marker, 1)[1]
+                file_path = (
+                    file_url.split(
+                        marker,
+                        1
+                    )[1]
+                )
 
-                supabase.storage \
-                    .from_("fund") \
+                (
+                    supabase.storage
+                    .from_("fund")
                     .remove([file_path])
+                )
 
         # --------------------------------
         # Delete database record
         # --------------------------------
-        supabase.table("fund_management") \
-            .delete() \
-            .eq("id", material_id) \
+        (
+            supabase
+            .table("fund_management")
+            .delete()
+            .eq(
+                "id",
+                material_id
+            )
             .execute()
+        )
 
         messages.success(
             request,
@@ -1617,7 +2639,10 @@ def delete_fund_management(request, material_id):
             f"Delete failed: {str(e)}"
         )
 
-    return redirect("fund_management")
+    return redirect(
+        "fund_management"
+    )
+
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -1630,15 +2655,22 @@ def view_fund(request):
     """
 
     try:
+
         response = (
             supabase
             .table("fund_management")
             .select("*")
-            .order("created_at", desc=True)
+            .order(
+                "created_at",
+                desc=True
+            )
             .execute()
         )
 
-        funds = response.data or []
+        funds = (
+            response.data
+            or []
+        )
 
         return render(
             request,
@@ -1649,29 +2681,41 @@ def view_fund(request):
         )
 
     except Exception as e:
-        print("Fund fetch error:", e)
+
+        print(
+            "Fund fetch error:",
+            e
+        )
 
         return render(
             request,
             "user/view_fund.html",
             {
                 "funds": [],
-                "error": "Unable to load fund details."
+                "error":
+                    "Unable to load fund details."
             }
         )
 
 
-def fund_detail(request, fund_id):
+def fund_detail(
+    request,
+    fund_id
+):
     """
     Display the selected fund's file.
     """
 
     try:
+
         response = (
             supabase
             .table("fund_management")
             .select("*")
-            .eq("id", fund_id)
+            .eq(
+                "id",
+                fund_id
+            )
             .single()
             .execute()
         )
@@ -1679,7 +2723,10 @@ def fund_detail(request, fund_id):
         fund = response.data
 
         if not fund:
-            return HttpResponse("Fund not found.", status=404)
+            return HttpResponse(
+                "Fund not found.",
+                status=404
+            )
 
         return render(
             request,
@@ -1690,25 +2737,40 @@ def fund_detail(request, fund_id):
         )
 
     except Exception as e:
-        print("Fund detail error:", e)
-        return HttpResponse("Fund not found.", status=404)
-    
 
+        print(
+            "Fund detail error:",
+            e
+        )
+
+        return HttpResponse(
+            "Fund not found.",
+            status=404
+        )
 
 
 def ptaupdates(request):
-    selected_year = request.GET.get("year", "")
+
+    selected_year = request.GET.get(
+        "year",
+        ""
+    )
 
     # Get available years
     users_response = (
         supabase
         .table("users")
-        .select("name, ktu_id, passout_year")
+        .select(
+            "name, ktu_id, passout_year"
+        )
         .order("passout_year")
         .execute()
     )
 
-    all_users = users_response.data or []
+    all_users = (
+        users_response.data
+        or []
+    )
 
     # Get unique years
     years = sorted(
@@ -1721,35 +2783,55 @@ def ptaupdates(request):
 
     # Filter students by selected year
     if selected_year:
+
         students = [
             user for user in all_users
-            if user.get("passout_year") == selected_year
+            if user.get(
+                "passout_year"
+            ) == selected_year
         ]
+
     else:
+
         students = []
 
     context = {
+
         "students": students,
         "years": years,
-        "selected_year": selected_year,
+        "selected_year":
+            selected_year,
+
     }
 
-    return render(request, "admin/ptaupdates.html", context)
+    return render(
+        request,
+        "admin/ptaupdates.html",
+        context
+    )
 
 
 def ptaupdates(request):
 
-    selected_year = request.GET.get("year", "")
+    selected_year = request.GET.get(
+        "year",
+        ""
+    )
 
     response = (
         supabase
         .table("users")
-        .select("name, ktu_id, passout_year")
+        .select(
+            "name, ktu_id, passout_year"
+        )
         .order("name")
         .execute()
     )
 
-    all_users = response.data or []
+    all_users = (
+        response.data
+        or []
+    )
 
     years = sorted(
         {
@@ -1760,11 +2842,16 @@ def ptaupdates(request):
     )
 
     if selected_year:
+
         students = [
             user for user in all_users
-            if user.get("passout_year") == selected_year
+            if user.get(
+                "passout_year"
+            ) == selected_year
         ]
+
     else:
+
         students = []
 
     return render(
@@ -1773,12 +2860,16 @@ def ptaupdates(request):
         {
             "students": students,
             "years": years,
-            "selected_year": selected_year,
+            "selected_year":
+                selected_year,
         }
     )
 
 
-def update_insights(request, ktu_id):
+def update_insights(
+    request,
+    ktu_id
+):
 
     # --------------------------------
     # GET STUDENT FROM USERS TABLE
@@ -1787,8 +2878,13 @@ def update_insights(request, ktu_id):
     student_response = (
         supabase
         .table("users")
-        .select("name, ktu_id")
-        .eq("ktu_id", ktu_id)
+        .select(
+            "name, ktu_id"
+        )
+        .eq(
+            "ktu_id",
+            ktu_id
+        )
         .single()
         .execute()
     )
@@ -1796,9 +2892,15 @@ def update_insights(request, ktu_id):
     student = student_response.data
 
     if not student:
-        messages.error(request, "Student not found.")
-        return redirect("ptaupdates")
 
+        messages.error(
+            request,
+            "Student not found."
+        )
+
+        return redirect(
+            "ptaupdates"
+        )
 
     # --------------------------------
     # GET EXISTING INSIGHTS
@@ -1808,13 +2910,18 @@ def update_insights(request, ktu_id):
         supabase
         .table("insights")
         .select("*")
-        .eq("ktu_id", ktu_id)
+        .eq(
+            "ktu_id",
+            ktu_id
+        )
         .order("semester")
         .execute()
     )
 
-    insights = insights_response.data or []
-
+    insights = (
+        insights_response.data
+        or []
+    )
 
     # --------------------------------
     # SAVE DATA
@@ -1822,7 +2929,9 @@ def update_insights(request, ktu_id):
 
     if request.method == "POST":
 
-        subjects = request.POST.getlist("subject_code")
+        subjects = request.POST.getlist(
+            "subject_code"
+        )
 
         for subject_code in subjects:
 
@@ -1846,18 +2955,38 @@ def update_insights(request, ktu_id):
                 f"attendance_{subject_code}"
             )
 
-
             data = {
-                "ktu_id": student["ktu_id"],
-                "name": student["name"],
-                "semester": int(semester),
-                "subject_code": subject_code,
-                "subject_name": subject_name,
-                "internal": internal if internal else None,
-                "external": external if external else None,
-                "attendance": attendance if attendance else None,
-            }
 
+                "ktu_id":
+                    student["ktu_id"],
+
+                "name":
+                    student["name"],
+
+                "semester":
+                    int(semester),
+
+                "subject_code":
+                    subject_code,
+
+                "subject_name":
+                    subject_name,
+
+                "internal":
+                    internal
+                    if internal
+                    else None,
+
+                "external":
+                    external
+                    if external
+                    else None,
+
+                "attendance":
+                    attendance
+                    if attendance
+                    else None,
+            }
 
             # Check existing record
 
@@ -1865,22 +2994,36 @@ def update_insights(request, ktu_id):
                 supabase
                 .table("insights")
                 .select("id")
-                .eq("ktu_id", student["ktu_id"])
-                .eq("semester", int(semester))
-                .eq("subject_code", subject_code)
+                .eq(
+                    "ktu_id",
+                    student["ktu_id"]
+                )
+                .eq(
+                    "semester",
+                    int(semester)
+                )
+                .eq(
+                    "subject_code",
+                    subject_code
+                )
                 .execute()
             )
 
-
             if existing_response.data:
 
-                insight_id = existing_response.data[0]["id"]
+                insight_id = (
+                    existing_response
+                    .data[0]["id"]
+                )
 
                 (
                     supabase
                     .table("insights")
                     .update(data)
-                    .eq("id", insight_id)
+                    .eq(
+                        "id",
+                        insight_id
+                    )
                     .execute()
                 )
 
@@ -1893,14 +3036,14 @@ def update_insights(request, ktu_id):
                     .execute()
                 )
 
-
         messages.success(
             request,
             "Student insights updated successfully."
         )
 
-        return redirect("ptaupdates")
-
+        return redirect(
+            "ptaupdates"
+        )
 
     # --------------------------------
     # DISPLAY PAGE
@@ -1917,13 +3060,14 @@ def update_insights(request, ktu_id):
 
 
 import os
-
 from google import genai
 from django.shortcuts import render
 
 
 client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
+    api_key=os.getenv(
+        "GEMINI_API_KEY"
+    )
 )
 
 
@@ -1943,7 +3087,9 @@ from django.shortcuts import render
 # ==========================================
 
 client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
+    api_key=os.getenv(
+        "GEMINI_API_KEY"
+    )
 )
 
 
@@ -1958,10 +3104,21 @@ def insights_search(request):
     error = None
     ai_summary = None
 
-    name = request.GET.get("name", "").strip()
-    ktu_id = request.GET.get("ktu_id", "").strip()
-    ai_requested = request.GET.get("ai_summary") == "true"
+    name = request.GET.get(
+        "name",
+        ""
+    ).strip()
 
+    ktu_id = request.GET.get(
+        "ktu_id",
+        ""
+    ).strip()
+
+    ai_requested = (
+        request.GET.get(
+            "ai_summary"
+        ) == "true"
+    )
 
     # ==========================================
     # SEARCH STUDENT
@@ -1972,7 +3129,10 @@ def insights_search(request):
         # Both Name and KTU ID are required
         if not name or not ktu_id:
 
-            error = "Please enter both Student Name and KTU ID."
+            error = (
+                "Please enter both "
+                "Student Name and KTU ID."
+            )
 
         else:
 
@@ -1983,12 +3143,19 @@ def insights_search(request):
             user_response = (
                 supabase
                 .table("users")
-                .select("ktu_id, name")
-                .eq("ktu_id", ktu_id)
-                .ilike("name", name)
+                .select(
+                    "ktu_id, name"
+                )
+                .eq(
+                    "ktu_id",
+                    ktu_id
+                )
+                .ilike(
+                    "name",
+                    name
+                )
                 .execute()
             )
-
 
             # ==========================================
             # STUDENT FOUND
@@ -1996,8 +3163,9 @@ def insights_search(request):
 
             if user_response.data:
 
-                student = user_response.data[0]
-
+                student = (
+                    user_response.data[0]
+                )
 
                 # ==========================================
                 # GET ACADEMIC DETAILS
@@ -2007,17 +3175,30 @@ def insights_search(request):
                     supabase
                     .table("insights")
                     .select(
-                        "semester, subject_code, subject_name, "
-                        "internal, external, attendance, created_at"
+                        "semester, "
+                        "subject_code, "
+                        "subject_name, "
+                        "internal, "
+                        "external, "
+                        "attendance, "
+                        "created_at"
                     )
-                    .eq("ktu_id", student["ktu_id"])
-                    .order("semester")
-                    .order("subject_code")
+                    .eq(
+                        "ktu_id",
+                        student["ktu_id"]
+                    )
+                    .order(
+                        "semester"
+                    )
+                    .order(
+                        "subject_code"
+                    )
                     .execute()
                 )
 
-                insights = insights_response.data
-
+                insights = (
+                    insights_response.data
+                )
 
                 # ==========================================
                 # AI ANALYSIS
@@ -2032,10 +3213,9 @@ def insights_search(request):
                     if not insights:
 
                         ai_summary = (
-                            "There is no academic data available "
-                            "for this student."
+                            "There is no academic data "
+                            "available for this student."
                         )
-
 
                     else:
 
@@ -2048,14 +3228,37 @@ def insights_search(request):
                         for row in insights:
 
                             academic_data.append({
-                                "semester": row.get("semester"),
-                                "subject_code": row.get("subject_code"),
-                                "subject_name": row.get("subject_name"),
-                                "internal": row.get("internal"),
-                                "external": row.get("external"),
-                                "attendance": row.get("attendance"),
-                            })
 
+                                "semester":
+                                    row.get(
+                                        "semester"
+                                    ),
+
+                                "subject_code":
+                                    row.get(
+                                        "subject_code"
+                                    ),
+
+                                "subject_name":
+                                    row.get(
+                                        "subject_name"
+                                    ),
+
+                                "internal":
+                                    row.get(
+                                        "internal"
+                                    ),
+
+                                "external":
+                                    row.get(
+                                        "external"
+                                    ),
+
+                                "attendance":
+                                    row.get(
+                                        "attendance"
+                                    ),
+                            })
 
                         # ==================================
                         # GEMINI PROMPT
@@ -2092,20 +3295,24 @@ Important rules:
 - Start directly with the overall assessment.
 """
 
-
                         # ==================================
                         # GEMINI REQUEST
                         # ==================================
 
                         try:
 
-                            response = client.models.generate_content(
-                                model="gemini-3.8-flash",
-                                contents=prompt
+                            response = (
+                                client
+                                .models
+                                .generate_content(
+                                    model="gemini-3.8-flash",
+                                    contents=prompt
+                                )
                             )
 
-                            ai_summary = response.text
-
+                            ai_summary = (
+                                response.text
+                            )
 
                         # ==================================
                         # PRIMARY MODEL ERROR
@@ -2117,7 +3324,6 @@ Important rules:
                                 "GEMINI PRIMARY ERROR:",
                                 repr(e)
                             )
-
 
                             # ==================================
                             # RETRY PRIMARY MODEL
@@ -2131,14 +3337,18 @@ Important rules:
 
                                 time.sleep(2)
 
-
-                                response = client.models.generate_content(
-                                    model="gemini-3.8-flash",
-                                    contents=prompt
+                                response = (
+                                    client
+                                    .models
+                                    .generate_content(
+                                        model="gemini-3.8-flash",
+                                        contents=prompt
+                                    )
                                 )
 
-                                ai_summary = response.text
-
+                                ai_summary = (
+                                    response.text
+                                )
 
                             # ==================================
                             # RETRY FAILED
@@ -2151,7 +3361,6 @@ Important rules:
                                     repr(retry_error)
                                 )
 
-
                                 # ==================================
                                 # FALLBACK MODEL
                                 # ==================================
@@ -2162,14 +3371,18 @@ Important rules:
                                         "Trying Gemini fallback model..."
                                     )
 
-
-                                    response = client.models.generate_content(
-                                        model="gemini-3.8-flash-lite",
-                                        contents=prompt
+                                    response = (
+                                        client
+                                        .models
+                                        .generate_content(
+                                            model="gemini-3.8-flash-lite",
+                                            contents=prompt
+                                        )
                                     )
 
-                                    ai_summary = response.text
-
+                                    ai_summary = (
+                                        response.text
+                                    )
 
                                 # ==================================
                                 # ALL MODELS FAILED
@@ -2182,13 +3395,11 @@ Important rules:
                                         repr(fallback_error)
                                     )
 
-
                                     ai_summary = (
                                         "The AI service is temporarily "
                                         "busy. Please try again in a "
                                         "few moments."
                                     )
-
 
             # ==========================================
             # STUDENT NOT FOUND
@@ -2200,7 +3411,6 @@ Important rules:
                     "Name and KTU ID do not match. "
                     "Please check your details."
                 )
-
 
     # ==========================================
     # RENDER PAGE

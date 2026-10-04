@@ -1,562 +1,874 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Insights | CoreConnect</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Student Insights</title>
-
-    <!-- Google Font -->
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
-
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-        crossorigin
-    >
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-    >
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- External CSS -->
-    <link
-        rel="stylesheet"
-        href="{% static 'corecss/insights.css' %}"
-    >
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --primary-border: #bfdbfe;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --bg: #f3f6fb;
+            --card-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+            --card-shadow-hover: 0 10px 30px -4px rgba(15, 23, 42, 0.1);
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--slate-800);
+            line-height: 1.5;
+            padding: 40px 20px 80px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation / Home Button */
+        .top-nav {
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 18px;
+            background: white;
+            color: var(--slate-700);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 10px;
+            border: 1px solid var(--slate-200);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+            border-color: var(--primary-border);
+            transform: translateX(-3px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Search Header */
+        .search-hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .search-hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 12px;
+        }
+
+        .search-hero p {
+            color: var(--slate-500);
+            font-size: 16px;
+        }
+
+        /* Search Card */
+        .search-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--slate-200);
+            margin-bottom: 40px;
+        }
+
+        .search-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--slate-700);
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--slate-900);
+            background: var(--slate-50);
+            border: 1.5px solid var(--slate-200);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn-search {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-search:hover {
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+            transform: translateY(-2px);
+        }
+
+        .btn-ai {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-ai:hover {
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45);
+            transform: translateY(-2px);
+        }
+
+        /* Error Message */
+        .error-card {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .error-card i {
+            font-size: 24px;
+            color: #ef4444;
+        }
+
+        .error-content h3 {
+            color: #991b1b;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .error-content p {
+            color: #b91c1c;
+            font-size: 14px;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+
+        /* Student Info Card */
+        .student-profile-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--slate-200);
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: var(--slate-700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+        }
+
+        .profile-details {
+            flex: 1;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: #ecfdf5;
+            color: #059669;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-details h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 4px;
+        }
+
+        .profile-details p {
+            font-size: 15px;
+            color: var(--slate-500);
+            font-weight: 500;
+        }
+
+        .profile-details p strong {
+            color: var(--slate-700);
+        }
+
+        /* AI Summary Card */
+        .ai-summary-card {
+            background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #e9d5ff;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px dashed #d8b4fe;
+        }
+
+        .ai-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #f3e8ff;
+            color: #7e22ce;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .ai-header-text h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #581c87;
+        }
+
+        .ai-header-text p {
+            font-size: 14px;
+            color: #6b21a8;
+        }
+
+        .ai-content {
+            font-size: 15px;
+            color: var(--slate-700);
+            line-height: 1.6;
+        }
+
+
+        /* Academic Section Header */
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin: 48px 0 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+
+        /* Semester Card */
+        .semester-card {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            margin-bottom: 28px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--slate-200);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .semester-card:hover {
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .semester-header {
+            background: var(--slate-50);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .semester-title {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .semester-number {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid var(--slate-100);
+        }
+
+        .semester-title h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .semester-title p {
+            font-size: 13px;
+            color: var(--slate-500);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 16px 24px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--slate-500);
+            background: white;
+            border-bottom: 1px solid var(--slate-100);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--slate-50);
+            font-size: 14px;
+            color: var(--slate-700);
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: var(--slate-50);
+        }
+
+        .subject-code {
+            display: inline-block;
+            padding: 4px 8px;
+            background: var(--slate-100);
+            color: var(--slate-600);
+            font-family: monospace;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 6px;
+        }
+
+        .subject-name {
+            font-weight: 600;
+            color: var(--slate-800);
+            min-width: 250px;
+        }
+        
+        .score-val {
+            font-weight: 600;
+            color: var(--slate-900);
+        }
+
+        .attendance-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .attendance-good { background: #ecfdf5; color: #059669; }
+        .attendance-avg { background: #fffbeb; color: #d97706; }
+        .attendance-poor { background: #fef2f2; color: #dc2626; }
+
+        /* Semester Footer (CGPA) */
+        .semester-footer {
+            background: white;
+            padding: 16px 24px;
+            border-top: 1px dashed var(--slate-200);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .cgpa-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--slate-50);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--slate-200);
+        }
+
+        .cgpa-pill-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--slate-600);
+            text-transform: uppercase;
+        }
+
+        .cgpa-pill-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Overall CGPA Card */
+        .overall-cgpa-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            border: 2px solid var(--primary-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .overall-cgpa-card::after {
+            content: '\f091';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: -20px;
+            top: -20px;
+            font-size: 140px;
+            color: rgba(37, 99, 235, 0.05);
+            transform: rotate(-15deg);
+        }
+
+        .overall-cgpa-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .trophy-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 8px 16px rgba(245, 158, 11, 0.25);
+        }
+
+        .overall-cgpa-left h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 4px;
+        }
+
+        .overall-cgpa-left p {
+            font-size: 14px;
+            color: var(--slate-500);
+            font-weight: 500;
+        }
+
+        .overall-cgpa-right {
+            position: relative;
+            z-index: 1;
+        }
+
+        .overall-cgpa-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--primary);
+            text-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .search-form-grid {
+                grid-template-columns: 1fr;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .action-buttons button {
+                width: 100%;
+                justify-content: center;
+            }
+            .student-profile-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .overall-cgpa-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+            }
+            .overall-cgpa-left {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
-
 
 <body>
 
-<div class="page-container">
+<div class="container">
 
-
-    <!-- =========================
-         PAGE HEADER
-    ========================== -->
-
-    <div class="page-header">
-
-        <div>
-
-            <div class="page-icon">
-                <i class="fa-solid fa-chart-line"></i>
-            </div>
-
-            <div>
-
-                <h1>
-                    Student Insights
-                </h1>
-
-                <p>
-                    View semester-wise academic performance
-                </p>
-
-            </div>
-
-        </div>
-
+    <!-- Top Nav -->
+    <div class="top-nav">
+        <a href="{% url 'home' %}" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back to Home</span>
+        </a>
     </div>
 
+    <!-- Hero Section -->
+    <div class="search-hero">
+        <h1>Student Insights</h1>
+        <p>Analyze semester-wise academic performance and AI summaries.</p>
+    </div>
 
-
-    <!-- =========================
-         SEARCH CARD
-    ========================== -->
-
+    <!-- Search Card -->
     <div class="search-card">
-
-        <div class="search-heading">
-
-            <div class="search-icon">
-                <i class="fa-solid fa-magnifying-glass"></i>
+        <form method="GET">
+            <div class="search-form-grid">
+                <!-- Name -->
+                <div class="input-group">
+                    <label for="name"><i class="fa-regular fa-user" style="margin-right: 6px;"></i>Student Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter full name" value="{{ searched_name }}" required>
+                </div>
+                <!-- KTU ID -->
+                <div class="input-group">
+                    <label for="ktu_id"><i class="fa-solid fa-id-card" style="margin-right: 6px;"></i>KTU ID</label>
+                    <input type="text" id="ktu_id" name="ktu_id" placeholder="e.g. TVA20CS001" value="{{ searched_ktu_id }}" required>
+                </div>
             </div>
 
-            <div>
-
-                <h2>
-                    Find Student
-                </h2>
-
-                <p>
-                    Enter both the student name and KTU ID
-                    to view academic insights.
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <form
-            method="GET"
-            class="search-form"
-        >
-
-            <!-- NAME -->
-
-            <div class="input-group">
-
-                <label for="name">
-                    Student Name
-                </label>
-
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder="Enter student name"
-                    value="{{ searched_name }}"
-                    required
-                >
-
-            </div>
-
-
-
-            <!-- KTU ID -->
-
-            <div class="input-group">
-
-                <label for="ktu_id">
-                    KTU ID
-                </label>
-
-                <input
-                    type="text"
-                    id="ktu_id"
-                    name="ktu_id"
-                    placeholder="Enter KTU ID"
-                    value="{{ searched_ktu_id }}"
-                    required
-                >
-
-            </div>
-
-
-
-            <!-- ACTION BUTTONS -->
-
-            <div class="search-actions">
-
-                <!-- SEARCH STUDENT -->
-
-                <button
-                    type="submit"
-                    class="search-btn"
-                >
-
+            <div class="action-buttons">
+                <button type="submit" class="btn-search">
                     <i class="fa-solid fa-magnifying-glass"></i>
-
-                    <span>
-                        Search Student
-                    </span>
-
+                    <span>Search Insights</span>
                 </button>
 
-
-                <!-- AI SUMMARY -->
-
-                <button
-                    type="submit"
-                    name="ai_summary"
-                    value="true"
-                    class="ai-summary-btn"
-                >
-
+                <button type="submit" name="ai_summary" value="true" class="btn-ai">
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
-
-                    <span>
-                        AI Summary
-                    </span>
-
+                    <span>Generate AI Summary</span>
                 </button>
-
             </div>
-
         </form>
-
     </div>
 
-
-
-    <!-- =========================
-         ERROR MESSAGE
-    ========================== -->
-
+    <!-- Error Message -->
     {% if error %}
-
-    <div class="error-message">
-
-        <div class="error-icon">
-            !
+    <div class="error-card">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <div class="error-content">
+            <h3>Student Not Found</h3>
+            <p>{{ error }}</p>
         </div>
-
-        <div>
-
-            <strong>
-                Student Not Found
-            </strong>
-
-            <p>
-                {{ error }}
-            </p>
-
-        </div>
-
     </div>
-
     {% endif %}
 
-
-
-    <!-- =========================
-         VERIFIED STUDENT
-    ========================== -->
-
+    <!-- Student Details & Insights -->
     {% if student %}
-
-    <div class="student-card">
-
-        <div class="student-avatar">
+    
+    <!-- Profile Card -->
+    <div class="student-profile-card">
+        <div class="profile-avatar">
             {{ student.name|first|upper }}
         </div>
-
-        <div class="student-details">
-
-            <span class="verified">
-                <i class="fa-solid fa-circle-check"></i>
-                VERIFIED STUDENT
-            </span>
-
-            <h2>
-                {{ student.name }}
-            </h2>
-
-            <p>
-                KTU ID:
-                <strong>
-                    {{ student.ktu_id }}
-                </strong>
-            </p>
-
+        <div class="profile-details">
+            <div class="verified-badge">
+                <i class="fa-solid fa-check-circle"></i> Verified Student
+            </div>
+            <h2>{{ student.name }}</h2>
+            <p>KTU ID: <strong>{{ student.ktu_id }}</strong></p>
         </div>
-
     </div>
 
-
-
-    <!-- =========================
-         AI SUMMARY RESULT
-    ========================== -->
-
+    <!-- AI Summary -->
     {% if ai_summary %}
-
     <div class="ai-summary-card">
-
-        <div class="ai-summary-header">
-
-            <div class="ai-summary-icon">
+        <div class="ai-header">
+            <div class="ai-icon">
                 <i class="fa-solid fa-wand-magic-sparkles"></i>
             </div>
-
-            <div>
-
-                <h2>
-                    AI Academic Summary
-                </h2>
-
-                <p>
-                    AI-generated analysis of the student's academic performance
-                </p>
-
+            <div class="ai-header-text">
+                <h3>AI Academic Summary</h3>
+                <p>Intelligent analysis of the student's overall performance.</p>
             </div>
-
         </div>
-
-        <div class="ai-summary-content">
-
+        <div class="ai-content">
             {{ ai_summary|linebreaks }}
-
         </div>
-
     </div>
-
     {% endif %}
 
-
-
-    <!-- =========================
-         ACADEMIC SECTION
-    ========================== -->
-
-    <div class="academic-heading">
-
-        <div>
-
-            <h2>
-                Academic Performance
-            </h2>
-
-            <p>
-                Semester-wise subject performance
-            </p>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- =========================
-         GROUP BY SEMESTER
-    ========================== -->
+    <!-- Academic Records -->
+    <h2 class="section-title">Academic Performance</h2>
 
     {% regroup insights by semester as semester_list %}
-
-
-
-    <!-- =========================
-         SEMESTER CARDS
-    ========================== -->
-
+    
     {% for semester in semester_list %}
-
-        <div class="semester-card">
-
-            <div class="semester-header">
-
-                <div class="semester-title">
-
-                    <span class="semester-number">
-                        {% if semester.grouper == 1 %}
-                            01
-                        {% elif semester.grouper == 2 %}
-                            02
-                        {% elif semester.grouper == 3 %}
-                            03
-                        {% elif semester.grouper == 4 %}
-                            04
-                        {% endif %}
-                    </span>
-
-                    <div>
-
-                        <span class="semester-label">
-                            SEMESTER
-                        </span>
-
-                        <h3>
-                            Semester {{ semester.grouper }}
-                        </h3>
-
-                    </div>
-
+    <div class="semester-card">
+        <div class="semester-header">
+            <div class="semester-title">
+                <div class="semester-number">
+                    0{{ semester.grouper }}
                 </div>
-
-
-                <div class="subject-count">
-
-                    {{ semester.list|length }}
-
-                    {% if semester.list|length == 1 %}
-                        Subject
-                    {% else %}
-                        Subjects
-                    {% endif %}
-
+                <div>
+                    <h3>Semester {{ semester.grouper }}</h3>
+                    <p>{{ semester.list|length }} Subject{% if semester.list|length > 1 %}s{% endif %}</p>
                 </div>
-
             </div>
-
-
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                Subject Code
-                            </th>
-
-                            <th>
-                                Subject Name
-                            </th>
-
-                            <th>
-                                Internal / 50
-                            </th>
-
-                            <th>
-                                External / 60
-                            </th>
-
-                            <th>
-                                Attendance
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        {% for row in semester.list %}
-
-                        <tr>
-
-                            <td>
-
-                                <span class="subject-code">
-                                    {{ row.subject_code }}
-                                </span>
-
-                            </td>
-
-
-                            <td class="subject-name">
-                                {{ row.subject_name }}
-                            </td>
-
-
-                            <td>
-
-                                {% if row.internal is not None %}
-                                    {{ row.internal }}
-                                {% else %}
-                                    —
-                                {% endif %}
-
-                            </td>
-
-
-                            <td>
-
-                                {% if row.external is not None %}
-                                    {{ row.external }}
-                                {% else %}
-                                    —
-                                {% endif %}
-
-                            </td>
-
-
-                            <td>
-
-                                {% if row.attendance is not None %}
-                                    <span class="attendance-value">
-                                        {{ row.attendance }}%
-                                    </span>
-                                {% else %}
-                                    —
-                                {% endif %}
-
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-            <!-- =========================
-                 SEMESTER CGPA
-            ========================== -->
-
-            <div class="semester-cgpa">
-
-                <strong>
-                    Semester {{ semester.grouper }} CGPA
-                </strong>
-
-                <span>
-
-                    {% for row in semester.list %}
-
-                        {% if row.cgpa is not None %}
-
-                            {{ row.cgpa }}
-
-                            {% if not forloop.last %}
-                            {% endif %}
-
-                        {% endif %}
-
-                    {% endfor %}
-
-                </span>
-
-            </div>
-
-
         </div>
 
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject Code</th>
+                        <th>Subject Name</th>
+                        <th>Internal (50)</th>
+                        <th>External (60)</th>
+                        <th>Attendance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in semester.list %}
+                    <tr>
+                        <td>
+                            <span class="subject-code">{{ row.subject_code }}</span>
+                        </td>
+                        <td class="subject-name">
+                            {{ row.subject_name }}
+                        </td>
+                        <td>
+                            {% if row.internal is not None %}
+                                <span class="score-val">{{ row.internal }}</span>
+                            {% else %}
+                                <span style="color: var(--slate-400)">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if row.external is not None %}
+                                <span class="score-val">{{ row.external }}</span>
+                            {% else %}
+                                <span style="color: var(--slate-400)">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if row.attendance is not None %}
+                                {% if row.attendance >= 85 %}
+                                    <span class="attendance-pill attendance-good">{{ row.attendance }}%</span>
+                                {% elif row.attendance >= 75 %}
+                                    <span class="attendance-pill attendance-avg">{{ row.attendance }}%</span>
+                                {% else %}
+                                    <span class="attendance-pill attendance-poor">{{ row.attendance }}%</span>
+                                {% endif %}
+                            {% else %}
+                                <span style="color: var(--slate-400)">—</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Semester CGPA -->
+        <div class="semester-footer">
+            <div class="cgpa-pill">
+                <span class="cgpa-pill-label">Semester {{ semester.grouper }} CGPA</span>
+                <span class="cgpa-pill-value">
+                    {% for row in semester.list %}
+                        {% if forloop.first %}
+                            {% if row.cgpa is not None %}
+                                {{ row.cgpa }}
+                            {% elif row.semester_cgpa is not None %}
+                                {{ row.semester_cgpa }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+        </div>
+    </div>
     {% endfor %}
 
-
-
-    <!-- =========================
-         OVERALL CGPA
-    ========================== -->
-
-    <div class="overall-cgpa">
-
-        <div>
-
-            <span class="overall-cgpa-label">
-                OVERALL CGPA
-            </span>
-
-            <h2>
+    <!-- Overall CGPA -->
+    <div class="overall-cgpa-card">
+        <div class="overall-cgpa-left">
+            <div class="trophy-icon">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <div>
+                <h2>Overall Academic Standing</h2>
+                <p>Cumulative Grade Point Average (CGPA)</p>
+            </div>
+        </div>
+        <div class="overall-cgpa-right">
+            <div class="overall-cgpa-value">
                 {% if overall_cgpa %}
                     {{ overall_cgpa }}
                 {% else %}
                     —
                 {% endif %}
-            </h2>
-
+            </div>
         </div>
-
     </div>
-
 
     {% endif %}
 
-
 </div>
 
-
 </body>
-
 </html>

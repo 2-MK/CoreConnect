@@ -2879,7 +2879,7 @@ def update_insights(
         supabase
         .table("users")
         .select(
-            "name, ktu_id"
+            "name, ktu_id, passout_year"
         )
         .eq(
             "ktu_id",
@@ -2915,6 +2915,7 @@ def update_insights(
             ktu_id
         )
         .order("semester")
+        .order("subject_code")
         .execute()
     )
 
@@ -2923,15 +2924,36 @@ def update_insights(
         or []
     )
 
+    def _parse_float(val):
+        if val is None:
+            return None
+        val_str = str(val).strip()
+        if not val_str:
+            return None
+        try:
+            return float(val_str)
+        except (ValueError, TypeError):
+            return None
+
     # --------------------------------
     # SAVE DATA
     # --------------------------------
 
     if request.method == "POST":
 
+        overall_cgpa_raw = request.POST.get("overall_cgpa")
+        overall_cgpa = _parse_float(overall_cgpa_raw)
+
         subjects = request.POST.getlist(
             "subject_code"
         )
+
+        # Build existing map: (semester, subject_code) -> record id
+        existing_map = {}
+        for item in insights:
+            if item.get("semester") is not None and item.get("subject_code"):
+                key = (int(item["semester"]), str(item["subject_code"]).strip())
+                existing_map[key] = item["id"]
 
         for subject_code in subjects:
 
@@ -2955,6 +2977,12 @@ def update_insights(
                 f"attendance_{subject_code}"
             )
 
+            semester_cgpa = request.POST.get(
+                f"cgpa_{semester}"
+            )
+
+            sem_int = int(semester) if semester else 1
+
             data = {
 
                 "ktu_id":
@@ -2964,7 +2992,7 @@ def update_insights(
                     student["name"],
 
                 "semester":
-                    int(semester),
+                    sem_int,
 
                 "subject_code":
                     subject_code,
@@ -2973,48 +3001,25 @@ def update_insights(
                     subject_name,
 
                 "internal":
-                    internal
-                    if internal
-                    else None,
+                    _parse_float(internal),
 
                 "external":
-                    external
-                    if external
-                    else None,
+                    _parse_float(external),
 
                 "attendance":
-                    attendance
-                    if attendance
-                    else None,
+                    _parse_float(attendance),
+
+                "semester_cgpa":
+                    _parse_float(semester_cgpa),
+
+                "overall_cgpa":
+                    overall_cgpa,
             }
 
-            # Check existing record
+            key = (sem_int, str(subject_code).strip())
+            insight_id = existing_map.get(key)
 
-            existing_response = (
-                supabase
-                .table("insights")
-                .select("id")
-                .eq(
-                    "ktu_id",
-                    student["ktu_id"]
-                )
-                .eq(
-                    "semester",
-                    int(semester)
-                )
-                .eq(
-                    "subject_code",
-                    subject_code
-                )
-                .execute()
-            )
-
-            if existing_response.data:
-
-                insight_id = (
-                    existing_response
-                    .data[0]["id"]
-                )
+            if insight_id:
 
                 (
                     supabase
@@ -3036,9 +3041,18 @@ def update_insights(
                     .execute()
                 )
 
+        # Ensure all existing student rows have overall_cgpa updated consistently
+        (
+            supabase
+            .table("insights")
+            .update({"overall_cgpa": overall_cgpa})
+            .eq("ktu_id", student["ktu_id"])
+            .execute()
+        )
+
         messages.success(
             request,
-            "Student insights updated successfully."
+            f"Academic insights for {student['name']} updated successfully."
         )
 
         return redirect(
@@ -3049,48 +3063,40 @@ def update_insights(
     # DISPLAY PAGE
     # --------------------------------
 
+    overall_cgpa = None
+    for item in insights:
+        if item.get("overall_cgpa") is not None:
+            overall_cgpa = item["overall_cgpa"]
+            break
+
+    insights_json = json.dumps(insights, default=str)
+
     return render(
         request,
         "admin/update_insights.html",
         {
             "student": student,
             "insights": insights,
+            "insights_json": insights_json,
+            "overall_cgpa": overall_cgpa,
         }
     )
 
 
 import os
-from google import genai
-from django.shortcuts import render
-
-
-client = genai.Client(
-    api_key=os.getenv(
-        "GEMINI_API_KEY"
-    )
-)
-
-
-import os
 import time
-
 from google import genai
-from django.shortcuts import render
-
-# Make sure this is imported from wherever your Supabase client is defined
-# Example:
-# from .supabaseclient import supabase
 
 
-# ==========================================
-# GEMINI CLIENT
-# ==========================================
-
-client = genai.Client(
-    api_key=os.getenv(
-        "GEMINI_API_KEY"
-    )
-)
+def get_gemini_client():
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        return None
+    try:
+        return genai.Client(api_key=api_key)
+    except Exception as e:
+        print("Error initializing Gemini client:", repr(e))
+        return None
 
 
 # ==========================================
@@ -3103,6 +3109,7 @@ def insights_search(request):
     insights = []
     error = None
     ai_summary = None
+    overall_cgpa = None
 
     name = request.GET.get(
         "name",
@@ -3181,6 +3188,8 @@ def insights_search(request):
                         "internal, "
                         "external, "
                         "attendance, "
+                        "semester_cgpa, "
+                        "overall_cgpa, "
                         "created_at"
                     )
                     .eq(
@@ -3198,7 +3207,14 @@ def insights_search(request):
 
                 insights = (
                     insights_response.data
+                    or []
                 )
+
+                for row in insights:
+                    if "cgpa" not in row:
+                        row["cgpa"] = row.get("semester_cgpa")
+                    if overall_cgpa is None and row.get("overall_cgpa") is not None:
+                        overall_cgpa = row.get("overall_cgpa")
 
                 # ==========================================
                 # AI ANALYSIS
@@ -3299,49 +3315,18 @@ Important rules:
                         # GEMINI REQUEST
                         # ==================================
 
-                        try:
+                        client = get_gemini_client()
 
-                            response = (
-                                client
-                                .models
-                                .generate_content(
-                                    model="gemini-3.8-flash",
-                                    contents=prompt
-                                )
-                            )
-
-                            ai_summary = (
-                                response.text
-                            )
-
-                        # ==================================
-                        # PRIMARY MODEL ERROR
-                        # ==================================
-
-                        except Exception as e:
-
-                            print(
-                                "GEMINI PRIMARY ERROR:",
-                                repr(e)
-                            )
-
-                            # ==================================
-                            # RETRY PRIMARY MODEL
-                            # ==================================
-
+                        if not client:
+                            ai_summary = "AI Summary is currently unavailable (GEMINI_API_KEY not configured)."
+                        else:
                             try:
-
-                                print(
-                                    "Retrying Gemini request..."
-                                )
-
-                                time.sleep(2)
 
                                 response = (
                                     client
                                     .models
                                     .generate_content(
-                                        model="gemini-3.8-flash",
+                                        model="gemini-2.5-flash",
                                         contents=prompt
                                     )
                                 )
@@ -3351,31 +3336,33 @@ Important rules:
                                 )
 
                             # ==================================
-                            # RETRY FAILED
+                            # PRIMARY MODEL ERROR
                             # ==================================
 
-                            except Exception as retry_error:
+                            except Exception as e:
 
                                 print(
-                                    "GEMINI RETRY ERROR:",
-                                    repr(retry_error)
+                                    "GEMINI PRIMARY ERROR:",
+                                    repr(e)
                                 )
 
                                 # ==================================
-                                # FALLBACK MODEL
+                                # RETRY PRIMARY MODEL
                                 # ==================================
 
                                 try:
 
                                     print(
-                                        "Trying Gemini fallback model..."
+                                        "Retrying Gemini request..."
                                     )
+
+                                    time.sleep(2)
 
                                     response = (
                                         client
                                         .models
                                         .generate_content(
-                                            model="gemini-3.8-flash-lite",
+                                            model="gemini-2.5-flash",
                                             contents=prompt
                                         )
                                     )
@@ -3385,21 +3372,55 @@ Important rules:
                                     )
 
                                 # ==================================
-                                # ALL MODELS FAILED
+                                # RETRY FAILED
                                 # ==================================
 
-                                except Exception as fallback_error:
+                                except Exception as retry_error:
 
                                     print(
-                                        "GEMINI FALLBACK ERROR:",
-                                        repr(fallback_error)
+                                        "GEMINI RETRY ERROR:",
+                                        repr(retry_error)
                                     )
 
-                                    ai_summary = (
-                                        "The AI service is temporarily "
-                                        "busy. Please try again in a "
-                                        "few moments."
-                                    )
+                                    # ==================================
+                                    # FALLBACK MODEL
+                                    # ==================================
+
+                                    try:
+
+                                        print(
+                                            "Trying Gemini fallback model..."
+                                        )
+
+                                        response = (
+                                            client
+                                            .models
+                                            .generate_content(
+                                                model="gemini-2.5-flash-lite",
+                                                contents=prompt
+                                            )
+                                        )
+
+                                        ai_summary = (
+                                            response.text
+                                        )
+
+                                    # ==================================
+                                    # ALL MODELS FAILED
+                                    # ==================================
+
+                                    except Exception as fallback_error:
+
+                                        print(
+                                            "GEMINI FALLBACK ERROR:",
+                                            repr(fallback_error)
+                                        )
+
+                                        ai_summary = (
+                                            "The AI service is temporarily "
+                                            "busy. Please try again in a "
+                                            "few moments."
+                                        )
 
             # ==========================================
             # STUDENT NOT FOUND
@@ -3422,6 +3443,7 @@ Important rules:
         {
             "student": student,
             "insights": insights,
+            "overall_cgpa": overall_cgpa,
             "error": error,
             "ai_summary": ai_summary,
             "searched_name": name,

@@ -1,258 +1,810 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Student Insights | CoreConnect Admin</title>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 
-    <title>Update Student Insights</title>
-
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --primary-border: #bfdbfe;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --bg: #f3f6fb;
+            --card-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+            --card-shadow-hover: 0 10px 30px -4px rgba(15, 23, 42, 0.1);
+        }
 
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            padding: 30px;
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--slate-800);
+            line-height: 1.5;
+            padding: 24px 20px 120px;
         }
 
         .container {
             max-width: 1200px;
-            margin: auto;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .back-btn {
-            display: inline-block;
-            margin-bottom: 20px;
-            text-decoration: none;
-            color: #2563eb;
-            font-weight: bold;
-        }
-
-        .student-card,
-        .semester-card,
-        .overall-cgpa-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 18px;
             background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            color: var(--slate-700);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 10px;
+            border: 1px solid var(--slate-200);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
         }
 
-        .student-card h1 {
-            margin-top: 0;
+        .back-btn:hover {
+            color: var(--primary);
+            border-color: var(--primary-border);
+            transform: translateX(-3px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
         }
 
-        .student-info {
+        .quick-nav {
             display: flex;
-            gap: 80px;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .student-info p {
-            margin-top: 8px;
-            font-size: 17px;
+        .quick-pill {
+            padding: 6px 14px;
+            background: white;
+            border: 1px solid var(--slate-200);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--slate-600);
+            text-decoration: none;
+            transition: all 0.2s;
         }
 
-        .semester-card h2 {
-            margin-top: 0;
-            color: #1e293b;
+        .quick-pill:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary-border);
         }
 
+        /* Messages */
+        .messages-container {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 12px;
+            font-weight: 500;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Student Hero Card */
+        .student-hero-card {
+            background: white;
+            border-radius: 18px;
+            padding: 28px 32px;
+            margin-bottom: 28px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #2563eb 0%, #3b82f6 100%);
+        }
+
+        .student-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .student-avatar {
+            width: 68px;
+            height: 68px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);
+            flex-shrink: 0;
+        }
+
+        .student-details h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 4px;
+        }
+
+        .student-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: var(--slate-100);
+            color: var(--slate-700);
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+
+        .meta-badge i {
+            color: var(--primary);
+        }
+
+        .stats-strip {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--slate-50);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--slate-200);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .stat-item:not(:last-child) {
+            border-right: 1px solid var(--slate-200);
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--slate-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Semester Card */
+        .semester-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--slate-200);
+            transition: transform 0.2s, box-shadow 0.2s;
+            scroll-margin-top: 24px;
+        }
+
+        .semester-card:hover {
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .semester-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--slate-100);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .semester-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .semester-icon-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .semester-title-group h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .subject-count-pill {
+            padding: 4px 12px;
+            background: var(--slate-100);
+            color: var(--slate-600);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Modern Table */
         .table-wrapper {
             overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--slate-200);
+            background: white;
+            margin-bottom: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-        }
-
-        th {
-            padding: 14px;
-            background: #f1f5f9;
             text-align: left;
         }
 
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #e5e7eb;
+        thead {
+            background: var(--slate-50);
         }
 
-        .subject-select {
+        th {
+            padding: 14px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--slate-600);
+            border-bottom: 1px solid var(--slate-200);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--slate-100);
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: #fafbfd;
+        }
+
+        .col-index {
+            width: 40px;
+            font-weight: 600;
+            color: var(--slate-400);
+            font-size: 13px;
+        }
+
+        .col-subject {
+            min-width: 260px;
+        }
+
+        .col-input {
+            width: 150px;
+        }
+
+        .subject-code-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: var(--slate-100);
+            color: var(--slate-700);
+            font-family: monospace;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            border: 1px solid var(--slate-200);
+        }
+
+        .subject-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--slate-800);
+        }
+
+        /* Input Styles */
+        .input-box {
+            position: relative;
+        }
+
+        .input-box input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 7px;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--slate-800);
+            background: white;
+            border: 1.5px solid var(--slate-200);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .input-box input:hover {
+            border-color: var(--slate-300);
+        }
+
+        .input-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
             background: white;
         }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 7px;
+        .input-box input::placeholder {
+            color: var(--slate-400);
+            font-size: 13px;
+            font-weight: 400;
         }
 
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #2563eb;
+        /* Semester CGPA Section in Card */
+        .semester-footer {
+            background: var(--slate-50);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            border: 1px dashed var(--slate-300);
         }
 
-        /* SEMESTER CGPA */
-
-        .cgpa-section {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-            max-width: 300px;
+        .cgpa-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .cgpa-section label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #1e293b;
+        .cgpa-info i {
+            color: #d97706;
+            font-size: 18px;
         }
 
-        .cgpa-section input {
-            width: 100%;
-        }
-
-        /* OVERALL CGPA */
-
-        .overall-cgpa-card h2 {
-            margin-top: 0;
-            color: #1e293b;
-        }
-
-        .overall-cgpa-section {
-            max-width: 300px;
-        }
-
-        .overall-cgpa-section label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #1e293b;
-        }
-
-        .overall-cgpa-section input {
-            width: 100%;
-        }
-
-        .save-btn {
-            padding: 14px 35px;
-            border: none;
-            border-radius: 8px;
-            background: #2563eb;
-            color: white;
-            font-size: 16px;
+        .cgpa-info label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--slate-800);
             cursor: pointer;
         }
 
+        .cgpa-info p {
+            font-size: 12px;
+            color: var(--slate-500);
+        }
+
+        .cgpa-input-wrap {
+            width: 160px;
+        }
+
+        .cgpa-input-wrap input {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            border: 1.5px solid var(--slate-300);
+            border-radius: 8px;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .cgpa-input-wrap input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        /* Overall CGPA Card */
+        .overall-cgpa-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 32px;
+            box-shadow: var(--card-shadow);
+            border: 1.5px solid var(--primary-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 24px;
+            position: relative;
+            scroll-margin-top: 24px;
+        }
+
+        .overall-cgpa-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .trophy-badge {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 6px 14px rgba(245, 158, 11, 0.25);
+            flex-shrink: 0;
+        }
+
+        .overall-cgpa-left h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 2px;
+        }
+
+        .overall-cgpa-left p {
+            font-size: 13px;
+            color: var(--slate-500);
+        }
+
+        .overall-input-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .overall-input-group input {
+            width: 180px;
+            padding: 12px 16px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            border: 2px solid var(--primary-border);
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.08);
+            transition: all 0.2s;
+        }
+
+        .overall-input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+        }
+
+        /* Sticky Action Bar */
+        .bottom-action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid var(--slate-200);
+            padding: 14px 24px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+        }
+
+        .action-bar-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .status-tracker {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--slate-600);
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 3px var(--success-light);
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cancel-btn {
+            padding: 12px 20px;
+            border: 1px solid var(--slate-200);
+            background: white;
+            color: var(--slate-700);
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .cancel-btn:hover {
+            background: var(--slate-100);
+            color: var(--slate-900);
+        }
+
+        .save-btn {
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
         .save-btn:hover {
-            background: #1d4ed8;
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+            transform: translateY(-1px);
         }
 
-        @media (max-width: 700px) {
+        .save-btn:active {
+            transform: translateY(0);
+        }
 
+        /* Responsive Styles */
+        @media (max-width: 768px) {
             body {
-                padding: 15px;
+                padding: 16px 12px 130px;
             }
 
-            .student-info {
+            .student-hero-card {
+                padding: 20px;
                 flex-direction: column;
-                gap: 10px;
+                align-items: flex-start;
             }
 
+            .stats-strip {
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .col-input {
+                width: 110px;
+            }
+
+            .semester-footer,
+            .overall-cgpa-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .cgpa-input-wrap,
+            .overall-input-group,
+            .overall-input-group input {
+                width: 100%;
+            }
+
+            .action-bar-inner {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .action-buttons {
+                justify-content: flex-end;
+            }
+
+            .save-btn {
+                flex: 1;
+                justify-content: center;
+            }
         }
-
     </style>
-
 </head>
-
 
 <body>
 
-
 <div class="container">
 
+    <!-- TOP NAVIGATION -->
+    <div class="top-nav">
+        <a href="{% url 'ptaupdates' %}" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back to PTA List</span>
+        </a>
 
-    <a href="{% url 'ptaupdates' %}"
-       class="back-btn">
-
-        ← Back to PTA
-
-    </a>
-
-
-    <!-- STUDENT INFORMATION -->
-
-    <div class="student-card">
-
-        <h1>Update Student Insights</h1>
-
-        <div class="student-info">
-
-            <div>
-
-                <strong>Student Name</strong>
-
-                <p>
-                    {{ student.name }}
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <strong>KTU ID</strong>
-
-                <p>
-                    {{ student.ktu_id }}
-                </p>
-
-            </div>
-
+        <div class="quick-nav">
+            <span style="font-size: 13px; font-weight: 600; color: var(--slate-500); margin-right: 4px;">Jump to:</span>
+            <a href="#sem-1" class="quick-pill">Sem 1</a>
+            <a href="#sem-2" class="quick-pill">Sem 2</a>
+            <a href="#sem-3" class="quick-pill">Sem 3</a>
+            <a href="#sem-4" class="quick-pill">Sem 4</a>
+            <a href="#overall-card" class="quick-pill" style="color: #b45309; background: #fef3c7; border-color: #fde68a;">Overall CGPA</a>
         </div>
-
     </div>
 
+    <!-- MESSAGES / ALERTS -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}error{% else %}success{% endif %}">
+            <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-    <form method="POST">
+    <!-- STUDENT HERO CARD -->
+    <div class="student-hero-card">
+        <div class="student-profile">
+            <div class="student-avatar">
+                {{ student.name|first|upper }}
+            </div>
+            <div class="student-details">
+                <h1>{{ student.name }}</h1>
+                <div class="student-meta">
+                    <span class="meta-badge">
+                        <i class="fa-solid fa-id-badge"></i>
+                        KTU ID: {{ student.ktu_id }}
+                    </span>
+                    {% if student.passout_year %}
+                    <span class="meta-badge">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        Batch: {{ student.passout_year }}
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
+        <div class="stats-strip">
+            <div class="stat-item">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Semesters</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">27</div>
+                <div class="stat-label">Subjects</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stats-filled-count">0</div>
+                <div class="stat-label">Recorded</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORM START -->
+    <form method="POST" id="insights-form">
         {% csrf_token %}
 
-
-        <!-- JAVASCRIPT WILL CREATE THE SUBJECT TABLES -->
-
+        <!-- DYNAMIC SEMESTER TABLES -->
         <div id="semester-container"></div>
 
+        <!-- OVERALL CGPA CARD -->
+        <div class="overall-cgpa-card" id="overall-card">
+            <div class="overall-cgpa-left">
+                <div class="trophy-badge">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div>
+                    <h2>Overall Cumulative CGPA</h2>
+                    <p>Cumulative Grade Point Average across all completed semesters</p>
+                </div>
+            </div>
 
-        <!-- ===========================================
-             OVERALL CGPA
-        ============================================ -->
-
-        <div class="overall-cgpa-card">
-
-            <h2>Overall CGPA</h2>
-
-            <div class="overall-cgpa-section">
-
-                <label for="overall_cgpa">
-                    Overall CGPA
-                </label>
-
+            <div class="overall-input-group">
+                <label for="overall_cgpa" style="font-weight: 700; color: var(--slate-700); font-size: 14px;">Overall CGPA:</label>
                 <input
                     type="number"
                     id="overall_cgpa"
@@ -261,467 +813,301 @@
                     max="10"
                     step="0.01"
                     value="{{ overall_cgpa|default:'' }}"
-                    placeholder="Enter Overall CGPA"
+                    placeholder="e.g. 8.50"
                 >
-
             </div>
-
         </div>
 
+        <!-- STICKY BOTTOM ACTION BAR -->
+        <div class="bottom-action-bar">
+            <div class="action-bar-inner">
+                <div class="status-tracker">
+                    <div class="status-dot"></div>
+                    <span id="tracker-text">Ready to update student academic performance</span>
+                </div>
 
-        <button type="submit"
-                class="save-btn">
-
-            Save Insights
-
-        </button>
+                <div class="action-buttons">
+                    <a href="{% url 'ptaupdates' %}" class="cancel-btn">Cancel</a>
+                    <button type="submit" class="save-btn" id="save-btn">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Save Academic Insights</span>
+                    </button>
+                </div>
+            </div>
+        </div>
 
     </form>
 
-
 </div>
 
-
-
-<script>
-
-
-// ===========================================
-// SUBJECT LIST
-// ===========================================
-
-const subjects = {
-
-    1: [
-
-        {
-            code: "20MCA101",
-            name: "Mathematical Foundations for Computing"
-        },
-
-        {
-            code: "20MCA103",
-            name: "Digital Fundamentals & Computer Architecture"
-        },
-
-        {
-            code: "20MCA105",
-            name: "Advanced Data Structures"
-        },
-
-        {
-            code: "20MCA107",
-            name: "Advanced Software Engineering"
-        },
-
-        {
-            code: "20MCA131",
-            name: "Programming Lab"
-        },
-
-        {
-            code: "20MCA133",
-            name: "Web Programming Lab"
-        },
-
-        {
-            code: "20MCA135",
-            name: "Data Structures Lab"
-        }
-
-    ],
-
-
-    2: [
-
-        {
-            code: "20MCA102",
-            name: "Avanced Database Management System"
-        },
-
-        {
-            code: "20MCA104",
-            name: "Advanced Computer Networks"
-        },
-
-        {
-            code: "20MCA162",
-            name: "Applied Statistics"
-        },
-
-        {
-            code: "20MCA164",
-            name: "Organisational Behaviour"
-        },
-
-        {
-            code: "20MCA188",
-            name: "Artificial Intelligence"
-        },
-
-        {
-            code: "20MCA192",
-            name: "IPR and Cyber Laws"
-        },
-
-        {
-            code: "20MCA132",
-            name: "Object Oriented Programming"
-        },
-
-        {
-            code: "20MCA134",
-            name: "Advanced DBMS Lab"
-        },
-
-        {
-            code: "20MCA136",
-            name: "Networking & System Administration Lab"
-        }
-
-    ],
-
-
-    3: [
-
-        {
-            code: "20MCA201",
-            name: "Data Science & Machine Learning"
-        },
-
-        {
-            code: "20MCA203",
-            name: "Design & Analysis of Algorithms"
-        },
-
-        {
-            code: "20MCA263",
-            name: "Cyber Security & Cryptography"
-        },
-
-        {
-            code: "20MCA283",
-            name: "Deep Learning"
-        },
-
-        {
-            code: "S20MCA287",
-            name: "Bioinformatics"
-        },
-
-        {
-            code: "20MCA241",
-            name: "Data Science Lab"
-        },
-
-        {
-            code: "20MCA243",
-            name: "Mobile Application Develpoment Lab"
-        },
-
-        {
-            code: "20MCA245",
-            name: "Mini Project"
-        }
-
-    ],
-
-
-    4: [
-
-        {
-            code: "20MCA242",
-            name: "Comprehensive Viva"
-        },
-
-        {
-            code: "20MCA244",
-            name: "Seminar"
-        },
-
-        {
-            code: "20MCA246",
-            name: "Main Project"
-        }
-
-    ]
-
-};
-
-
-// ===========================================
-// EXISTING DATA FROM DATABASE
-// ===========================================
-
-const existingInsights =
-    {{ insights|safe }};
-
-
-// ===========================================
-// FIND EXISTING RECORD
-// ===========================================
-
-function getExisting(semester, code) {
-
-    return existingInsights.find(
-        item =>
-            Number(item.semester) === Number(semester)
-            &&
-            item.subject_code === code
-    );
-
-}
-
-
-// ===========================================
-// FIND EXISTING CGPA FOR SEMESTER
-// ===========================================
-
-function getExistingCGPA(semester) {
-
-    const existing =
-        existingInsights.find(
-            item =>
-                Number(item.semester) === Number(semester)
-                &&
-                item.cgpa !== null
-                &&
-                item.cgpa !== undefined
-        );
-
-    return existing ? existing.cgpa : '';
-
-}
-
-
-// ===========================================
-// CREATE SEMESTER TABLE
-// ===========================================
-
-function createSemester(semester) {
-
-    const container =
-        document.getElementById("semester-container");
-
-
-    const card =
-        document.createElement("div");
-
-    card.className = "semester-card";
-
-
-    const title =
-        document.createElement("h2");
-
-    title.textContent =
-        `Semester ${semester}`;
-
-
-    card.appendChild(title);
-
-
-    const wrapper =
-        document.createElement("div");
-
-    wrapper.className =
-        "table-wrapper";
-
-
-    const table =
-        document.createElement("table");
-
-
-    table.innerHTML = `
-
-        <thead>
-
-            <tr>
-
-                <th>Subject</th>
-
-                <th>Internal</th>
-
-                <th>External</th>
-
-                <th>Attendance (%)</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody></tbody>
-
-    `;
-
-
-    const tbody =
-        table.querySelector("tbody");
-
-
-    subjects[semester].forEach(subject => {
-
-
-        const existing =
-            getExisting(
-                semester,
-                subject.code
-            );
-
-
-        const row =
-            document.createElement("tr");
-
-
-        row.innerHTML = `
-
-            <td>
-
-                <select
-                    class="subject-select"
-                    disabled
-                >
-
-                    <option value="${subject.code}">
-                        ${subject.code} - ${subject.name}
-                    </option>
-
-                </select>
-
-
-                <input
-                    type="hidden"
-                    name="subject_code"
-                    value="${subject.code}"
-                >
-
-
-                <input
-                    type="hidden"
-                    name="semester_${subject.code}"
-                    value="${semester}"
-                >
-
-
-                <input
-                    type="hidden"
-                    name="subject_name_${subject.code}"
-                    value="${subject.name}"
-                >
-
-            </td>
-
-
-            <td>
-
-                <input
-                    type="number"
-                    name="internal_${subject.code}"
-                    min="0"
-                    max="100"
-                    value="${existing?.internal ?? ''}"
-                    placeholder="Internal"
-                >
-
-            </td>
-
-
-            <td>
-
-                <input
-                    type="number"
-                    name="external_${subject.code}"
-                    min="0"
-                    max="100"
-                    value="${existing?.external ?? ''}"
-                    placeholder="External"
-                >
-
-            </td>
-
-
-            <td>
-
-                <input
-                    type="number"
-                    name="attendance_${subject.code}"
-                    min="0"
-                    max="100"
-                    value="${existing?.attendance ?? ''}"
-                    placeholder="Attendance"
-                >
-
-            </td>
-
-        `;
-
-
-        tbody.appendChild(row);
-
-    });
-
-
-    wrapper.appendChild(table);
-
-    card.appendChild(wrapper);
-
-
-    // ===========================================
-    // SEMESTER CGPA AT END OF SEMESTER
-    // ===========================================
-
-    const cgpaSection =
-        document.createElement("div");
-
-    cgpaSection.className =
-        "cgpa-section";
-
-
-    cgpaSection.innerHTML = `
-
-        <label for="cgpa_${semester}">
-            Semester ${semester} CGPA
-        </label>
-
-        <input
-            type="number"
-            id="cgpa_${semester}"
-            name="cgpa_${semester}"
-            min="0"
-            max="10"
-            step="0.01"
-            value="${getExistingCGPA(semester)}"
-            placeholder="Enter CGPA"
-        >
-
-    `;
-
-
-    card.appendChild(cgpaSection);
-
-
-    container.appendChild(card);
-
-}
-
-
-// ===========================================
-// CREATE ALL SEMESTERS
-// ===========================================
-
-Object.keys(subjects).forEach(
-    semester => {
-
-        createSemester(
-            Number(semester)
-        );
-
-    }
-);
-
-
+<!-- EMBEDDED INSIGHTS JSON -->
+<script id="insights-data" type="application/json">
+    {{ insights_json|safe }}
 </script>
 
+<script>
+// ===========================================
+// SUBJECT CATALOG
+// ===========================================
+const subjects = {
+    1: [
+        { code: "20MCA101", name: "Mathematical Foundations for Computing" },
+        { code: "20MCA103", name: "Digital Fundamentals & Computer Architecture" },
+        { code: "20MCA105", name: "Advanced Data Structures" },
+        { code: "20MCA107", name: "Advanced Software Engineering" },
+        { code: "20MCA131", name: "Programming Lab" },
+        { code: "20MCA133", name: "Web Programming Lab" },
+        { code: "20MCA135", name: "Data Structures Lab" }
+    ],
+    2: [
+        { code: "20MCA102", name: "Advanced Database Management System" },
+        { code: "20MCA104", name: "Advanced Computer Networks" },
+        { code: "20MCA162", name: "Applied Statistics" },
+        { code: "20MCA164", name: "Organisational Behaviour" },
+        { code: "20MCA188", name: "Artificial Intelligence" },
+        { code: "20MCA192", name: "IPR and Cyber Laws" },
+        { code: "20MCA132", name: "Object Oriented Programming" },
+        { code: "20MCA134", name: "Advanced DBMS Lab" },
+        { code: "20MCA136", name: "Networking & System Administration Lab" }
+    ],
+    3: [
+        { code: "20MCA201", name: "Data Science & Machine Learning" },
+        { code: "20MCA203", name: "Design & Analysis of Algorithms" },
+        { code: "20MCA263", name: "Cyber Security & Cryptography" },
+        { code: "20MCA283", name: "Deep Learning" },
+        { code: "S20MCA287", name: "Bioinformatics" },
+        { code: "20MCA241", name: "Data Science Lab" },
+        { code: "20MCA243", name: "Mobile Application Development Lab" },
+        { code: "20MCA245", name: "Mini Project" }
+    ],
+    4: [
+        { code: "20MCA242", name: "Comprehensive Viva" },
+        { code: "20MCA244", name: "Seminar" },
+        { code: "20MCA246", name: "Main Project" }
+    ]
+};
+
+// ===========================================
+// LOAD EXISTING DATABASE DATA SAFELY
+// ===========================================
+let existingInsights = [];
+try {
+    const rawData = document.getElementById("insights-data").textContent;
+    existingInsights = JSON.parse(rawData || "[]");
+} catch (e) {
+    console.error("Failed to parse insights JSON:", e);
+    existingInsights = [];
+}
+
+// ===========================================
+// HELPER FUNCTIONS
+// ===========================================
+function getExisting(semester, code) {
+    const cleanCode = String(code).trim().toLowerCase();
+    return existingInsights.find(item =>
+        Number(item.semester) === Number(semester) &&
+        String(item.subject_code || '').trim().toLowerCase() === cleanCode
+    );
+}
+
+function getExistingCGPA(semester) {
+    const existing = existingInsights.find(item =>
+        Number(item.semester) === Number(semester) &&
+        item.semester_cgpa !== null &&
+        item.semester_cgpa !== undefined &&
+        item.semester_cgpa !== ''
+    );
+    if (existing) return existing.semester_cgpa;
+
+    const alt = existingInsights.find(item =>
+        Number(item.semester) === Number(semester) &&
+        item.cgpa !== null &&
+        item.cgpa !== undefined &&
+        item.cgpa !== ''
+    );
+    return alt ? alt.cgpa : '';
+}
+
+// ===========================================
+// RENDER SEMESTER CARDS
+// ===========================================
+function createSemester(semester) {
+    const container = document.getElementById("semester-container");
+    const semesterSubjects = subjects[semester] || [];
+
+    const card = document.createElement("div");
+    card.className = "semester-card";
+    card.id = `sem-${semester}`;
+
+    const header = document.createElement("div");
+    header.className = "semester-header";
+    header.innerHTML = `
+        <div class="semester-title-group">
+            <div class="semester-icon-box">
+                <i class="fa-solid fa-book-open"></i>
+            </div>
+            <div>
+                <h2>Semester ${semester}</h2>
+            </div>
+        </div>
+        <div class="subject-count-pill">
+            ${semesterSubjects.length} Subjects
+        </div>
+    `;
+    card.appendChild(header);
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "table-wrapper";
+
+    const table = document.createElement("table");
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th class="col-index">#</th>
+                <th class="col-subject">Subject Code & Name</th>
+                <th class="col-input">Internal (0-50)</th>
+                <th class="col-input">External (0-60)</th>
+                <th class="col-input">Attendance (%)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+
+    const tbody = table.querySelector("tbody");
+
+    semesterSubjects.forEach((subject, index) => {
+        const existing = getExisting(semester, subject.code);
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="col-index">${index + 1}</td>
+            <td class="col-subject">
+                <div>
+                    <span class="subject-code-badge">${subject.code}</span>
+                    <div class="subject-title">${subject.name}</div>
+                    <input type="hidden" name="subject_code" value="${subject.code}">
+                    <input type="hidden" name="semester_${subject.code}" value="${semester}">
+                    <input type="hidden" name="subject_name_${subject.code}" value="${subject.name}">
+                </div>
+            </td>
+            <td class="col-input">
+                <div class="input-box">
+                    <input
+                        type="number"
+                        name="internal_${subject.code}"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        value="${existing?.internal ?? ''}"
+                        placeholder="Marks / 50"
+                        class="insight-input"
+                    >
+                </div>
+            </td>
+            <td class="col-input">
+                <div class="input-box">
+                    <input
+                        type="number"
+                        name="external_${subject.code}"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        value="${existing?.external ?? ''}"
+                        placeholder="Marks / 60"
+                        class="insight-input"
+                    >
+                </div>
+            </td>
+            <td class="col-input">
+                <div class="input-box">
+                    <input
+                        type="number"
+                        name="attendance_${subject.code}"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        value="${existing?.attendance ?? ''}"
+                        placeholder="Attendance %"
+                        class="insight-input"
+                    >
+                </div>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    wrapper.appendChild(table);
+    card.appendChild(wrapper);
+
+    // Semester CGPA section
+    const footer = document.createElement("div");
+    footer.className = "semester-footer";
+    footer.innerHTML = `
+        <div class="cgpa-info">
+            <i class="fa-solid fa-star"></i>
+            <div>
+                <label for="cgpa_${semester}">Semester ${semester} CGPA</label>
+                <p>Grade point average for Semester ${semester} examinations</p>
+            </div>
+        </div>
+        <div class="cgpa-input-wrap">
+            <input
+                type="number"
+                id="cgpa_${semester}"
+                name="cgpa_${semester}"
+                min="0"
+                max="10"
+                step="0.01"
+                value="${getExistingCGPA(semester)}"
+                placeholder="e.g. 8.45"
+            >
+        </div>
+    `;
+    card.appendChild(footer);
+
+    container.appendChild(card);
+}
+
+// Render all semesters
+Object.keys(subjects).forEach(sem => createSemester(Number(sem)));
+
+// Update filled stats counter
+function updateStats() {
+    let filled = 0;
+    const inputs = document.querySelectorAll('.insight-input');
+    const checkedRows = new Set();
+
+    inputs.forEach(input => {
+        if (input.value.trim() !== '') {
+            const tr = input.closest('tr');
+            if (tr) checkedRows.add(tr);
+        }
+    });
+
+    const filledCountEl = document.getElementById("stats-filled-count");
+    if (filledCountEl) {
+        filledCountEl.textContent = checkedRows.size;
+    }
+
+    const trackerText = document.getElementById("tracker-text");
+    if (trackerText) {
+        trackerText.textContent = `${checkedRows.size} of 27 subjects currently recorded`;
+    }
+}
+
+document.addEventListener('input', updateStats);
+updateStats();
+
+// Form submit animation
+const form = document.getElementById("insights-form");
+const saveBtn = document.getElementById("save-btn");
+if (form && saveBtn) {
+    form.addEventListener("submit", function() {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Saving Details...</span>';
+    });
+}
+</script>
 
 </body>
-
 </html>

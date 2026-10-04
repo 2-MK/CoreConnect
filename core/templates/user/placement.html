@@ -27,14 +27,387 @@
 
         <h3>{{ job.company_name }}</h3>
 
-        <p><strong>Role:</strong> {{ job.role }}</p>
-        <p><strong>Eligibility:</strong> {{ job.eligibility }}</p>
-        <p><strong>Minimum CGPA:</strong> {{ job.cgpa|default:"-" }}</p>
-        <p><strong>Deadline:</strong> {{ job.deadline }}</p>
-        <p class="description">{{ job.description }}</p>
+        <p>
+            <strong>Role:</strong>
+            {{ job.role }}
+        </p>
+
+        <p>
+            <strong>Eligibility:</strong>
+            {{ job.eligibility }}
+        </p>
+
+        <p>
+            <strong>Minimum CGPA:</strong>
+            {{ job.cgpa|default:"-" }}
+        </p>
+
+        <p>
+            <strong>Deadline:</strong>
+            {{ job.deadline }}
+        </p>
+
+        <p class="description">
+            {{ job.description }}
+        </p>
+
+
+        <!-- AI Eligibility Button -->
+        <button
+            type="button"
+            class="check-eligibility-btn"
+            data-url="{% url 'check_placement_eligibility' job.id %}"
+            onclick="checkEligibility(this)">
+
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+            Check My Eligibility
+
+        </button>
+
+
+        <!-- AI Eligibility Result -->
+        <div
+            id="eligibility-result-{{ job.id }}"
+            class="eligibility-result"
+            style="display: none;">
+
+        </div>
 
     </div>
     {% endfor %}
 
 </div>
 {% endif %}
+
+
+<script>
+
+function checkEligibility(button) {
+
+    /*
+     * Get the result box belonging to this placement card
+     */
+
+    const resultBox =
+        button
+        .closest(".card")
+        .querySelector(".eligibility-result");
+
+
+    /*
+     * Get the Django-generated URL
+     */
+
+    const url = button.dataset.url;
+
+
+    /*
+     * Show loading message
+     */
+
+    resultBox.style.display = "block";
+
+    resultBox.innerHTML = `
+        <div class="eligibility-loading">
+
+            <i class="fa-solid fa-spinner fa-spin"></i>
+
+            <span>
+                Checking your eligibility...
+            </span>
+
+        </div>
+    `;
+
+
+    /*
+     * Call Django
+     */
+
+    fetch(
+        url,
+        {
+            method: "GET",
+
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        }
+    )
+
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error(
+                "Server returned an error: " + response.status
+            );
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+
+        /*
+         * Error
+         */
+
+        if (!data.success) {
+
+            resultBox.innerHTML = `
+
+                <div class="eligibility-error">
+
+                    <strong>
+                        Unable to Check Eligibility
+                    </strong>
+
+                    <p>
+                        ${data.error || "Something went wrong."}
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        /*
+         * Determine status
+         */
+
+        let statusClass =
+            "eligibility-unknown";
+
+        let statusText =
+            "Needs Verification";
+
+
+        if (data.eligible === true) {
+
+            statusClass =
+                "eligibility-eligible";
+
+            statusText =
+                "Eligible";
+
+        }
+
+        else if (data.eligible === false) {
+
+            statusClass =
+                "eligibility-not-eligible";
+
+            statusText =
+                "Not Eligible";
+
+        }
+
+
+        /*
+         * Matched requirements
+         */
+
+        let matchedHTML = "";
+
+        if (
+            data.matched_requirements &&
+            data.matched_requirements.length > 0
+        ) {
+
+            matchedHTML = `
+
+                <div class="eligibility-section">
+
+                    <strong>
+                        <i class="fa-solid fa-circle-check"></i>
+                        Matched Requirements
+                    </strong>
+
+                    <ul>
+
+                        ${
+                            data.matched_requirements
+                            .map(
+                                item =>
+                                `<li>${item}</li>`
+                            )
+                            .join("")
+                        }
+
+                    </ul>
+
+                </div>
+
+            `;
+        }
+
+
+        /*
+         * Missing requirements
+         */
+
+        let missingHTML = "";
+
+        if (
+            data.missing_requirements &&
+            data.missing_requirements.length > 0
+        ) {
+
+            missingHTML = `
+
+                <div class="eligibility-section">
+
+                    <strong>
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        Missing Requirements
+                    </strong>
+
+                    <ul>
+
+                        ${
+                            data.missing_requirements
+                            .map(
+                                item =>
+                                `<li>${item}</li>`
+                            )
+                            .join("")
+                        }
+
+                    </ul>
+
+                </div>
+
+            `;
+        }
+
+
+        /*
+         * Uncertain requirements
+         */
+
+        let uncertainHTML = "";
+
+        if (
+            data.uncertain_requirements &&
+            data.uncertain_requirements.length > 0
+        ) {
+
+            uncertainHTML = `
+
+                <div class="eligibility-section">
+
+                    <strong>
+                        <i class="fa-solid fa-circle-question"></i>
+                        Needs Verification
+                    </strong>
+
+                    <ul>
+
+                        ${
+                            data.uncertain_requirements
+                            .map(
+                                item =>
+                                `<li>${item}</li>`
+                            )
+                            .join("")
+                        }
+
+                    </ul>
+
+                </div>
+
+            `;
+        }
+
+
+        /*
+         * Final result
+         */
+
+        resultBox.innerHTML = `
+
+            <div class="${statusClass}">
+
+                <div class="eligibility-status">
+
+                    <span>
+                        ${statusText}
+                    </span>
+
+                </div>
+
+
+                <div class="eligibility-cgpa">
+
+                    <strong>
+                        Your Overall CGPA:
+                    </strong>
+
+                    ${data.student_cgpa}
+
+                    ${
+                        data.required_cgpa !== null &&
+                        data.required_cgpa !== undefined
+                        ?
+                        `
+                        <span>
+                            (Required:
+                            ${data.required_cgpa})
+                        </span>
+                        `
+                        :
+                        ""
+                    }
+
+                </div>
+
+
+                <p class="eligibility-explanation">
+                    ${data.explanation}
+                </p>
+
+
+                ${matchedHTML}
+
+                ${missingHTML}
+
+                ${uncertainHTML}
+
+            </div>
+
+        `;
+
+    })
+
+
+    .catch(error => {
+
+        console.error(error);
+
+        resultBox.innerHTML = `
+
+            <div class="eligibility-error">
+
+                <strong>
+                    Unable to Check Eligibility
+                </strong>
+
+                <p>
+                    Please try again.
+                </p>
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+</script>

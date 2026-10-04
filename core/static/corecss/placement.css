@@ -415,6 +415,316 @@ body {
 
 
 /* =========================================================
+   AI ELIGIBILITY BUTTON
+   ========================================================= */
+
+.check-eligibility-btn {
+    position: relative;
+    z-index: 4;
+
+    width: 100%;
+
+    margin-top: 16px;
+
+    padding: 11px 16px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #111827;
+    color: #ffffff;
+
+    font-family: "Inter", sans-serif;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.check-eligibility-btn:hover {
+    background: #1d4ed8;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 18px rgba(37, 99, 235, 0.18);
+}
+
+.check-eligibility-btn:active {
+    transform: translateY(0);
+}
+
+.check-eligibility-btn i {
+    font-size: 0.75rem;
+}
+
+
+/* =========================================================
+   AI ELIGIBILITY RESULT
+   ========================================================= */
+
+.eligibility-result {
+    position: relative;
+    z-index: 4;
+
+    width: 100%;
+
+    margin-top: 14px;
+}
+
+
+/* =========================================================
+   AI LOADING
+   ========================================================= */
+
+.eligibility-loading {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 13px 12px;
+
+    border-radius: 9px;
+
+    background: #f5f7fa;
+
+    border: 1px solid #e5e7eb;
+
+    color: #475569;
+
+    font-size: 0.72rem;
+
+    line-height: 1.5;
+}
+
+.eligibility-loading i {
+    color: #2563eb;
+}
+
+
+/* =========================================================
+   ELIGIBLE RESULT
+   ========================================================= */
+
+.eligibility-eligible {
+    padding: 15px;
+
+    border-radius: 11px;
+
+    background: #ecfdf5;
+
+    border: 1px solid #a7f3d0;
+
+    color: #065f46;
+
+    box-shadow:
+        0 4px 12px rgba(16, 185, 129, 0.06);
+}
+
+.eligibility-eligible .eligibility-status {
+    color: #047857;
+
+    font-size: 0.95rem;
+
+    font-weight: 700;
+
+    margin-bottom: 9px;
+}
+
+
+/* =========================================================
+   NOT ELIGIBLE RESULT
+   ========================================================= */
+
+.eligibility-not-eligible {
+    padding: 15px;
+
+    border-radius: 11px;
+
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+
+    color: #991b1b;
+
+    box-shadow:
+        0 4px 12px rgba(239, 68, 68, 0.06);
+}
+
+.eligibility-not-eligible .eligibility-status {
+    color: #b91c1c;
+
+    font-size: 0.95rem;
+
+    font-weight: 700;
+
+    margin-bottom: 9px;
+}
+
+
+/* =========================================================
+   NEEDS VERIFICATION RESULT
+   ========================================================= */
+
+.eligibility-unknown {
+    padding: 15px;
+
+    border-radius: 11px;
+
+    background: #fffbeb;
+
+    border: 1px solid #fde68a;
+
+    color: #92400e;
+
+    box-shadow:
+        0 4px 12px rgba(245, 158, 11, 0.06);
+}
+
+.eligibility-unknown .eligibility-status {
+    color: #b45309;
+
+    font-size: 0.95rem;
+
+    font-weight: 700;
+
+    margin-bottom: 9px;
+}
+
+
+/* =========================================================
+   AI CGPA INFORMATION
+   ========================================================= */
+
+.eligibility-cgpa {
+    margin: 9px 0;
+
+    font-size: 0.72rem;
+
+    line-height: 1.6;
+}
+
+.eligibility-cgpa strong {
+    font-weight: 600;
+}
+
+.eligibility-cgpa span {
+    opacity: 0.8;
+}
+
+
+/* =========================================================
+   AI EXPLANATION
+   ========================================================= */
+
+.eligibility-explanation {
+    margin: 9px 0 !important;
+
+    padding: 0 !important;
+
+    border-top: none !important;
+
+    color: inherit !important;
+
+    font-size: 0.72rem !important;
+
+    line-height: 1.6 !important;
+}
+
+
+/* =========================================================
+   REQUIREMENT SECTIONS
+   ========================================================= */
+
+.eligibility-section {
+    margin-top: 12px;
+
+    padding-top: 10px;
+
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.eligibility-section strong {
+    color: inherit;
+
+    font-size: 0.72rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   REQUIREMENT LIST
+   ========================================================= */
+
+.eligibility-section ul {
+    margin: 7px 0 0 17px;
+
+    padding: 0;
+}
+
+.eligibility-section li {
+    margin-bottom: 4px;
+
+    color: inherit;
+
+    font-size: 0.68rem;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   AI ERROR
+   ========================================================= */
+
+.eligibility-error {
+    padding: 14px;
+
+    border-radius: 9px;
+
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+
+    color: #991b1b;
+}
+
+.eligibility-error strong {
+    font-size: 0.75rem;
+
+    font-weight: 700;
+}
+
+.eligibility-error p {
+    margin-top: 5px;
+
+    margin-bottom: 0;
+
+    color: inherit;
+
+    font-size: 0.68rem;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
    TABLET
    ========================================================= */
 
@@ -438,6 +748,10 @@ body {
     .company-logo {
         width: 76px;
         height: 76px;
+    }
+
+    .check-eligibility-btn {
+        font-size: 0.76rem;
     }
 
 }
@@ -508,6 +822,32 @@ body {
         font-size: 0.72rem;
 
         line-height: 1.6;
+    }
+
+    .check-eligibility-btn {
+        padding: 10px 12px;
+
+        font-size: 0.70rem;
+    }
+
+    .eligibility-loading {
+        font-size: 0.65rem;
+    }
+
+    .eligibility-cgpa {
+        font-size: 0.67rem;
+    }
+
+    .eligibility-explanation {
+        font-size: 0.67rem !important;
+    }
+
+    .eligibility-section strong {
+        font-size: 0.67rem;
+    }
+
+    .eligibility-section li {
+        font-size: 0.62rem;
     }
 
 }
@@ -618,6 +958,111 @@ body {
         line-height: 1.55;
     }
 
+
+    /* =====================================================
+       AI ELIGIBILITY - MOBILE
+       ===================================================== */
+
+    .check-eligibility-btn {
+        margin-top: 12px;
+
+        padding: 8px 6px;
+
+        border-radius: 7px;
+
+        font-size: 0.54rem;
+
+        gap: 5px;
+    }
+
+    .check-eligibility-btn i {
+        font-size: 0.52rem;
+    }
+
+    .eligibility-result {
+        margin-top: 10px;
+    }
+
+    .eligibility-loading {
+        padding: 9px 5px;
+
+        border-radius: 7px;
+
+        font-size: 0.52rem;
+    }
+
+    .eligibility-eligible,
+    .eligibility-not-eligible,
+    .eligibility-unknown {
+        padding: 10px;
+
+        border-radius: 8px;
+    }
+
+    .eligibility-eligible .eligibility-status,
+    .eligibility-not-eligible .eligibility-status,
+    .eligibility-unknown .eligibility-status {
+        font-size: 0.68rem;
+
+        margin-bottom: 6px;
+    }
+
+    .eligibility-cgpa {
+        margin: 6px 0;
+
+        font-size: 0.53rem;
+    }
+
+    .eligibility-explanation {
+        margin: 6px 0 !important;
+
+        font-size: 0.53rem !important;
+
+        line-height: 1.45 !important;
+    }
+
+    .eligibility-section {
+        margin-top: 8px;
+
+        padding-top: 7px;
+    }
+
+    .eligibility-section strong {
+        font-size: 0.53rem;
+    }
+
+    .eligibility-section ul {
+        margin-top: 5px;
+
+        margin-left: 13px;
+    }
+
+    .eligibility-section li {
+        margin-bottom: 3px;
+
+        font-size: 0.49rem;
+
+        line-height: 1.4;
+    }
+
+    .eligibility-error {
+        padding: 9px;
+
+        border-radius: 7px;
+    }
+
+    .eligibility-error strong {
+        font-size: 0.55rem;
+    }
+
+    .eligibility-error p {
+        margin-top: 4px;
+
+        font-size: 0.50rem;
+
+        line-height: 1.4;
+    }
+
 }
 
 
@@ -670,6 +1115,57 @@ body {
         font-size: 0.51rem;
     }
 
+
+    /* =====================================================
+       AI ELIGIBILITY - VERY SMALL DEVICES
+       ===================================================== */
+
+    .check-eligibility-btn {
+        padding: 7px 4px;
+
+        font-size: 0.48rem;
+
+        gap: 3px;
+    }
+
+    .check-eligibility-btn i {
+        font-size: 0.46rem;
+    }
+
+    .eligibility-loading {
+        padding: 7px 4px;
+
+        font-size: 0.46rem;
+    }
+
+    .eligibility-eligible,
+    .eligibility-not-eligible,
+    .eligibility-unknown {
+        padding: 8px;
+    }
+
+    .eligibility-eligible .eligibility-status,
+    .eligibility-not-eligible .eligibility-status,
+    .eligibility-unknown .eligibility-status {
+        font-size: 0.60rem;
+    }
+
+    .eligibility-cgpa {
+        font-size: 0.47rem;
+    }
+
+    .eligibility-explanation {
+        font-size: 0.47rem !important;
+    }
+
+    .eligibility-section strong {
+        font-size: 0.47rem;
+    }
+
+    .eligibility-section li {
+        font-size: 0.44rem;
+    }
+
 }
 
 
@@ -689,4 +1185,5 @@ body {
     html {
         scroll-behavior: auto;
     }
+
 }

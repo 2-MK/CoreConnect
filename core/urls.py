@@ -121,5 +121,11 @@ urlpatterns = [
 
     path("insights/", views.insights_search, name="insights_search"),
 
+    path(
+    "check-placement-eligibility/<int:opportunity_id>/",
+    views.check_placement_eligibility,
+    name="check_placement_eligibility",
+    ),
+
 
 ]

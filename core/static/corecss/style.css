@@ -191,8 +191,8 @@ nav ul li a:hover{
     color: #fff;
 }
 
-/* Show dropdown on hover */
-.dropdown:hover .dropdown-content {
+/* Show dropdown on click */
+.dropdown.active .dropdown-content {
     display: block;
 }
 

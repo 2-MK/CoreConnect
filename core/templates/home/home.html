@@ -191,6 +191,26 @@
 <!-- JS -->
 
 <script src="{% static 'home/js/script.js' %}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const navBtn = document.querySelector(".dropdown .nav-btn");
+        const dropdown = document.querySelector(".dropdown");
+
+        if (navBtn && dropdown) {
+            navBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+                dropdown.classList.toggle("active");
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener("click", function(e) {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove("active");
+                }
+            });
+        }
+    });
+</script>
 
 </body>
 </html>

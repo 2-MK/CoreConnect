@@ -218,8 +218,6 @@
 
                             <th>File</th>
 
-                            <th>Uploaded On</th>
-
                         </tr>
 
                     </thead>
@@ -282,19 +280,13 @@
 
                             </td>
 
-                            <td>
-
-                                {{ item.created_at|date:"d M Y" }}
-
-                            </td>
-
                         </tr>
 
                         {% empty %}
 
                         <tr>
 
-                            <td colspan="6" class="text-center py-5">
+                            <td colspan="5" class="text-center py-5">
 
                                 <img
                                     src="{% static 'images/no-data.svg' %}"

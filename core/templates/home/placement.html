@@ -2,7 +2,6 @@
 
 <link rel="stylesheet" href="{% static 'corecss/placement.css' %}">
 
-
 <h2 class="section-title">Placement Achievements</h2>
 
 {% if placed_students %}
@@ -12,7 +11,7 @@
     <div class="card">
 
         {% if student.image_url %}
-        <img src="{{ student.image_url }}" class="student-img">
+        <img src="{{ student.image_url }}" alt="{{ student.student_name }}" class="student-img" style="width: 100px; height: 100px; object-fit: cover;">
         {% endif %}
 
         <h3>{{ student.student_name }}</h3>

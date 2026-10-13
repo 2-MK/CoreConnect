@@ -31,7 +31,7 @@ const subjects = {
         "20MCA203- Design & Analysis of Algorithms",
         "20MCA263- Cyber Security & Cryptography",
         "20MCA283- Deep Learning",
-        "S20MCA287- Bioinformatics",
+        "20MCA287- Bioinformatics",
         "20MCA241- Data Science Lab",
         "20MCA243- Mobile Application Develpoment Lab",
         "20MCA245- Mini Project"
